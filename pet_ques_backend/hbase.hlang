@@ -1,0 +1,6 @@
+create 'drink','info'
+alter 'drink', {NAME => 'info'}
+
+create 'count','item_count'
+
+put 'count','drink_count','item_count:count','0'

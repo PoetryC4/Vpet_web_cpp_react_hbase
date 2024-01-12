@@ -1,0 +1,3 @@
+/home/clpo/Documents/pet_ques_new/backend/cmake-build-debug/CMakeFiles/main.dir
+/home/clpo/Documents/pet_ques_new/backend/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/clpo/Documents/pet_ques_new/backend/cmake-build-debug/CMakeFiles/rebuild_cache.dir
