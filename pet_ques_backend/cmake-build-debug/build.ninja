@@ -119,6 +119,13 @@ build CMakeFiles/main.dir/model/basic/MyPageResult.cpp.o: CXX_COMPILER__main_uns
   OBJECT_DIR = CMakeFiles/main.dir
   OBJECT_FILE_DIR = CMakeFiles/main.dir/model/basic
 
+build CMakeFiles/main.dir/model/dto/drink/DrinkUpdateRequest.cpp.o: CXX_COMPILER__main_unscanned_Debug /home/clpo/Documents/pet_ques_new/backend/model/dto/drink/DrinkUpdateRequest.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/model/dto/drink/DrinkUpdateRequest.cpp.o.d
+  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -DPISTACHE_USE_SSL -DPISTACHE_USE_CONTENT_ENCODING_BROTLI -DPISTACHE_USE_CONTENT_ENCODING_DEFLATE
+  INCLUDES = -I/home/clpo/Documents/pet_ques_new/backend/include -I/home/clpo/Documents/pet_ques_new/backend/controller -I/home/clpo/Documents/pet_ques_new/backend/./include/hbase
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/model/dto/drink
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target main
@@ -127,7 +134,7 @@ build CMakeFiles/main.dir/model/basic/MyPageResult.cpp.o: CXX_COMPILER__main_uns
 #############################################
 # Link the executable main
 
-build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/gen-cpp/hbase_types.cpp.o CMakeFiles/main.dir/gen-cpp/THBaseService.cpp.o CMakeFiles/main.dir/model/dto/drink/DrinkAddRequest.cpp.o CMakeFiles/main.dir/model/dto/drink/DrinkPageRequest.cpp.o CMakeFiles/main.dir/model/entity/Drink.cpp.o CMakeFiles/main.dir/controller/DrinkController.cpp.o CMakeFiles/main.dir/utils/strUtils.cpp.o CMakeFiles/main.dir/utils/floatUtils.cpp.o CMakeFiles/main.dir/model/basic/MyPageResult.cpp.o | /usr/lib/x86_64-linux-gnu/libpistache.so
+build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/gen-cpp/hbase_types.cpp.o CMakeFiles/main.dir/gen-cpp/THBaseService.cpp.o CMakeFiles/main.dir/model/dto/drink/DrinkAddRequest.cpp.o CMakeFiles/main.dir/model/dto/drink/DrinkPageRequest.cpp.o CMakeFiles/main.dir/model/entity/Drink.cpp.o CMakeFiles/main.dir/controller/DrinkController.cpp.o CMakeFiles/main.dir/utils/strUtils.cpp.o CMakeFiles/main.dir/utils/floatUtils.cpp.o CMakeFiles/main.dir/model/basic/MyPageResult.cpp.o CMakeFiles/main.dir/model/dto/drink/DrinkUpdateRequest.cpp.o | /usr/lib/x86_64-linux-gnu/libpistache.so
   FLAGS = -g
   LINK_LIBRARIES = -lthrift  /usr/lib/x86_64-linux-gnu/libpistache.so
   OBJECT_DIR = CMakeFiles/main.dir

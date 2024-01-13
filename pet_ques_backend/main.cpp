@@ -136,7 +136,7 @@ HTTP_PROTOTYPE(MyHandler)
             if (req.method() == Http::Method::Post) {
                 const auto &body = req.body();
 
-                DrinkAddRequest drinkAddRequest = parseRequestBodyToDrinkAddRequest(body);
+                DrinkAddRequest drinkAddRequest = DrinkAddRequest::toObject(body);
 
                 long resId = DrinkController::save(drinkAddRequest);
 
@@ -149,6 +149,43 @@ HTTP_PROTOTYPE(MyHandler)
                     response.send(Pistache::Http::Code::Ok, std::to_string(resId));
                 } else {
                     response.send(Pistache::Http::Code::Internal_Server_Error, drinkAddRequest.getDrinkName());
+                }
+            } else if (req.method() == Http::Method::Options) {
+                response.headers()
+                        .add<Http::Header::AccessControlAllowOrigin>("*")
+                        .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
+                        .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
+                response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
+                response.send(Http::Code::Ok);
+            } else {
+                response.send(Http::Code::Method_Not_Allowed);
+            }
+        } else if (req.resource() == (PORT_PREFIX + "/drink/updateById")) {
+            if (req.method() == Http::Method::Post) {
+                const auto &body = req.body();
+
+                std::cout << req.resource() << std::endl;
+                std::cout << body << std::endl;
+                DrinkUpdateRequest drinkUpdateRequest = DrinkUpdateRequest::toObject(body);
+
+                // std::cout << drinkUpdateRequest << std::endl;
+                bool update = DrinkController::updateById(drinkUpdateRequest);
+
+                if (update) {
+                    response.headers()
+                            .add<Http::Header::AccessControlAllowOrigin>("*")
+                            .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
+                            .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
+                    response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
+                    response.send(Pistache::Http::Code::Ok, "修改成功");
+                } else {
+                    response.headers()
+                            .add<Http::Header::AccessControlAllowOrigin>("*")
+                            .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
+                            .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
+                    response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
+                    response.send(Pistache::Http::Code::Internal_Server_Error,
+                                  std::to_string(drinkUpdateRequest.getDrinkId()));
                 }
             } else if (req.method() == Http::Method::Options) {
                 response.headers()
@@ -200,7 +237,7 @@ HTTP_PROTOTYPE(MyHandler)
             if (req.method() == Http::Method::Post) {
                 const auto &body = req.body();
 
-                DrinkPageRequest drinkPageRequest = parseRequestBodyToDrinkPageRequest(body);
+                DrinkPageRequest drinkPageRequest = DrinkPageRequest::toObject(body);
 
                 MyPageResult<Drink> drinks = DrinkController::page(drinkPageRequest.getPage(),
                                                                    drinkPageRequest.getPageSize());
@@ -254,43 +291,10 @@ HTTP_PROTOTYPE(MyHandler)
                 .send(Http::Code::Request_Timeout, "Timeout")
                 .then([=](ssize_t) {}, PrintException());
     }
-
-private:
-
-    static DrinkAddRequest parseRequestBodyToDrinkAddRequest(const std::string &body) {
-        // 在这里实现反序列化逻辑，将请求体解析为PostAddRequest对象
-        // 可以使用JSON库（如nlohmann/json）进行解析
-        // 这里只是一个简单的示例，实际上你需要根据你的数据格式进行修改
-        // 以下是使用nlohmann/json的示例代码
-        nlohmann::json jsonBody = nlohmann::json::parse(body);
-        DrinkAddRequest drinkAddRequest;
-        drinkAddRequest.setDrinkPrice(std::stof(jsonBody["drinkPrice"].get<std::string>()));
-        drinkAddRequest.setDrinkPicPath(jsonBody["drinkPicPath"].get<std::string>());
-        drinkAddRequest.setDrinkName(jsonBody["drinkName"].get<std::string>());
-        drinkAddRequest.setDrinkHunger(std::stof(jsonBody["drinkHunger"].get<std::string>()));
-        drinkAddRequest.setDrinkMood(std::stof(jsonBody["drinkMood"].get<std::string>()));
-        drinkAddRequest.setDrinkThirsty(std::stof(jsonBody["drinkThirsty"].get<std::string>()));
-        drinkAddRequest.setDrinkEndu(std::stof(jsonBody["drinkEndu"].get<std::string>()));
-        drinkAddRequest.setDrinkExp(std::stof(jsonBody["drinkExp"].get<std::string>()));
-        drinkAddRequest.setDrinkHealth(std::stof(jsonBody["drinkHealth"].get<std::string>()));
-        return drinkAddRequest;
-    }
-
-    static DrinkPageRequest parseRequestBodyToDrinkPageRequest(const std::string &body) {
-        // 在这里实现反序列化逻辑，将请求体解析为PostAddRequest对象
-        // 可以使用JSON库（如nlohmann/json）进行解析
-        // 这里只是一个简单的示例，实际上你需要根据你的数据格式进行修改
-        // 以下是使用nlohmann/json的示例代码
-        nlohmann::json jsonBody = nlohmann::json::parse(body);
-        DrinkPageRequest drinkPageRequest;
-        drinkPageRequest.setPage(jsonBody["page"].get<int>());
-        drinkPageRequest.setPageSize(jsonBody["pageSize"].get<int>());
-        return drinkPageRequest;
-    }
 };
 
 int main(int argc, char *argv[]) {
-    Port port(12321);
+    Port port(8878);
 
     int thr = 2;
 /*

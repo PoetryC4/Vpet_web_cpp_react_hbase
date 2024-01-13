@@ -15,6 +15,17 @@ export async function addDrinkUsingPost(body: API.DrinkAddRequest, options?: { [
   });
 }
 
+export async function updateDrinkUsingPost(body: API.DrinkUpdateRequest, options?: { [key: string]: any }) {
+  return request<string>(API_PREFIX + '/drink/updateById', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 export async function getDrinkByPageUsingPost(body: API.DrinkPageRequest, options?: { [key: string]: any }) {
   return request<API.DrinkPage>(API_PREFIX + '/drink/page', {
     method: 'POST',

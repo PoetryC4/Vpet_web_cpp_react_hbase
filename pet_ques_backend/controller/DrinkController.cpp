@@ -316,4 +316,103 @@ long DrinkController::save(const DrinkAddRequest &drinkAddRequest) {
     return resId;
 }
 
+bool DrinkController::updateById(const DrinkUpdateRequest &drinkUpdateRequest) {
+    std::shared_ptr<TSocket> socket(new TSocket(THRIFT_IP, THRIFT_PORT));
+    std::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
+    std::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
+    long update = false;
+    try {
+        transport->open();
+        THBaseServiceClient client(protocol);
+        const std::string table("drink");
+
+        //数据存入
+        std::vector<TPut> puts;
+
+        std::string rowKey = std::to_string(drinkUpdateRequest.getDrinkId());
+
+        // Inserting data for the generated row
+        TPut putRow;
+        std::vector<TColumnValue> cvsRow;
+
+        // 'drink_id' column
+        TColumnValue tcvId;
+        tcvId.__set_family("info");
+        tcvId.__set_qualifier("drink_id");
+        tcvId.__set_value(rowKey);
+        cvsRow.insert(cvsRow.end(), tcvId);
+
+        // 'drink_price' column
+        TColumnValue tcvPrice;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_price");
+        tcvPrice.__set_value(std::to_string(drinkUpdateRequest.getDrinkPrice()));
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        TColumnValue tcvPicPath;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_pic_path");
+        tcvPrice.__set_value(drinkUpdateRequest.getDrinkPicPath());
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        TColumnValue tcvName;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_name");
+        tcvPrice.__set_value(drinkUpdateRequest.getDrinkName());
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        TColumnValue tcvHunger;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_hunger");
+        tcvPrice.__set_value(std::to_string(drinkUpdateRequest.getDrinkHunger()));
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        TColumnValue tcvMood;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_mood");
+        tcvPrice.__set_value(std::to_string(drinkUpdateRequest.getDrinkPrice()));
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        TColumnValue tcvThirsty;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_thirsty");
+        tcvPrice.__set_value(std::to_string(drinkUpdateRequest.getDrinkThirsty()));
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        TColumnValue tcvEndu;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_endu");
+        tcvPrice.__set_value(std::to_string(drinkUpdateRequest.getDrinkEndu()));
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        TColumnValue tcvExp;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_exp");
+        tcvPrice.__set_value(std::to_string(drinkUpdateRequest.getDrinkExp()));
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        TColumnValue tcvHealth;
+        tcvPrice.__set_family("info");
+        tcvPrice.__set_qualifier("drink_health");
+        tcvPrice.__set_value(std::to_string(drinkUpdateRequest.getDrinkHealth()));
+        cvsRow.insert(cvsRow.end(), tcvPrice);
+
+        // Set row key and column values
+        putRow.__set_row(rowKey);
+        putRow.__set_columnValues(cvsRow);
+        puts.insert(puts.end(), putRow);
+
+        // Perform the put operation
+        client.putMultiple(table, puts);
+        puts.clear();
+
+        transport->close();
+        update = true;
+
+    } catch (const TException &tx) {
+        std::cerr << "ERROR(exception): " << tx.what() << std::endl;
+    }
+    return update;
+}
+
 DrinkController::DrinkController() = default;

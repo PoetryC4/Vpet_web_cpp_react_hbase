@@ -17,6 +17,7 @@
 #include "../model/entity/Drink.h"
 #include "../model/dto/drink/DrinkAddRequest.h"
 #include "../model/basic/MyPageResult.h"
+#include "../model/dto/drink/DrinkUpdateRequest.h"
 
 using namespace std;
 using namespace apache::thrift;
@@ -35,6 +36,8 @@ public:
     static Drink getById(const std::string& drinkId);
 
     static long save(const DrinkAddRequest& drinkAddRequest);
+
+    static bool updateById(const DrinkUpdateRequest& drinkUpdateRequest);
 
 };
 

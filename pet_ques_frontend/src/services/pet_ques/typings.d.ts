@@ -1,7 +1,7 @@
 declare namespace API {
 
   type Drink = {
-    drinkId?: string;
+    drinkId?: number;
     drinkPicPath?: string;
     drinkName?: string;
     drinkPrice?: number;
@@ -37,6 +37,18 @@ declare namespace API {
   };
 
   type DrinkAddRequest = {
+    drinkName?: string;
+    drinkPicPath?: string;
+    drinkPrice?: number;
+    drinkHunger?: number;
+    drinkMood?: number;
+    drinkThirsty?: number;
+    drinkEndu?: number;
+    drinkExp?: number;
+    drinkHealth?: number;
+  };
+  type DrinkUpdateRequest = {
+    drinkId?: number;
     drinkName?: string;
     drinkPicPath?: string;
     drinkPrice?: number;

@@ -30,6 +30,8 @@ set(SOURCES
         utils/floatUtils.h
         model/basic/MyPageResult.cpp
         model/basic/MyPageResult.h
+        model/dto/drink/DrinkUpdateRequest.cpp
+        model/dto/drink/DrinkUpdateRequest.h
 )
 
 # 添加可执行文件

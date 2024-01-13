@@ -10,10 +10,10 @@ import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {addDrinkUsingPost, getDrinkByPageUsingPost} from "@/services/pet_ques/drinkController";
 
-const handleCopyCase = (drinkId: string) => {
+const handleCopyCase = (drinkId: number) => {
   history.push(`/drink/add?drinkId=${drinkId}`);
 };
-const handleUpdateCase = (drinkId: string) => {
+const handleUpdateCase = (drinkId: number) => {
   history.push(`/drink/update?drinkId=${drinkId}`);
 };
 
@@ -52,11 +52,8 @@ const DrinkTable: React.FC = () => {
         pageSize: pageSize,
         page: curPage,
       });
-      console.log(res);
       setDrinkTable(res.records);
       setDrinkCount(res.count);
-      console.log(drinkTable);
-      console.log(drinkCount);
       message.success("获取成功");
     } catch (error) {
       message.error("获取失败" + error);

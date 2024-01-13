@@ -15,7 +15,7 @@
 
 class Drink {
 private:
-    std::string drinkId;
+    int drinkId;
     float drinkPrice;
     std::string drinkPicPath;
     std::string drinkName;
@@ -45,8 +45,8 @@ public:
         };
     }
 
-    const std::string &getDrinkId() const;
-    void setDrinkId(const std::string &drinkId);
+    const int &getDrinkId() const;
+    void setDrinkId(const int &drinkId);
 
     float getDrinkPrice() const;
     void setDrinkPrice(float drinkPrice);
@@ -80,6 +80,8 @@ public:
 private:
     using SetterFunctionString = std::function<void(Drink&, const std::string&)>;
     std::unordered_map<std::string, SetterFunctionString> propertyStringSetters;
+    using SetterFunctionInteger = std::function<void(Drink&, const int)>;
+    std::unordered_map<std::string, SetterFunctionInteger> propertyIntegerSetters;
     using SetterFunctionFloat = std::function<void(Drink&, const float)>;
     std::unordered_map<std::string, SetterFunctionFloat> propertyFloatSetters;
 

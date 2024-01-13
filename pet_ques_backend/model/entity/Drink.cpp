@@ -7,11 +7,11 @@
 #include "../include/nlohmann/json.hpp"
 #include "../../utils/floatUtils.h"
 
-const std::string &Drink::getDrinkId() const {
+const int &Drink::getDrinkId() const {
     return drinkId;
 }
 
-void Drink::setDrinkId(const std::string &drinkId) {
+void Drink::setDrinkId(const int &drinkId) {
     Drink::drinkId = drinkId;
 }
 
@@ -93,13 +93,15 @@ void Drink::setProperty(const std::string &propertyName, const std::string &valu
         propertyFloatSetters[propertyName](*this, floatUtils::setPrecision(std::stof(value), 2));
     } else if (propertyStringSetters.find(propertyName) != propertyStringSetters.end()) {
         propertyStringSetters[propertyName](*this, value);
+    } else if (propertyIntegerSetters.find(propertyName) != propertyIntegerSetters.end()) {
+        propertyIntegerSetters[propertyName](*this, std::stoi(value));
     } else {
         std::cerr << "Property not found: " << propertyName << std::endl;
     }
 }
 
 Drink::Drink() {
-    propertyStringSetters["drinkId"] = &Drink::setDrinkId;
+    propertyIntegerSetters["drinkId"] = &Drink::setDrinkId;
     propertyFloatSetters["drinkPrice"] = &Drink::setDrinkPrice;
     propertyStringSetters["drinkPicPath"] = &Drink::setDrinkPicPath;
     propertyStringSetters["drinkName"] = &Drink::setDrinkName;

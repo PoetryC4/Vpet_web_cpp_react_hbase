@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <functional>
 #include <iostream>
+#include "nlohmann/json.hpp"
 
 class DrinkPageRequest {
 private:
@@ -34,7 +35,13 @@ public:
     void setPageSize(int pageSize);
 
     void setProperty(const std::string &propertyName, const std::string &value);
-
+    static DrinkPageRequest toObject(const std::string &body) {
+        nlohmann::json jsonBody = nlohmann::json::parse(body);
+        DrinkPageRequest drinkPageRequest;
+        drinkPageRequest.setPage(jsonBody["page"].get<int>());
+        drinkPageRequest.setPageSize(jsonBody["pageSize"].get<int>());
+        return drinkPageRequest;
+    }
 private:
     using SetterFunctionInt = std::function<void(DrinkPageRequest&, const int)>;
     std::unordered_map<std::string, SetterFunctionInt> propertyIntSetters;

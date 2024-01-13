@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <functional>
 #include <iostream>
+#include "nlohmann/json.hpp"
 
 class DrinkAddRequest {
 private:
@@ -70,7 +71,24 @@ public:
 
     // Method to set property based on string name
     void setProperty(const std::string &propertyName, const std::string &value);
-
+    static DrinkAddRequest toObject(const std::string &body) {
+        // 在这里实现反序列化逻辑，将请求体解析为PostAddRequest对象
+        // 可以使用JSON库（如nlohmann/json）进行解析
+        // 这里只是一个简单的示例，实际上你需要根据你的数据格式进行修改
+        // 以下是使用nlohmann/json的示例代码
+        nlohmann::json jsonBody = nlohmann::json::parse(body);
+        DrinkAddRequest drinkAddRequest;
+        drinkAddRequest.setDrinkPrice(jsonBody["drinkPrice"].get<float>());
+        drinkAddRequest.setDrinkPicPath(jsonBody["drinkPicPath"].get<std::string>());
+        drinkAddRequest.setDrinkName(jsonBody["drinkName"].get<std::string>());
+        drinkAddRequest.setDrinkHunger(jsonBody["drinkHunger"].get<float>());
+        drinkAddRequest.setDrinkMood(jsonBody["drinkMood"].get<float>());
+        drinkAddRequest.setDrinkThirsty(jsonBody["drinkThirsty"].get<float>());
+        drinkAddRequest.setDrinkEndu(jsonBody["drinkEndu"].get<float>());
+        drinkAddRequest.setDrinkExp(jsonBody["drinkExp"].get<float>());
+        drinkAddRequest.setDrinkHealth(jsonBody["drinkHealth"].get<float>());
+        return drinkAddRequest;
+    }
 private:
     using SetterFunctionString = std::function<void(DrinkAddRequest&, const std::string&)>;
     std::unordered_map<std::string, SetterFunctionString> propertyStringSetters;

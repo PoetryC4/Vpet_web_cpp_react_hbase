@@ -8,6 +8,14 @@ const routesConfig = [
     ],
   },
   {
+    path: '/update',
+    layout: false,
+    name: '修改',
+    routes: [
+      { path: '/update/drink', name: 'drinkUpdate', component: './Update/Drink' },
+    ],
+  },
+  {
     path: '/table',
     layout: false,
     name: '表展示',
