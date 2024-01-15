@@ -7,7 +7,7 @@
 
 #include <string>
 
-class strUtils {
+class StrUtils {
 public:
     static std::string toCamelCase(const std::string& input);
 };

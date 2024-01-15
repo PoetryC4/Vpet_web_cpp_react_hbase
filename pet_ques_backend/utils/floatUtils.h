@@ -7,7 +7,7 @@
 
 #include <cmath>
 
-class floatUtils {
+class FloatUtils {
 public:
     static double setPrecision(double input, int prec);
 };

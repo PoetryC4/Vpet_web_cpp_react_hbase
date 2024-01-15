@@ -1,7 +1,7 @@
 import {useModel} from '@@/exports';
 import {useEmotionCss} from '@ant-design/use-emotion-css';
 import {history} from '@umijs/max';
-import {Button, Divider, Input, message, Pagination, Result} from 'antd';
+import {Button, Descriptions, DescriptionsProps, Divider, Input, message, Pagination, Result} from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
 import {Table} from 'antd/lib';
@@ -9,13 +9,51 @@ import {ColumnsType} from 'antd/lib/table';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {addDrinkUsingPost, getDrinkByPageUsingPost} from "@/services/pet_ques/drinkController";
+import {Image} from 'antd';
 
 const handleCopyCase = (drinkId: number) => {
-  history.push(`/drink/add?drinkId=${drinkId}`);
+  history.push(`/add/drink?drinkId=${drinkId}`);
 };
 const handleUpdateCase = (drinkId: number) => {
-  history.push(`/drink/update?drinkId=${drinkId}`);
+  history.push(`/update/drink?drinkId=${drinkId}`);
 };
+
+const imageUrlPrefix = "http://192.168.116.129:12432/static/drink/"
+
+const getExpandInfo = (record: API.Drink) => {
+  //const items: DescriptionsProps['items'] = ;
+
+  return ([
+    {
+      label: '饮料补充饥饿值',
+      children: record.drinkHunger?.toFixed(2),
+    },
+    {
+      label: '饮料补充心情值',
+      children: record.drinkMood?.toFixed(2),
+    },
+    {
+      label: '饮料补充口渴值',
+      children: record.drinkThirsty?.toFixed(2),
+    },
+    {
+      label: '饮料补充耐力值',
+      children: record.drinkEndu?.toFixed(2),
+    },
+    {
+      label: '饮料提供经验值',
+      children: record.drinkExp?.toFixed(2),
+    },
+    {
+      label: '饮料补充健康值',
+      children: record.drinkHealth?.toFixed(2),
+    },
+  ]);
+}
+
+const handleBuyDrink = (drink: API.Drink) => {
+  console.log(drink);
+}
 
 const DrinkTable: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
@@ -43,7 +81,7 @@ const DrinkTable: React.FC = () => {
   const pageSizes = [8, 16, 24];
 
   if (!initialState) {
-    return loading;
+    return (<div>加载错误</div>);
   }
 
   const getDrinks = async () => {
@@ -52,15 +90,15 @@ const DrinkTable: React.FC = () => {
         pageSize: pageSize,
         page: curPage,
       });
-      setDrinkTable(res.records);
-      setDrinkCount(res.count);
+      setDrinkTable(res.records || []);
+      setDrinkCount(res.count || 0);
       message.success("获取成功");
     } catch (error) {
       message.error("获取失败" + error);
     }
   };
 
-  const handleSearchChange = async (e) => {
+  const handleSearchChange = async (e: { target: { value: React.SetStateAction<string>; }; }) => {
     // 更新状态的值
     setSearchInput(e.target.value);
   };
@@ -77,6 +115,18 @@ const DrinkTable: React.FC = () => {
 
   const columns: ColumnsType<API.Drink> = [
     {
+      title: '饮料展示', dataIndex: '', key: 'drinkDisplay',
+      width: 55,
+      render: (text, record) => (
+        <div>
+          <Image
+            width={100}
+            src={imageUrlPrefix + record.drinkPicPath}
+          />
+        </div>
+      ),
+    },
+    {
       title: '饮料名称', dataIndex: '', key: 'drinkName',
       width: 100,
       render: (text, record) => (
@@ -85,50 +135,33 @@ const DrinkTable: React.FC = () => {
         </div>
       ),
     },
-    {title: '饮料价格', dataIndex: '', key: 'drinkPrice',
+    {
+      title: '饮料价格', dataIndex: '', key: 'drinkPrice',
       render: (text, record) => (
         <div>
-          {record.drinkPrice?.toFixed(2)}
+          {record.drinkPrice?.toFixed(2)}￥
         </div>
-      ),},
-    {title: '饮料补充饥饿值', dataIndex: '', key: 'drinkHunger',
-      render: (text, record) => (
-        <div>
-          {record.drinkHunger?.toFixed(2)}
-        </div>
-      ),},
-    {title: '饮料补充心情值', dataIndex: '', key: 'drinkMood',
-      render: (text, record) => (
-        <div>
-          {record.drinkMood?.toFixed(2)}
-        </div>
-      ),},
-    {title: '饮料补充口渴值', dataIndex: '', key: 'drinkThirsty',
-      render: (text, record) => (
-        <div>
-          {record.drinkThirsty?.toFixed(2)}
-        </div>
-      ),},
-    {title: '饮料补充耐力值', dataIndex: '', key: 'drinkEndu',
-      render: (text, record) => (
-        <div>
-          {record.drinkEndu?.toFixed(2)}
-        </div>
-      ),},
-    {title: '饮料提供经验值', dataIndex: '', key: 'drinkExp',
-      render: (text, record) => (
-        <div>
-          {record.drinkExp?.toFixed(2)}
-        </div>
-      ),},
-    {title: '饮料补充健康值', dataIndex: '', key: 'drinkHealth',
-      render: (text, record) => (
-        <div>
-          {record.drinkHealth?.toFixed(2)}
-        </div>
-      ),},
+      ),
+    },
     {
       title: '操作',
+      width: 200,
+      dataIndex: '',
+      key: 'op',
+      render: (text, record) => (
+        <div>
+          <Button
+            type="primary"
+            onClick={() => handleBuyDrink(record)}
+            style={{marginLeft: 20, marginRight: 20}}
+          >
+            购买
+          </Button>
+        </div>
+      ),
+    },
+    {
+      title: '管理员操作',
       width: 400,
       dataIndex: '',
       key: 'op',
@@ -136,14 +169,14 @@ const DrinkTable: React.FC = () => {
         <div>
           <Button
             type="primary"
-            onClick={() => handleCopyCase(record.drinkId || '0')}
+            onClick={() => handleCopyCase(record.drinkId || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             复制
           </Button>
           <Button
             type="primary"
-            onClick={() => handleUpdateCase(record.drinkId || '0')}
+            onClick={() => handleUpdateCase(record.drinkId || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             修改
@@ -168,9 +201,22 @@ const DrinkTable: React.FC = () => {
           style={{width: '30%', margin: '1% 40% 1% 10%'}}
         />
         <Table
-          rowKey="id"
+          rowKey={(record) => (record.drinkId || -1).toString()}
           pagination={false}
           columns={columns}
+          expandable={{
+            expandedRowRender: (record) => (
+              <div>
+                <Descriptions
+                  title="饮料信息"
+                  bordered
+                  column={{xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4}}
+                  items={getExpandInfo(record)}
+                />
+              </div>
+            ),
+            rowExpandable: (record) => record.drinkName !== null,
+          }}
           dataSource={drinkTable}
         />
         <Pagination

@@ -1,44 +1,48 @@
 //
-// Created by clpo-2 on 12/20/23.
+// Created by clpo on 1/14/24.
 //
 
 #ifndef MAIN_DRINKCONTROLLER_H
 #define MAIN_DRINKCONTROLLER_H
 
-#include "../gen-cpp/THBaseService.h"
-#include <vector>
-#include <thrift/config.h>
-#include <iostream>
-#include <thrift/transport/TSocket.h>
-#include <thrift/transport/TBufferTransports.h>
-#include <thrift/protocol/TBinaryProtocol.h>
-#include <chrono>
+#include <string>
 #include <unordered_map>
+#include <functional>
+#include <iostream>
+#include <pistache/common.h>
+#include <pistache/cookie.h>
+#include <pistache/endpoint.h>
+#include <pistache/http.h>
+#include <pistache/http_headers.h>
+#include <pistache/net.h>
+#include <pistache/peer.h>
 #include "../model/entity/Drink.h"
-#include "../model/dto/drink/DrinkAddRequest.h"
-#include "../model/basic/MyPageResult.h"
-#include "../model/dto/drink/DrinkUpdateRequest.h"
-
-using namespace std;
-using namespace apache::thrift;
-using namespace apache::thrift::protocol;
-using namespace apache::thrift::transport;
-using namespace apache::hadoop::hbase::thrift2;
+#include "../service/DrinkService.h"
 
 class DrinkController {
+private:
+    using DrinkControllerFunctions = std::function<void(DrinkController&, const Pistache::Http::Request &req,
+                                                        Pistache::Http::ResponseWriter &response)>;
+
 public:
     DrinkController();
 
-    static std::vector<Drink> scan();
+    std::unordered_map<std::string, DrinkControllerFunctions> drinkRequestHandlers;
 
-    static MyPageResult<Drink> page(const int& page, const int& pageSize);
+    void getById(const Pistache::Http::Request &req,
+                 Pistache::Http::ResponseWriter &response);
 
-    static Drink getById(const std::string& drinkId);
+    void getAll(const Pistache::Http::Request &req,
+                Pistache::Http::ResponseWriter &response);
 
-    static long save(const DrinkAddRequest& drinkAddRequest);
+    void add(const Pistache::Http::Request &req,
+              Pistache::Http::ResponseWriter &response);
 
-    static bool updateById(const DrinkUpdateRequest& drinkUpdateRequest);
+    void updateById(const Pistache::Http::Request &req,
+              Pistache::Http::ResponseWriter &response);
 
+    void page(const Pistache::Http::Request &req,
+                Pistache::Http::ResponseWriter &response);
 };
 
 

@@ -19,9 +19,12 @@
 #include <pistache/peer.h>
 #include "include/nlohmann/json.hpp"
 #include "model/dto/drink/DrinkAddRequest.h"
-#include "model/dto/drink/DrinkPageRequest.h"
+#include "model/basic/MyPageRequest.h"
 #include "model/basic/MyPageResult.h"
 #include "controller/DrinkController.h"
+#include "controller/FoodController.h"
+#include "controller/MedicineController.h"
+#include "controller/PresentController.h"
 
 using namespace Pistache;
 
@@ -89,192 +92,21 @@ HTTP_PROTOTYPE(MyHandler)
     void onRequest(
             const Http::Request &req,
             Http::ResponseWriter response) override {
+        DrinkController drinkController;
+        FoodController foodController;
+        MedicineController medicineController;
+        PresentController presentController;
 
         std::cout << "拦截到请求:" << req.resource() << std::endl;
 
-        if (req.resource() == (PORT_PREFIX + "/drink/getById")) {
-            if (req.method() == Http::Method::Get) {
-
-                using namespace Http;
-
-                const auto &query = req.query();
-                if (query.has("drinkId")) {
-                    std::string drinkId = query.get("drinkId").value_or("");
-                    Drink drink = DrinkController::getById(drinkId);
-
-                    response.headers()
-                            .add<Header::Server>("pistache/0.1")
-                            .add<Header::ContentType>(MIME(Text, Plain));
-
-                    /* response.cookies()
-                             .add(Cookie("lang", "en-US"));*/
-
-                    /*auto stream = response.stream(Http::Code::Ok);
-                    stream << "PO";
-                    stream << "NG";
-                    stream << ends;*/
-                    response.headers()
-                            .add<Http::Header::AccessControlAllowOrigin>("*")
-                            .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                            .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                    response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                    response.send(Http::Code::Ok, drink.toJson().dump());
-                } else {
-                    response.send(Http::Code::Ok, "PONG");
-                }
-            } else if (req.method() == Http::Method::Options) {
-                response.headers()
-                        .add<Http::Header::AccessControlAllowOrigin>("*")
-                        .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                        .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                response.send(Http::Code::Ok);
-            } else {
-                response.send(Http::Code::Method_Not_Allowed);
-            }
-        } else if (req.resource() == (PORT_PREFIX + "/drink/add")) {
-            if (req.method() == Http::Method::Post) {
-                const auto &body = req.body();
-
-                DrinkAddRequest drinkAddRequest = DrinkAddRequest::toObject(body);
-
-                long resId = DrinkController::save(drinkAddRequest);
-
-                if (resId != -1) {
-                    response.headers()
-                            .add<Http::Header::AccessControlAllowOrigin>("*")
-                            .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                            .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                    response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                    response.send(Pistache::Http::Code::Ok, std::to_string(resId));
-                } else {
-                    response.send(Pistache::Http::Code::Internal_Server_Error, drinkAddRequest.getDrinkName());
-                }
-            } else if (req.method() == Http::Method::Options) {
-                response.headers()
-                        .add<Http::Header::AccessControlAllowOrigin>("*")
-                        .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                        .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                response.send(Http::Code::Ok);
-            } else {
-                response.send(Http::Code::Method_Not_Allowed);
-            }
-        } else if (req.resource() == (PORT_PREFIX + "/drink/updateById")) {
-            if (req.method() == Http::Method::Post) {
-                const auto &body = req.body();
-
-                std::cout << req.resource() << std::endl;
-                std::cout << body << std::endl;
-                DrinkUpdateRequest drinkUpdateRequest = DrinkUpdateRequest::toObject(body);
-
-                // std::cout << drinkUpdateRequest << std::endl;
-                bool update = DrinkController::updateById(drinkUpdateRequest);
-
-                if (update) {
-                    response.headers()
-                            .add<Http::Header::AccessControlAllowOrigin>("*")
-                            .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                            .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                    response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                    response.send(Pistache::Http::Code::Ok, "修改成功");
-                } else {
-                    response.headers()
-                            .add<Http::Header::AccessControlAllowOrigin>("*")
-                            .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                            .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                    response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                    response.send(Pistache::Http::Code::Internal_Server_Error,
-                                  std::to_string(drinkUpdateRequest.getDrinkId()));
-                }
-            } else if (req.method() == Http::Method::Options) {
-                response.headers()
-                        .add<Http::Header::AccessControlAllowOrigin>("*")
-                        .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                        .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                response.send(Http::Code::Ok);
-            } else {
-                response.send(Http::Code::Method_Not_Allowed);
-            }
-        } else if (req.resource() == (PORT_PREFIX + "/drink/getAll")) {
-            if (req.method() == Http::Method::Get) {
-
-                std::vector<Drink> drinks = DrinkController::scan();
-                nlohmann::json jsonArray;
-                for (const auto &drink: drinks) {
-                    jsonArray.push_back({
-                                                {"drinkId",      drink.getDrinkId()},
-                                                {"drinkPrice",   drink.getDrinkPrice()},
-                                                {"drinkPicPath", drink.getDrinkPicPath()},
-                                                {"drinkName",    drink.getDrinkName()},
-                                                {"drinkHunger",  drink.getDrinkHunger()},
-                                                {"drinkMood",    drink.getDrinkMood()},
-                                                {"drinkThirsty", drink.getDrinkThirsty()},
-                                                {"drinkEndu",    drink.getDrinkEndu()},
-                                                {"drinkExp",     drink.getDrinkExp()},
-                                                {"drinkHealth",  drink.getDrinkHealth()}
-                                        });
-                }
-
-                response.headers()
-                        .add<Http::Header::AccessControlAllowOrigin>("*")
-                        .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                        .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                response.send(Pistache::Http::Code::Ok, jsonArray.dump());
-            } else if (req.method() == Http::Method::Options) {
-                response.headers()
-                        .add<Http::Header::AccessControlAllowOrigin>("*")
-                        .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                        .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                response.send(Http::Code::Ok);
-            } else {
-                response.send(Http::Code::Method_Not_Allowed);
-            }
-        } else if (req.resource() == (PORT_PREFIX + "/drink/page")) {
-            if (req.method() == Http::Method::Post) {
-                const auto &body = req.body();
-
-                DrinkPageRequest drinkPageRequest = DrinkPageRequest::toObject(body);
-
-                MyPageResult<Drink> drinks = DrinkController::page(drinkPageRequest.getPage(),
-                                                                   drinkPageRequest.getPageSize());
-                nlohmann::json jsonObject;
-                nlohmann::json jsonArray;
-                for (const auto &drink: drinks.getRecords()) {
-                    jsonArray.push_back({
-                                                {"drinkId",      drink.getDrinkId()},
-                                                {"drinkPrice",   drink.getDrinkPrice()},
-                                                {"drinkPicPath", drink.getDrinkPicPath()},
-                                                {"drinkName",    drink.getDrinkName()},
-                                                {"drinkHunger",  drink.getDrinkHunger()},
-                                                {"drinkMood",    drink.getDrinkMood()},
-                                                {"drinkThirsty", drink.getDrinkThirsty()},
-                                                {"drinkEndu",    drink.getDrinkEndu()},
-                                                {"drinkExp",     drink.getDrinkExp()},
-                                                {"drinkHealth",  drink.getDrinkHealth()}
-                                        });
-                }
-                jsonObject["count"] = drinks.getCount();
-                jsonObject["records"] = jsonArray;
-                response.headers()
-                        .add<Http::Header::AccessControlAllowOrigin>("*")
-                        .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                        .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                response.send(Pistache::Http::Code::Ok, jsonObject.dump());
-            } else if (req.method() == Http::Method::Options) {
-                response.headers()
-                        .add<Http::Header::AccessControlAllowOrigin>("*")
-                        .add<Http::Header::AccessControlAllowMethods>("GET, POST, OPTIONS, DELETE, PUT")
-                        .add<Http::Header::AccessControlAllowHeaders>("Content-Type");
-                response.headers().add<Http::Header::ContentType>(MIME(Text, Plain));
-                response.send(Http::Code::Ok);
-            } else {
-                response.send(Http::Code::Method_Not_Allowed);
-            }
+        if (drinkController.drinkRequestHandlers.find(req.resource())!=drinkController.drinkRequestHandlers.end()) {
+            drinkController.drinkRequestHandlers[req.resource()](drinkController, req, response);
+        } else if(foodController.foodRequestHandlers.find(req.resource())!=foodController.foodRequestHandlers.end()) {
+            foodController.foodRequestHandlers[req.resource()](foodController, req, response);
+        } else if(medicineController.medicineRequestHandlers.find(req.resource())!=medicineController.medicineRequestHandlers.end()) {
+            medicineController.medicineRequestHandlers[req.resource()](medicineController, req, response);
+        } else if(presentController.presentRequestHandlers.find(req.resource())!=presentController.presentRequestHandlers.end()) {
+            presentController.presentRequestHandlers[req.resource()](presentController, req, response);
         } else if (req.resource() == "/exception") {
             throw std::runtime_error("Exception thrown in the handler");
         } else if (req.resource() == "/timeout") {

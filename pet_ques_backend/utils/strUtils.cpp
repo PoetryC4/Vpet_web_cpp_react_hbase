@@ -2,11 +2,11 @@
 // Created by clpo-2 on 12/20/23.
 //
 
-#include "strUtils.h"
+#include "StrUtils.h"
 #include <vector>
 #include <sstream>
 
-std::string strUtils::toCamelCase(const std::string &input) {
+std::string StrUtils::toCamelCase(const std::string &input) {
     std::vector<std::string> parts;
     std::istringstream iss(input);
     std::string part;

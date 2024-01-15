@@ -5,6 +5,9 @@ const routesConfig = [
     name: '添加',
     routes: [
       { path: '/add/drink', name: 'drinkAdd', component: './Add/Drink' },
+      { path: '/add/food', name: 'foodAdd', component: './Add/Food' },
+      { path: '/add/medicine', name: 'medicineAdd', component: './Add/Medicine' },
+      { path: '/add/present', name: 'presentAdd', component: './Add/Present' },
     ],
   },
   {
@@ -13,6 +16,9 @@ const routesConfig = [
     name: '修改',
     routes: [
       { path: '/update/drink', name: 'drinkUpdate', component: './Update/Drink' },
+      { path: '/update/food', name: 'foodUpdate', component: './Update/Food' },
+      { path: '/update/medicine', name: 'medicineUpdate', component: './Update/Medicine' },
+      { path: '/update/present', name: 'presentUpdate', component: './Update/Present' },
     ],
   },
   {
@@ -21,6 +27,9 @@ const routesConfig = [
     name: '表展示',
     routes: [
       { path: '/table/drink', name: 'drinkTable', component: './Table/Drink' },
+      { path: '/table/food', name: 'foodTable', component: './Table/Food' },
+      { path: '/table/medicine', name: 'medicineTable', component: './Table/Medicine' },
+      { path: '/table/present', name: 'presentTable', component: './Table/Present' },
     ],
   },
   { path: '/welcome', icon: 'smile', component: './Welcome', name: '欢迎界面' },
@@ -35,7 +44,6 @@ const routesConfig = [
       { path: '/admin/sub-page', name: 'admin2', component: './Admin' },
     ],
   },
-  { icon: 'table', path: '/list', component: './TableList', name: 'table' },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];

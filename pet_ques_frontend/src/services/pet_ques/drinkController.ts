@@ -26,7 +26,7 @@ export async function updateDrinkUsingPost(body: API.DrinkUpdateRequest, options
   });
 }
 
-export async function getDrinkByPageUsingPost(body: API.DrinkPageRequest, options?: { [key: string]: any }) {
+export async function getDrinkByPageUsingPost(body: API.MyPageRequest, options?: { [key: string]: any }) {
   return request<API.DrinkPage>(API_PREFIX + '/drink/page', {
     method: 'POST',
     headers: {

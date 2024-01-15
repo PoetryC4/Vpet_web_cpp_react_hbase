@@ -18,20 +18,53 @@ set(SOURCES
         ./gen-cpp/THBaseService.cpp
         model/dto/drink/DrinkAddRequest.cpp
         model/dto/drink/DrinkAddRequest.h
-        model/dto/drink/DrinkPageRequest.cpp
-        model/dto/drink/DrinkPageRequest.h
+        model/basic/MyPageRequest.cpp
+        model/basic/MyPageRequest.h
         model/entity/Drink.cpp
         model/entity/Drink.h
-        controller/DrinkController.h
-        controller/DrinkController.cpp
-        utils/strUtils.cpp
-        utils/strUtils.h
-        utils/floatUtils.cpp
-        utils/floatUtils.h
+        service/DrinkService.h
+        service/DrinkService.cpp
+        utils/StrUtils.cpp
+        utils/StrUtils.h
+        utils/FloatUtils.cpp
+        utils/FloatUtils.h
         model/basic/MyPageResult.cpp
         model/basic/MyPageResult.h
         model/dto/drink/DrinkUpdateRequest.cpp
         model/dto/drink/DrinkUpdateRequest.h
+        utils/FileUtils.cpp
+        utils/FileUtils.h
+        model/entity/Food.cpp
+        model/entity/Food.h
+        model/dto/food/FoodAddRequest.cpp
+        model/dto/food/FoodAddRequest.h
+        model/dto/food/FoodUpdateRequest.cpp
+        model/dto/food/FoodUpdateRequest.h
+        controller/DrinkController.cpp
+        controller/DrinkController.h
+        controller/FoodController.cpp
+        controller/FoodController.h
+        model/entity/Medicine.cpp
+        model/entity/Medicine.h
+        model/dto/medicine/MedicineAddRequest.cpp
+        model/dto/medicine/MedicineAddRequest.h
+        model/dto/medicine/MedicineUpdateRequest.cpp
+        model/dto/medicine/MedicineUpdateRequest.h
+        controller/MedicineController.cpp
+        controller/MedicineController.h
+        service/MedicineService.cpp
+        service/MedicineService.h
+        service/FoodService.cpp
+        model/entity/Present.cpp
+        model/entity/Present.h
+        model/dto/present/PresentAddRequest.cpp
+        model/dto/present/PresentAddRequest.h
+        model/dto/present/PresentUpdateRequest.cpp
+        model/dto/present/PresentUpdateRequest.h
+        service/PresentService.cpp
+        service/PresentService.h
+        controller/PresentController.cpp
+        controller/PresentController.h
 )
 
 # 添加可执行文件

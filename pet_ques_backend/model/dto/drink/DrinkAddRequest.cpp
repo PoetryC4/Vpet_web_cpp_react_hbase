@@ -4,7 +4,7 @@
 
 #include <string>
 #include "DrinkAddRequest.h"
-#include "../../../utils/floatUtils.h"
+#include "../../../utils/FloatUtils.h"
 
 
 float DrinkAddRequest::getDrinkPrice() const {
@@ -82,7 +82,7 @@ void DrinkAddRequest::setDrinkHealth(float drinkHealth) {
 void DrinkAddRequest::setProperty(const std::string &propertyName, const std::string &value) {
     // Check the type of the property and call the appropriate setter function
     if (propertyFloatSetters.find(propertyName) != propertyFloatSetters.end()) {
-        propertyFloatSetters[propertyName](*this, floatUtils::setPrecision(std::stof(value), 2));
+        propertyFloatSetters[propertyName](*this, FloatUtils::setPrecision(std::stof(value), 2));
     } else if (propertyStringSetters.find(propertyName) != propertyStringSetters.end()) {
         propertyStringSetters[propertyName](*this, value);
     } else {

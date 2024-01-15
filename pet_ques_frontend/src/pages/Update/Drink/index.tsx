@@ -42,7 +42,7 @@ const DrinkUpdate: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   if (!initialState) {
-    return loading;
+    return (<div>加载错误</div>);
   }
 
   const [form] = Form.useForm();
@@ -152,7 +152,6 @@ const DrinkUpdate: React.FC = () => {
             style={{width: 400}}
             step="0.01"
             precision={2}
-            stringMode
           />
         </Form.Item>
         <Form.Item
@@ -164,7 +163,6 @@ const DrinkUpdate: React.FC = () => {
             style={{width: 400}}
             step="0.01"
             precision={2}
-            stringMode
           />
         </Form.Item>
         <Form.Item
@@ -176,7 +174,6 @@ const DrinkUpdate: React.FC = () => {
             style={{width: 400}}
             step="0.01"
             precision={2}
-            stringMode
           />
         </Form.Item>
         <Form.Item
@@ -188,7 +185,6 @@ const DrinkUpdate: React.FC = () => {
             style={{width: 400}}
             step="0.01"
             precision={2}
-            stringMode
           />
         </Form.Item>
         <Form.Item
@@ -200,7 +196,6 @@ const DrinkUpdate: React.FC = () => {
             style={{width: 400}}
             step="0.01"
             precision={2}
-            stringMode
           />
         </Form.Item>
         <Form.Item
@@ -212,7 +207,6 @@ const DrinkUpdate: React.FC = () => {
             style={{width: 400}}
             step="0.01"
             precision={2}
-            stringMode
           />
         </Form.Item>
         <Form.Item
@@ -224,7 +218,6 @@ const DrinkUpdate: React.FC = () => {
             style={{width: 400}}
             step="0.01"
             precision={2}
-            stringMode
           />
         </Form.Item>
         <Form.Item wrapperCol={{...layout.wrapperCol, offset: 4}}>
