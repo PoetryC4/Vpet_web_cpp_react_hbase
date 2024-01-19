@@ -242,4 +242,17 @@ declare namespace API {
     medicineId?: string;
   };
 
+  type ChatHistory = {
+    role: 'assistant' | 'user';
+    content: string
+  }
+
+  type getFileNamesUsingGetParams = {
+    targetFolder?: string
+  }
+
+  type llmChatRequest = {
+    query: string;
+    history: ChatHistory[]
+  };
 }

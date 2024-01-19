@@ -1,7 +1,7 @@
 import {useModel} from '@@/exports';
 import {useEmotionCss} from '@ant-design/use-emotion-css';
 import {history} from '@umijs/max';
-import {Button, Descriptions, DescriptionsProps, Divider, Input, message, Pagination, Result} from 'antd';
+import {Button, Col, Descriptions, DescriptionsProps, Divider, Input, message, Pagination, Result, Row} from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
 import {Table} from 'antd/lib';
@@ -13,6 +13,9 @@ import {Image} from 'antd';
 
 const handleCopyCase = (presentId: number) => {
   history.push(`/add/present?presentId=${presentId}`);
+};
+const handleAddCase = () => {
+  history.push(`/add/present`);
 };
 const handleUpdateCase = (presentId: number) => {
   history.push(`/update/present?presentId=${presentId}`);
@@ -43,7 +46,7 @@ const handleBuyPresent = (present: API.Present) => {
   console.log(present);
 }
 
-const PresentTable: React.FC = () => {
+const PresentTable: React.FC = (props) => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const {initialState, setInitialState} = useModel('@@initialState');
@@ -71,6 +74,8 @@ const PresentTable: React.FC = () => {
   if (!initialState) {
     return (<div>加载错误</div>);
   }
+
+  const tableWidth = props?.width || '60%'
 
   const getPresents = async () => {
     try {
@@ -177,17 +182,30 @@ const PresentTable: React.FC = () => {
     <div className={presentTableClass}>
       <div
         style={{
-          width: '60%',
+          width: tableWidth,
           inset: 0,
           margin: '0 auto auto auto',
         }}
       >
-        <Input
-          placeholder="搜索输入"
-          value={searchInput}
-          onChange={handleSearchChange}
-          style={{width: '30%', margin: '1% 40% 1% 10%'}}
-        />
+        <Row style={{marginTop: '20px', marginBottom: '20px'}}>
+          <Col span={8}>
+            <Input
+              placeholder="搜索输入"
+              value={searchInput}
+              onChange={handleSearchChange}
+              style={{width: '90%', margin: '1% 40% 1% 10%'}}
+            /></Col>
+          <Col span={10}/>
+          <Col span={6}>
+            <Button
+              type="primary"
+              onClick={() => handleAddCase()}
+              style={{marginLeft: 20, marginRight: 20}}
+              block
+            >
+              添加
+            </Button></Col>
+        </Row>
         <Table
           rowKey={(record) => (record.presentId || -1).toString()}
           pagination={false}
