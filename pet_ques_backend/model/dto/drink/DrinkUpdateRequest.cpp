@@ -101,6 +101,16 @@ void DrinkUpdateRequest::setProperty(const std::string &propertyName, const std:
 }
 
 DrinkUpdateRequest::DrinkUpdateRequest() {
+    DrinkUpdateRequest::drinkId = -1;
+    DrinkUpdateRequest::drinkEndu = 0;
+    DrinkUpdateRequest::drinkExp = 0;
+    DrinkUpdateRequest::drinkHealth = 0;
+    DrinkUpdateRequest::drinkHunger = 0;
+    DrinkUpdateRequest::drinkName = "";
+    DrinkUpdateRequest::drinkPrice = 0;
+    DrinkUpdateRequest::drinkThirsty = 0;
+    DrinkUpdateRequest::drinkPicPath = "";
+    DrinkUpdateRequest::drinkMood = 0;
     propertyIntegerSetters["drinkId"] = &DrinkUpdateRequest::setDrinkId;
     propertyFloatSetters["drinkPrice"] = &DrinkUpdateRequest::setDrinkPrice;
     propertyStringSetters["drinkPicPath"] = &DrinkUpdateRequest::setDrinkPicPath;
@@ -110,15 +120,42 @@ DrinkUpdateRequest::DrinkUpdateRequest() {
     propertyFloatSetters["drinkThirsty"] = &DrinkUpdateRequest::setDrinkThirsty;
     propertyFloatSetters["drinkEndu"] = &DrinkUpdateRequest::setDrinkEndu;
     propertyFloatSetters["drinkExp"] = &DrinkUpdateRequest::setDrinkExp;
-    propertyFloatSetters["drinkHealth"] = &DrinkUpdateRequest::setDrinkHealth;/*
+    propertyFloatSetters["drinkHealth"] = &DrinkUpdateRequest::setDrinkHealth;
+}
 
-    propertyFloatSetters["drinkPrice"] = &DrinkUpdateRequest::setDrinkPrice;
-    propertyStringSetters["drinkPicPath"] = &DrinkUpdateRequest::setDrinkPicPath;
-    propertyStringSetters["drinkName"] = &DrinkUpdateRequest::setDrinkName;
-    propertyFloatSetters["drinkHunger"] = &DrinkUpdateRequest::setDrinkHunger;
-    propertyFloatSetters["drinkMood"] = &DrinkUpdateRequest::setDrinkMood;
-    propertyFloatSetters["drinkThirsty"] = &DrinkUpdateRequest::setDrinkThirsty;
-    propertyFloatSetters["drinkEndu"] = &DrinkUpdateRequest::setDrinkEndu;
-    propertyFloatSetters["drinkExp"] = &DrinkUpdateRequest::setDrinkExp;
-    propertyFloatSetters["drinkHealth"] = &DrinkUpdateRequest::setDrinkHealth;*/
+std::ostream &operator<<(std::ostream &os, const DrinkUpdateRequest &drink) {
+    os << "DrinkUpdateRequest{" <<
+       "drinkPrice=" << drink.drinkPrice <<
+       ", drinkPicPath='" << drink.drinkPicPath << '\'' <<
+       ", drinkName='" << drink.drinkName << '\'' <<
+       ", drinkHunger=" << drink.drinkHunger <<
+       ", drinkMood=" << drink.drinkMood <<
+       ", drinkThirsty=" << drink.drinkThirsty <<
+       ", drinkEndu=" << drink.drinkEndu <<
+       ", drinkExp=" << drink.drinkExp <<
+       ", drinkHealth=" << drink.drinkHealth <<
+       ", drinkId=" << drink.drinkId <<
+       '}';
+    return os;
+}
+
+DrinkUpdateRequest &DrinkUpdateRequest::operator=(const DrinkUpdateRequest &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        drinkId = other.drinkId;
+        drinkPrice = other.drinkPrice;
+        drinkPicPath = other.drinkPicPath;
+        drinkName = other.drinkName;
+        drinkHunger = other.drinkHunger;
+        drinkMood = other.drinkMood;
+        drinkThirsty = other.drinkThirsty;
+        drinkEndu = other.drinkEndu;
+        drinkExp = other.drinkExp;
+        drinkHealth = other.drinkHealth;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

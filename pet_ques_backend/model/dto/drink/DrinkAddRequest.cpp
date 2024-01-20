@@ -91,6 +91,15 @@ void DrinkAddRequest::setProperty(const std::string &propertyName, const std::st
 }
 
 DrinkAddRequest::DrinkAddRequest() {
+    DrinkAddRequest::drinkEndu = 0;
+    DrinkAddRequest::drinkExp = 0;
+    DrinkAddRequest::drinkHealth = 0;
+    DrinkAddRequest::drinkHunger = 0;
+    DrinkAddRequest::drinkName = "";
+    DrinkAddRequest::drinkPrice = 0;
+    DrinkAddRequest::drinkThirsty = 0;
+    DrinkAddRequest::drinkPicPath = "";
+    DrinkAddRequest::drinkMood = 0;
     propertyFloatSetters["drinkPrice"] = &DrinkAddRequest::setDrinkPrice;
     propertyStringSetters["drinkPicPath"] = &DrinkAddRequest::setDrinkPicPath;
     propertyStringSetters["drinkName"] = &DrinkAddRequest::setDrinkName;
@@ -99,15 +108,39 @@ DrinkAddRequest::DrinkAddRequest() {
     propertyFloatSetters["drinkThirsty"] = &DrinkAddRequest::setDrinkThirsty;
     propertyFloatSetters["drinkEndu"] = &DrinkAddRequest::setDrinkEndu;
     propertyFloatSetters["drinkExp"] = &DrinkAddRequest::setDrinkExp;
-    propertyFloatSetters["drinkHealth"] = &DrinkAddRequest::setDrinkHealth;/*
+    propertyFloatSetters["drinkHealth"] = &DrinkAddRequest::setDrinkHealth;
+}
 
-    propertyFloatSetters["drinkPrice"] = &DrinkAddRequest::setDrinkPrice;
-    propertyStringSetters["drinkPicPath"] = &DrinkAddRequest::setDrinkPicPath;
-    propertyStringSetters["drinkName"] = &DrinkAddRequest::setDrinkName;
-    propertyFloatSetters["drinkHunger"] = &DrinkAddRequest::setDrinkHunger;
-    propertyFloatSetters["drinkMood"] = &DrinkAddRequest::setDrinkMood;
-    propertyFloatSetters["drinkThirsty"] = &DrinkAddRequest::setDrinkThirsty;
-    propertyFloatSetters["drinkEndu"] = &DrinkAddRequest::setDrinkEndu;
-    propertyFloatSetters["drinkExp"] = &DrinkAddRequest::setDrinkExp;
-    propertyFloatSetters["drinkHealth"] = &DrinkAddRequest::setDrinkHealth;*/
+std::ostream &operator<<(std::ostream &os, const DrinkAddRequest &drink)  {
+    os << "DrinkAddRequest{" <<
+       "drinkPrice=" << drink.drinkPrice <<
+       ", drinkPicPath='" << drink.drinkPicPath << '\'' <<
+       ", drinkName='" << drink.drinkName << '\'' <<
+       ", drinkHunger=" << drink.drinkHunger <<
+       ", drinkMood=" << drink.drinkMood <<
+       ", drinkThirsty=" << drink.drinkThirsty <<
+       ", drinkEndu=" << drink.drinkEndu <<
+       ", drinkExp=" << drink.drinkExp <<
+       ", drinkHealth=" << drink.drinkHealth <<
+       '}';
+    return os;
+}
+
+DrinkAddRequest &DrinkAddRequest::operator=(const DrinkAddRequest &other) {// 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        drinkPrice = other.drinkPrice;
+        drinkPicPath = other.drinkPicPath;
+        drinkName = other.drinkName;
+        drinkHunger = other.drinkHunger;
+        drinkMood = other.drinkMood;
+        drinkThirsty = other.drinkThirsty;
+        drinkEndu = other.drinkEndu;
+        drinkExp = other.drinkExp;
+        drinkHealth = other.drinkHealth;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

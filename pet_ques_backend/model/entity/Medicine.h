@@ -40,6 +40,8 @@ public:
         };
     }
 
+    Medicine& operator=(const Medicine& other);
+
     const int &getMedicineId() const;
     void setMedicineId(const int &medicineId);
 

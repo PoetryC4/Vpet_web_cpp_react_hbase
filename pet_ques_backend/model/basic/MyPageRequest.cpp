@@ -28,7 +28,28 @@ void MyPageRequest::setProperty(const std::string &propertyName, const std::stri
     }
 }
 
-MyPageRequest::MyPageRequest() {
+MyPageRequest::MyPageRequest() : page(1), pageSize(2) {
     propertyIntSetters["page"] = &MyPageRequest::setPage;
     propertyIntSetters["pageSize"] = &MyPageRequest::setPageSize;
+}
+
+std::ostream &operator<<(std::ostream &os, const MyPageRequest &drink)  {
+    os << "MyPageRequest{" <<
+       "page=" << drink.page <<
+       ", pageSize='" << drink.pageSize << '\'' <<
+       '}';
+    return os;
+}
+
+MyPageRequest& MyPageRequest::operator=(const MyPageRequest& other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话），在这个类的情况下并没有资源需要释放
+
+        // 3. 复制参数对象的值
+        page = other.page;
+        pageSize = other.pageSize;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

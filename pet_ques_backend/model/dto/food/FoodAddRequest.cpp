@@ -92,6 +92,15 @@ void FoodAddRequest::setProperty(const std::string &propertyName, const std::str
 }
 
 FoodAddRequest::FoodAddRequest() {
+    FoodAddRequest::foodEndu = 0;
+    FoodAddRequest::foodExp = 0;
+    FoodAddRequest::foodHealth = 0;
+    FoodAddRequest::foodHunger = 0;
+    FoodAddRequest::foodName = "";
+    FoodAddRequest::foodPrice = 0;
+    FoodAddRequest::foodThirsty = 0;
+    FoodAddRequest::foodPicPath = "";
+    FoodAddRequest::foodMood = 0;
     propertyFloatSetters["foodPrice"] = &FoodAddRequest::setFoodPrice;
     propertyStringSetters["foodPicPath"] = &FoodAddRequest::setFoodPicPath;
     propertyStringSetters["foodName"] = &FoodAddRequest::setFoodName;
@@ -101,4 +110,38 @@ FoodAddRequest::FoodAddRequest() {
     propertyFloatSetters["foodEndu"] = &FoodAddRequest::setFoodEndu;
     propertyFloatSetters["foodExp"] = &FoodAddRequest::setFoodExp;
     propertyFloatSetters["foodHealth"] = &FoodAddRequest::setFoodHealth;
+}
+
+std::ostream& operator<<(std::ostream& os, const FoodAddRequest& food) {
+    os << "FoodAddRequest{" <<
+       "foodPrice=" << food.foodPrice <<
+       ", foodPicPath='" << food.foodPicPath << '\'' <<
+       ", foodName='" << food.foodName << '\'' <<
+       ", foodHunger=" << food.foodHunger <<
+       ", foodMood=" << food.foodMood <<
+       ", foodThirsty=" << food.foodThirsty <<
+       ", foodEndu=" << food.foodEndu <<
+       ", foodExp=" << food.foodExp <<
+       ", foodHealth=" << food.foodHealth <<
+       '}';
+    return os;
+}
+
+FoodAddRequest &FoodAddRequest::operator=(const FoodAddRequest &other) {// 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        foodPrice = other.foodPrice;
+        foodPicPath = other.foodPicPath;
+        foodName = other.foodName;
+        foodHunger = other.foodHunger;
+        foodMood = other.foodMood;
+        foodThirsty = other.foodThirsty;
+        foodEndu = other.foodEndu;
+        foodExp = other.foodExp;
+        foodHealth = other.foodHealth;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

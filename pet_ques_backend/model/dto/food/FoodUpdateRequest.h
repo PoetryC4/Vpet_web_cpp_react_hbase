@@ -29,21 +29,8 @@ public:
 
     FoodUpdateRequest();
 
-    friend std::ostream &operator<<(std::ostream &os, const FoodUpdateRequest &food) {
-        os << "FoodUpdateRequest{" <<
-           "foodPrice=" << food.foodPrice <<
-           ", foodPicPath='" << food.foodPicPath << '\'' <<
-           ", foodName='" << food.foodName << '\'' <<
-           ", foodHunger=" << food.foodHunger <<
-           ", foodMood=" << food.foodMood <<
-           ", foodThirsty=" << food.foodThirsty <<
-           ", foodEndu=" << food.foodEndu <<
-           ", foodExp=" << food.foodExp <<
-           ", foodHealth=" << food.foodHealth <<
-           ", foodId=" << food.foodId <<
-           '}';
-        return os;
-    }
+    friend std::ostream &operator<<(std::ostream &os, const FoodUpdateRequest &food);
+    FoodUpdateRequest& operator=(const FoodUpdateRequest& other);
 
     int getFoodId() const;
 

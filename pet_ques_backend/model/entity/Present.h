@@ -38,6 +38,8 @@ public:
         };
     }
 
+    Present& operator=(const Present& other);
+
     const int &getPresentId() const;
     void setPresentId(const int &presentId);
 

@@ -67,10 +67,45 @@ void PresentAddRequest::setProperty(const std::string &propertyName, const std::
 }
 
 PresentAddRequest::PresentAddRequest() {
+    PresentAddRequest::presentExp = 0;
+    PresentAddRequest::presentPerformance = 0;
+    PresentAddRequest::presentName = "";
+    PresentAddRequest::presentPrice = 0;
+    PresentAddRequest::presentPicPath = "";
+    PresentAddRequest::presentMood = 0;
     propertyFloatSetters["presentPrice"] = &PresentAddRequest::setPresentPrice;
     propertyStringSetters["presentPicPath"] = &PresentAddRequest::setPresentPicPath;
     propertyStringSetters["presentName"] = &PresentAddRequest::setPresentName;
     propertyFloatSetters["presentMood"] = &PresentAddRequest::setPresentMood;
     propertyFloatSetters["presentExp"] = &PresentAddRequest::setPresentExp;
     propertyFloatSetters["presentPerformance"] = &PresentAddRequest::setPresentPerformance;
+}
+
+std::ostream& operator<<(std::ostream& os, const PresentAddRequest& present) {
+    os << "PresentAddRequest{" <<
+       "presentPrice=" << present.presentPrice <<
+       ", presentPicPath='" << present.presentPicPath << '\'' <<
+       ", presentName='" << present.presentName << '\'' <<
+       ", presentMood=" << present.presentMood <<
+       ", presentExp=" << present.presentExp <<
+       ", presentPerformance=" << present.presentPerformance <<
+       '}';
+    return os;
+}
+
+PresentAddRequest &PresentAddRequest::operator=(const PresentAddRequest &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        presentPrice = other.presentPrice;
+        presentPicPath = other.presentPicPath;
+        presentName = other.presentName;
+        presentMood = other.presentMood;
+        presentExp = other.presentExp;
+        presentPerformance = other.presentPerformance;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

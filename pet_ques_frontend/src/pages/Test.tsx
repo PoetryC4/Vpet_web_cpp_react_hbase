@@ -1,9 +1,10 @@
 import {useModel} from '@umijs/max';
-import {theme, Typography} from 'antd';
+import {Button, theme, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {getAllDrinkUsingGet} from "@/services/pet_ques/drinkController";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/skeleton/Paragraph";
+import {tryGetNum, trySetNum} from "@/components/test";
 
 /**
  * 每个单独的卡片，为了复用样式抽成了组件
@@ -11,34 +12,34 @@ import Paragraph from "antd/es/skeleton/Paragraph";
  * @returns
  */
 
+export const getNum = {
+  value: () => {
+    return -1;
+  }
+}
+export const changeNum = {
+  value: (value: number) => {
+    console.log("changeNum")
+  }
+}
+
 const Test: React.FC = () => {
   const {token} = theme.useToken();
   const {initialState} = useModel('@@initialState');
-  const [flag, setFlag] = useState(false);
-  const [drinkData, setDrinkData] = useState([]);
 
-  const getInfo = async () => {
-    const res = await getAllDrinkUsingGet();
-    console.log(res);
-    if (res != null) {
-      setFlag(true);
-      setDrinkData(res);
-    }
+  const [num, setNum] = useState(1)
+
+  getNum.value = () => {
+    return num
+  }
+  changeNum.value = (value: number) => {
+    setNum(value)
   }
 
-
-  useEffect(() => {
-    getInfo();
-  }, [flag]);
   return (
     <div>
-      {drinkData.map((drink, index) => (
-        <div key={index}>
-          <h2>{drink.drinkName}</h2>
-          <p>Price: {drink.drinkPrice}</p>
-          {/* Add other properties as needed */}
-        </div>
-      ))}
+      <Button onClick={tryGetNum}>获取</Button>
+      <Button onClick={trySetNum}>设置随机值</Button>
     </div>
   );
 };

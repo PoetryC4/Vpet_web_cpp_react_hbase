@@ -79,6 +79,13 @@ void Present::setProperty(const std::string &propertyName, const std::string &va
 }
 
 Present::Present() {
+    Present::presentId = -1;
+    Present::presentExp = 0;
+    Present::presentPerformance = 0;
+    Present::presentName = "";
+    Present::presentPrice = 0;
+    Present::presentPicPath = "";
+    Present::presentMood = 0;
     propertyIntegerSetters["presentId"] = &Present::setPresentId;
     propertyFloatSetters["presentPrice"] = &Present::setPresentPrice;
     propertyStringSetters["presentPicPath"] = &Present::setPresentPicPath;
@@ -86,4 +93,22 @@ Present::Present() {
     propertyFloatSetters["presentMood"] = &Present::setPresentMood;
     propertyFloatSetters["presentExp"] = &Present::setPresentExp;
     propertyFloatSetters["presentPerformance"] = &Present::setPresentPerformance;
+}
+
+Present &Present::operator=(const Present &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        presentId = other.presentId;
+        presentPrice = other.presentPrice;
+        presentPicPath = other.presentPicPath;
+        presentName = other.presentName;
+        presentMood = other.presentMood;
+        presentExp = other.presentExp;
+        presentPerformance = other.presentPerformance;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

@@ -42,10 +42,6 @@ const getExpandInfo = (record: API.Present) => {
   ]);
 }
 
-const handleBuyPresent = (present: API.Present) => {
-  console.log(present);
-}
-
 const PresentTable: React.FC = (props) => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
@@ -74,6 +70,10 @@ const PresentTable: React.FC = (props) => {
   if (!initialState) {
     return (<div>加载错误</div>);
   }
+
+  const handleBuyPresent = (props?.handleBuyPresent || ((present: API.Present) => {
+    console.log(present);
+  }))
 
   const tableWidth = props?.width || '60%'
 

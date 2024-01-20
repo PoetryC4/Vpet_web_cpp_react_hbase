@@ -65,6 +65,8 @@ set(SOURCES
         service/PresentService.h
         controller/PresentController.cpp
         controller/PresentController.h
+        controller/OtherInteractionController.cpp
+        controller/OtherInteractionController.h
 )
 
 # 添加可执行文件

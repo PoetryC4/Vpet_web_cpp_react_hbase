@@ -27,19 +27,8 @@ public:
 
     MedicineUpdateRequest();
 
-    friend std::ostream &operator<<(std::ostream &os, const MedicineUpdateRequest &medicine) {
-        os << "MedicineUpdateRequest{" <<
-           "medicinePrice=" << medicine.medicinePrice <<
-           ", medicinePicPath='" << medicine.medicinePicPath << '\'' <<
-           ", medicineName='" << medicine.medicineName << '\'' <<
-           ", medicineMood=" << medicine.medicineMood <<
-           ", medicineEndu=" << medicine.medicineEndu <<
-           ", medicineExp=" << medicine.medicineExp <<
-           ", medicineHealth=" << medicine.medicineHealth <<
-           ", medicineId=" << medicine.medicineId <<
-           '}';
-        return os;
-    }
+    friend std::ostream &operator<<(std::ostream &os, const MedicineUpdateRequest &medicine);
+    MedicineUpdateRequest& operator=(const MedicineUpdateRequest& other);
 
     int getMedicineId() const;
 

@@ -101,6 +101,16 @@ void FoodUpdateRequest::setProperty(const std::string &propertyName, const std::
 }
 
 FoodUpdateRequest::FoodUpdateRequest() {
+    FoodUpdateRequest::foodId = -1;
+    FoodUpdateRequest::foodEndu = 0;
+    FoodUpdateRequest::foodExp = 0;
+    FoodUpdateRequest::foodHealth = 0;
+    FoodUpdateRequest::foodHunger = 0;
+    FoodUpdateRequest::foodName = "";
+    FoodUpdateRequest::foodPrice = 0;
+    FoodUpdateRequest::foodThirsty = 0;
+    FoodUpdateRequest::foodPicPath = "";
+    FoodUpdateRequest::foodMood = 0;
     propertyIntegerSetters["foodId"] = &FoodUpdateRequest::setFoodId;
     propertyFloatSetters["foodPrice"] = &FoodUpdateRequest::setFoodPrice;
     propertyStringSetters["foodPicPath"] = &FoodUpdateRequest::setFoodPicPath;
@@ -110,15 +120,42 @@ FoodUpdateRequest::FoodUpdateRequest() {
     propertyFloatSetters["foodThirsty"] = &FoodUpdateRequest::setFoodThirsty;
     propertyFloatSetters["foodEndu"] = &FoodUpdateRequest::setFoodEndu;
     propertyFloatSetters["foodExp"] = &FoodUpdateRequest::setFoodExp;
-    propertyFloatSetters["foodHealth"] = &FoodUpdateRequest::setFoodHealth;/*
+    propertyFloatSetters["foodHealth"] = &FoodUpdateRequest::setFoodHealth;
+}
 
-    propertyFloatSetters["foodPrice"] = &FoodUpdateRequest::setFoodPrice;
-    propertyStringSetters["foodPicPath"] = &FoodUpdateRequest::setFoodPicPath;
-    propertyStringSetters["foodName"] = &FoodUpdateRequest::setFoodName;
-    propertyFloatSetters["foodHunger"] = &FoodUpdateRequest::setFoodHunger;
-    propertyFloatSetters["foodMood"] = &FoodUpdateRequest::setFoodMood;
-    propertyFloatSetters["foodThirsty"] = &FoodUpdateRequest::setFoodThirsty;
-    propertyFloatSetters["foodEndu"] = &FoodUpdateRequest::setFoodEndu;
-    propertyFloatSetters["foodExp"] = &FoodUpdateRequest::setFoodExp;
-    propertyFloatSetters["foodHealth"] = &FoodUpdateRequest::setFoodHealth;*/
+std::ostream &operator<<(std::ostream &os, const FoodUpdateRequest &food) {
+    os << "FoodUpdateRequest{" <<
+       "foodPrice=" << food.foodPrice <<
+       ", foodPicPath='" << food.foodPicPath << '\'' <<
+       ", foodName='" << food.foodName << '\'' <<
+       ", foodHunger=" << food.foodHunger <<
+       ", foodMood=" << food.foodMood <<
+       ", foodThirsty=" << food.foodThirsty <<
+       ", foodEndu=" << food.foodEndu <<
+       ", foodExp=" << food.foodExp <<
+       ", foodHealth=" << food.foodHealth <<
+       ", foodId=" << food.foodId <<
+       '}';
+    return os;
+}
+
+FoodUpdateRequest &FoodUpdateRequest::operator=(const FoodUpdateRequest &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        foodId = other.foodId;
+        foodPrice = other.foodPrice;
+        foodPicPath = other.foodPicPath;
+        foodName = other.foodName;
+        foodHunger = other.foodHunger;
+        foodMood = other.foodMood;
+        foodThirsty = other.foodThirsty;
+        foodEndu = other.foodEndu;
+        foodExp = other.foodExp;
+        foodHealth = other.foodHealth;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

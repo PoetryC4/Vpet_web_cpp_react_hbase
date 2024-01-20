@@ -19,7 +19,6 @@ private:
     std::string presentPicPath;
     std::string presentName;
     float presentMood;
-    float presentEndu;
     float presentExp;
     float presentPerformance;
 
@@ -27,18 +26,8 @@ public:
 
     PresentUpdateRequest();
 
-    friend std::ostream &operator<<(std::ostream &os, const PresentUpdateRequest &present) {
-        os << "PresentUpdateRequest{" <<
-           "presentPrice=" << present.presentPrice <<
-           ", presentPicPath='" << present.presentPicPath << '\'' <<
-           ", presentName='" << present.presentName << '\'' <<
-           ", presentMood=" << present.presentMood <<
-           ", presentExp=" << present.presentExp <<
-           ", presentPerformance=" << present.presentPerformance <<
-           ", presentId=" << present.presentId <<
-           '}';
-        return os;
-    }
+    friend std::ostream &operator<<(std::ostream &os, const PresentUpdateRequest &present);
+    PresentUpdateRequest& operator=(const PresentUpdateRequest& other);
 
     int getPresentId() const;
 

@@ -13,20 +13,15 @@
 
 class MyPageRequest {
 private:
-    int page;
-    int pageSize;
+    int page{};
+    int pageSize{};
 
 public:
 
     MyPageRequest();
 
-    friend std::ostream& operator<<(std::ostream& os, const MyPageRequest& drink) {
-        os << "MyPageRequest{" <<
-           "page=" << drink.page <<
-           ", pageSize='" << drink.pageSize << '\'' <<
-           '}';
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const MyPageRequest& drink);
+    MyPageRequest& operator=(const MyPageRequest& other);
 
     int getPage() const;
     void setPage(int page);

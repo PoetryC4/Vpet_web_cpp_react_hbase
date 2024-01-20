@@ -27,20 +27,8 @@ public:
 
     DrinkAddRequest();
 
-    friend std::ostream& operator<<(std::ostream& os, const DrinkAddRequest& drink) {
-        os << "DrinkAddRequest{" <<
-           "drinkPrice=" << drink.drinkPrice <<
-           ", drinkPicPath='" << drink.drinkPicPath << '\'' <<
-           ", drinkName='" << drink.drinkName << '\'' <<
-           ", drinkHunger=" << drink.drinkHunger <<
-           ", drinkMood=" << drink.drinkMood <<
-           ", drinkThirsty=" << drink.drinkThirsty <<
-           ", drinkEndu=" << drink.drinkEndu <<
-           ", drinkExp=" << drink.drinkExp <<
-           ", drinkHealth=" << drink.drinkHealth <<
-           '}';
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const DrinkAddRequest& drink);
+    DrinkAddRequest& operator=(const DrinkAddRequest& other);
 
     float getDrinkPrice() const;
     void setDrinkPrice(float drinkPrice);

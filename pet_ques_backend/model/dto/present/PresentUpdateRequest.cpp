@@ -77,6 +77,13 @@ void PresentUpdateRequest::setProperty(const std::string &propertyName, const st
 }
 
 PresentUpdateRequest::PresentUpdateRequest() {
+    PresentUpdateRequest::presentId = -1;
+    PresentUpdateRequest::presentExp = 0;
+    PresentUpdateRequest::presentPerformance = 0;
+    PresentUpdateRequest::presentName = "";
+    PresentUpdateRequest::presentPrice = 0;
+    PresentUpdateRequest::presentPicPath = "";
+    PresentUpdateRequest::presentMood = 0;
     propertyIntegerSetters["presentId"] = &PresentUpdateRequest::setPresentId;
     propertyFloatSetters["presentPrice"] = &PresentUpdateRequest::setPresentPrice;
     propertyStringSetters["presentPicPath"] = &PresentUpdateRequest::setPresentPicPath;
@@ -84,5 +91,35 @@ PresentUpdateRequest::PresentUpdateRequest() {
     propertyFloatSetters["presentMood"] = &PresentUpdateRequest::setPresentMood;
     propertyFloatSetters["presentExp"] = &PresentUpdateRequest::setPresentExp;
     propertyFloatSetters["presentPerformance"] = &PresentUpdateRequest::setPresentPerformance;
+}
 
+std::ostream &operator<<(std::ostream &os, const PresentUpdateRequest &present) {
+    os << "PresentUpdateRequest{" <<
+       "presentPrice=" << present.presentPrice <<
+       ", presentPicPath='" << present.presentPicPath << '\'' <<
+       ", presentName='" << present.presentName << '\'' <<
+       ", presentMood=" << present.presentMood <<
+       ", presentExp=" << present.presentExp <<
+       ", presentPerformance=" << present.presentPerformance <<
+       ", presentId=" << present.presentId <<
+       '}';
+    return os;
+}
+
+PresentUpdateRequest &PresentUpdateRequest::operator=(const PresentUpdateRequest &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        presentId = other.presentId;
+        presentPrice = other.presentPrice;
+        presentPicPath = other.presentPicPath;
+        presentName = other.presentName;
+        presentMood = other.presentMood;
+        presentExp = other.presentExp;
+        presentPerformance = other.presentPerformance;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

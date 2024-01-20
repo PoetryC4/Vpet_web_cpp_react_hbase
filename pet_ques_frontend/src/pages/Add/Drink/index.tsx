@@ -23,7 +23,6 @@ const validateMessages = {
 /* eslint-enable no-template-curly-in-string */
 
 const DrinkAdd: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const {initialState, setInitialState} = useModel('@@initialState');
   const chartAddClass = useEmotionCss(() => {

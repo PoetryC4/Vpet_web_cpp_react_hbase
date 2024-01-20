@@ -10,6 +10,7 @@
 class StrUtils {
 public:
     static std::string toCamelCase(const std::string& input);
+    static void replaceAll(std::string& str, const std::string& from, const std::string& to);
 };
 
 

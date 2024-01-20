@@ -25,17 +25,8 @@ public:
 
     PresentAddRequest();
 
-    friend std::ostream& operator<<(std::ostream& os, const PresentAddRequest& present) {
-        os << "PresentAddRequest{" <<
-           "presentPrice=" << present.presentPrice <<
-           ", presentPicPath='" << present.presentPicPath << '\'' <<
-           ", presentName='" << present.presentName << '\'' <<
-           ", presentMood=" << present.presentMood <<
-           ", presentExp=" << present.presentExp <<
-           ", presentPerformance=" << present.presentPerformance <<
-           '}';
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const PresentAddRequest& present);
+    PresentAddRequest& operator=(const PresentAddRequest& other);
 
     float getPresentPrice() const;
     void setPresentPrice(float presentPrice);

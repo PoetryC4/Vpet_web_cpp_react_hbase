@@ -1,17 +1,15 @@
-import {useState} from "react";
-import {
-  animationTimestamp,
-  durDebug, imgSize,
-  isLaunched, petBackLayStyle, petFrontLayStyle, petItemLayStyle, petLeftMargin, petTopMargin,
-  setAnimationTimestamp, setPetBackLayImgUrl, setPetBackLayStyle,
-  setPetFrontLayImgUrl, setPetFrontLayStyle, setPetItemLayImgUrl, setPetItemLayStyle, setPetLeftMargin, setPetTopMargin
-} from "../Entity/petStateProperty";
 import {getAllImgsNames, getCurTime} from "@/components/Utils/utils";
 import {sleep} from "@antfu/utils";
 import {animationGap, debugSleep, imgUrlPrefix} from "@/components/Entity/petConstants";
+import {
+  animationTimestamp,
+  durDebug,
+  imgSize,
+  isLaunched, petLeftMargin, petTopMargin,
+  setAnimationTimestamp, setItemTransformScale, setPetLeftMargin, setPetTopMargin
+} from "@/components/Entity/petStateProperty";
 import {curAnimation} from "@/components/Entity/petProperty";
-
-export const [itemTransformScale, setItemTransformScale] = useState(0.005)
+import {hooksToBeExported} from "@/pages/Pet/Display";
 
 export const itemTransformDataIdx = {
   drinkHappyIdx: 0,
@@ -24,6 +22,7 @@ export const itemTransformDataIdx = {
   giftNormalIdx: 7,
   giftPoorConditionIdx: 8,
 }
+// 物品的变换参数
 export const itemTransformData = [
   [
     // x, y, rotation
@@ -137,18 +136,18 @@ export const itemTransformData = [
 ]
 
 export async function petAnimation(path: string, isDebug: boolean) {
-  if (!isLaunched || (durDebug && !isDebug)) return
+  if (!isLaunched.value || (durDebug.value && !isDebug)) return
   //console.log(path)
-  let allFrontLayImgs = await getAllImgsNames(path)
-  if (!allFrontLayImgs) return
-  //console.log(allFrontLayImgs)
+  let allBackLayImgs = await getAllImgsNames(path)
+  if (!allBackLayImgs) return
+  console.log(allBackLayImgs)
   setAnimationTimestamp(getCurTime())
-  let curAnimationTimestamp = animationTimestamp
-  for (let imgName in allFrontLayImgs) {
-    if (!isLaunched || (durDebug && !isDebug)) return
+  let thisAnimationTimestamp = animationTimestamp.value
+  for (let imgName of allBackLayImgs) {
+    if (!isLaunched.value || (durDebug.value && !isDebug)) return
     // 另一个动画开始后，当前动画结束
-    if (curAnimationTimestamp !== animationTimestamp) break
-    setPetFrontLayImgUrl(imgUrlPrefix + path + imgName)
+    if (thisAnimationTimestamp !== animationTimestamp.value) break
+    hooksToBeExported.trySetPetBackLayImgUrl(imgUrlPrefix + path + '/' + imgName)
     await sleep(animationGap)
   }
   if (isDebug) {
@@ -157,44 +156,52 @@ export async function petAnimation(path: string, isDebug: boolean) {
 }
 
 export async function petAnimation3layers(charPath: string, itemPath: string, startIndex: number, itemTransformIndex: number, isDebug: boolean) {
-  if (!isLaunched || (durDebug && !isDebug)) return
+  if (!isLaunched.value || (durDebug.value && !isDebug)) return
   // 180是试出来的值
-  setItemTransformScale(180 / imgSize)
-  let allBackLayImgs: string[] = await getAllImgsNames(charPath + '/back_lay')
+  setItemTransformScale(180 / imgSize.value)
+  let allBackLayImgs = await getAllImgsNames(charPath + '/back_lay')
   if (!allBackLayImgs) return
-  let allFrontLayImgs: string[] = await getAllImgsNames(charPath + '/front_lay')
+  let allFrontLayImgs = await getAllImgsNames(charPath + '/front_lay')
   if (!allFrontLayImgs) return
 
-  setPetFrontLayStyle({...petFrontLayStyle, marginLeft: petLeftMargin + 'px', marginTop: petTopMargin + 'px'})
-  setPetItemLayStyle({...petItemLayStyle, marginLeft: petLeftMargin + 'px', marginTop: petTopMargin + 'px'})
+  hooksToBeExported.trySetPetFrontLayStyle({
+    ...(hooksToBeExported.tryGetPetFrontLayStyle()),
+    marginLeft: petLeftMargin.value + 'px',
+    marginTop: petTopMargin.value + 'px'
+  })
+  hooksToBeExported.trySetPetItemLayStyle({
+    ...(hooksToBeExported.tryGetPetItemLayStyle()),
+    marginLeft: petLeftMargin.value + 'px',
+    marginTop: petTopMargin.value + 'px'
+  })
 
   setAnimationTimestamp(getCurTime())
-  let curAnimationTimestamp = animationTimestamp
+  let thisAnimationTimestamp = animationTimestamp.value
   for (let i = 0; i < allBackLayImgs.length; i++) {
-    if (!isLaunched || (durDebug && !isDebug)) return
+    if (!isLaunched.value || (durDebug.value && !isDebug)) return
     // 另一个动画开始后，当前动画结束
-    if (curAnimationTimestamp !== animationTimestamp) break
-    setPetBackLayImgUrl(imgUrlPrefix + charPath + allBackLayImgs[i])
+    if (thisAnimationTimestamp !== animationTimestamp.value) break
+    hooksToBeExported.trySetPetBackLayImgUrl(imgUrlPrefix + charPath + '/' + allBackLayImgs[i])
     // 处理前置层和物品图层
     if (i >= startIndex && i < startIndex + allFrontLayImgs.length) {
-      setPetFrontLayStyle({...petFrontLayStyle, display: 'block'})
-      setPetFrontLayImgUrl(imgUrlPrefix + charPath + allFrontLayImgs[i - startIndex])
+      hooksToBeExported.trySetPetFrontLayStyle({...(hooksToBeExported.tryGetPetFrontLayStyle()), display: 'block'})
+      hooksToBeExported.trySetPetFrontLayImgUrl(imgUrlPrefix + charPath + '/' + allFrontLayImgs[i - startIndex])
       if (itemTransformData[itemTransformIndex][i - startIndex][0] !== 1024) {
-        setPetItemLayStyle({
-          ...petItemLayStyle,
+        hooksToBeExported.trySetPetItemLayStyle({
+          ...(hooksToBeExported.tryGetPetItemLayStyle()),
           display: 'block',
           transform: 'scale(0.16) rotate(' + itemTransformData[itemTransformIndex][i - startIndex][2] + 'deg) translateX(' + itemTransformData[itemTransformIndex][i - startIndex][0] + 'px) translateY(' + itemTransformData[itemTransformIndex][i - startIndex][1] + 'px)'
         })
       }
-      setPetItemLayImgUrl(imgUrlPrefix + itemPath)
+      hooksToBeExported.trySetPetItemLayImgUrl(imgUrlPrefix + '/' + itemPath)
     } else {
-      setPetFrontLayStyle({...petFrontLayStyle, display: 'none'})
-      setPetItemLayStyle({...petItemLayStyle, display: 'none'})
+      hooksToBeExported.trySetPetFrontLayStyle({...(hooksToBeExported.tryGetPetFrontLayStyle()), display: 'none'})
+      hooksToBeExported.trySetPetItemLayStyle({...(hooksToBeExported.tryGetPetItemLayStyle()), display: 'none'})
     }
     await sleep(animationGap)
   }
-  setPetFrontLayStyle({...petFrontLayStyle, display: 'none'})
-  setPetItemLayStyle({...petItemLayStyle, display: 'none'})
+  hooksToBeExported.trySetPetFrontLayStyle({...(hooksToBeExported.tryGetPetFrontLayStyle()), display: 'none'})
+  hooksToBeExported.trySetPetItemLayStyle({...(hooksToBeExported.tryGetPetItemLayStyle()), display: 'none'})
   if (isDebug) {
     await sleep(debugSleep)
   }
@@ -202,26 +209,30 @@ export async function petAnimation3layers(charPath: string, itemPath: string, st
 
 
 export async function petMovementAnimation_B(path: string, speed: number, direction: string, target: number, startX: number, startY: number, isDebug: boolean) {
-  if (!isLaunched || (durDebug && !isDebug)) return
+  if (!isLaunched.value || (durDebug.value && !isDebug)) return
   console.log(path)
-  if (curAnimation === 'Raise') return
-  let allFrontLayImgs: string[] = await getAllImgsNames(path)
+
+  if (curAnimation.value === 'Raise') return
+  let allFrontLayImgs = await getAllImgsNames(path)
   if (!allFrontLayImgs) return
   setAnimationTimestamp(getCurTime())
-  let curAnimationTimestamp = animationTimestamp
+  let thisAnimationTimestamp = animationTimestamp.value
   switch (direction) {
     case 'R':
     case 'r': {
-      while (petLeftMargin + imgSize / 2 < target) {
-        if (!isLaunched || (durDebug && !isDebug)) return
-        if (curAnimationTimestamp !== animationTimestamp) break
+      while (petLeftMargin.value + imgSize.value / 2 < target) {
+        if (!isLaunched.value || (durDebug.value && !isDebug)) return
+        if (thisAnimationTimestamp !== animationTimestamp.value) break
         for (let i = 0; i < allFrontLayImgs.length; i++) {
-          if (curAnimationTimestamp !== animationTimestamp) break
-          let newLeftMargin = petLeftMargin + speed
+          if (thisAnimationTimestamp !== animationTimestamp.value) break
+          let newLeftMargin = petLeftMargin.value + speed
           setPetLeftMargin(newLeftMargin)
-          setPetBackLayStyle({...petBackLayStyle, marginLeft: newLeftMargin + 'px'})
-          if (petLeftMargin + imgSize / 2 >= target) break
-          setPetFrontLayImgUrl(imgUrlPrefix + path + allFrontLayImgs[i])
+          hooksToBeExported.trySetPetBackLayStyle({
+            ...(hooksToBeExported.tryGetPetBackLayStyle()),
+            marginLeft: newLeftMargin + 'px'
+          })
+          if (petLeftMargin.value + imgSize.value / 2 >= target) break
+          hooksToBeExported.trySetPetFrontLayImgUrl(imgUrlPrefix + path + '/' + allFrontLayImgs[i])
           await sleep(animationGap)
         }
       }
@@ -229,16 +240,19 @@ export async function petMovementAnimation_B(path: string, speed: number, direct
     }
     case 'L':
     case 'l': {
-      while (petLeftMargin + imgSize / 2 > target) {
-        if (!isLaunched || (durDebug && !isDebug)) return
-        if (curAnimationTimestamp !== animationTimestamp) break
+      while (petLeftMargin.value + imgSize.value / 2 > target) {
+        if (!isLaunched.value || (durDebug.value && !isDebug)) return
+        if (thisAnimationTimestamp !== animationTimestamp.value) break
         for (let i = 0; i < allFrontLayImgs.length; i++) {
-          if (curAnimationTimestamp !== animationTimestamp) break
-          let newLeftMargin = petLeftMargin - speed
+          if (thisAnimationTimestamp !== animationTimestamp.value) break
+          let newLeftMargin = petLeftMargin.value - speed
           setPetLeftMargin(newLeftMargin)
-          setPetBackLayStyle({...petBackLayStyle, marginLeft: newLeftMargin + 'px'})
-          if (petLeftMargin + imgSize / 2 <= target) break
-          setPetFrontLayImgUrl(imgUrlPrefix + path + allFrontLayImgs[i])
+          hooksToBeExported.trySetPetBackLayStyle({
+            ...(hooksToBeExported.tryGetPetBackLayStyle()),
+            marginLeft: newLeftMargin + 'px'
+          })
+          if (petLeftMargin.value + imgSize.value / 2 <= target) break
+          hooksToBeExported.trySetPetFrontLayImgUrl(imgUrlPrefix + path + '/' + allFrontLayImgs[i])
           await sleep(animationGap)
         }
       }
@@ -246,16 +260,19 @@ export async function petMovementAnimation_B(path: string, speed: number, direct
     }
     case 'D':
     case 'd': {
-      while (petTopMargin + imgSize / 2 < target) {
-        if (!isLaunched || (durDebug && !isDebug)) return
-        if (curAnimationTimestamp !== animationTimestamp) break
+      while (petTopMargin.value + imgSize.value / 2 < target) {
+        if (!isLaunched.value || (durDebug.value && !isDebug)) return
+        if (thisAnimationTimestamp !== animationTimestamp.value) break
         for (let i = 0; i < allFrontLayImgs.length; i++) {
-          if (curAnimationTimestamp !== animationTimestamp) break
-          let newTopMargin = petTopMargin + speed
+          if (thisAnimationTimestamp !== animationTimestamp.value) break
+          let newTopMargin = petTopMargin.value + speed
           setPetTopMargin(newTopMargin)
-          setPetBackLayStyle({...petBackLayStyle, marginTop: newTopMargin + 'px'})
-          if (petTopMargin + imgSize / 2 >= target) break
-          setPetFrontLayImgUrl(imgUrlPrefix + path + allFrontLayImgs[i])
+          hooksToBeExported.trySetPetBackLayStyle({
+            ...(hooksToBeExported.tryGetPetBackLayStyle()),
+            marginTop: newTopMargin + 'px'
+          })
+          if (petTopMargin.value + imgSize.value / 2 >= target) break
+          hooksToBeExported.trySetPetFrontLayImgUrl(imgUrlPrefix + path + '/' + allFrontLayImgs[i])
           await sleep(animationGap)
         }
       }
@@ -263,16 +280,19 @@ export async function petMovementAnimation_B(path: string, speed: number, direct
     }
     case 'U':
     case 'u': {
-      while (petTopMargin + imgSize / 2 > target) {
-        if (!isLaunched || (durDebug && !isDebug)) return
-        if (curAnimationTimestamp !== animationTimestamp) break
+      while (petTopMargin.value + imgSize.value / 2 > target) {
+        if (!isLaunched.value || (durDebug.value && !isDebug)) return
+        if (thisAnimationTimestamp !== animationTimestamp.value) break
         for (let i = 0; i < allFrontLayImgs.length; i++) {
-          if (curAnimationTimestamp !== animationTimestamp) break
-          let newTopMargin = petTopMargin - speed
+          if (thisAnimationTimestamp !== animationTimestamp.value) break
+          let newTopMargin = petTopMargin.value - speed
           setPetTopMargin(newTopMargin)
-          setPetBackLayStyle({...petBackLayStyle, marginTop: newTopMargin + 'px'})
-          if (petTopMargin + imgSize / 2 <= target) break
-          setPetFrontLayImgUrl(imgUrlPrefix + path + allFrontLayImgs[i])
+          hooksToBeExported.trySetPetBackLayStyle({
+            ...(hooksToBeExported.tryGetPetBackLayStyle()),
+            marginTop: newTopMargin + 'px'
+          })
+          if (petTopMargin.value + imgSize.value / 2 <= target) break
+          hooksToBeExported.trySetPetFrontLayImgUrl(imgUrlPrefix + path + '/' + allFrontLayImgs[i])
           await sleep(animationGap)
         }
       }

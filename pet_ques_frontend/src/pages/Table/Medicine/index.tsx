@@ -46,10 +46,6 @@ const getExpandInfo = (record: API.Medicine) => {
   ]);
 }
 
-const handleBuyMedicine = (medicine: API.Medicine) => {
-  console.log(medicine);
-}
-
 const MedicineTable: React.FC = (props) => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
@@ -78,6 +74,10 @@ const MedicineTable: React.FC = (props) => {
   if (!initialState) {
     return (<div>加载错误</div>);
   }
+
+  const handleBuyMedicine = (props?.handleBuyMedicine || ((medicine: API.Medicine) => {
+    console.log(medicine);
+  }))
 
   const tableWidth = props?.width || '60%'
 

@@ -86,6 +86,14 @@ void Medicine::setProperty(const std::string &propertyName, const std::string &v
 }
 
 Medicine::Medicine() {
+    Medicine::medicineId = -1;
+    Medicine::medicineEndu = 0;
+    Medicine::medicineExp = 0;
+    Medicine::medicineHealth = 0;
+    Medicine::medicineName = "";
+    Medicine::medicinePrice = 0;
+    Medicine::medicinePicPath = "";
+    Medicine::medicineMood = 0;
     propertyIntegerSetters["medicineId"] = &Medicine::setMedicineId;
     propertyFloatSetters["medicinePrice"] = &Medicine::setMedicinePrice;
     propertyStringSetters["medicinePicPath"] = &Medicine::setMedicinePicPath;
@@ -94,5 +102,24 @@ Medicine::Medicine() {
     propertyFloatSetters["medicineEndu"] = &Medicine::setMedicineEndu;
     propertyFloatSetters["medicineExp"] = &Medicine::setMedicineExp;
     propertyFloatSetters["medicineHealth"] = &Medicine::setMedicineHealth;
+}
+
+Medicine &Medicine::operator=(const Medicine &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        medicineId = other.medicineId;
+        medicinePrice = other.medicinePrice;
+        medicinePicPath = other.medicinePicPath;
+        medicineName = other.medicineName;
+        medicineMood = other.medicineMood;
+        medicineEndu = other.medicineEndu;
+        medicineExp = other.medicineExp;
+        medicineHealth = other.medicineHealth;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }
 

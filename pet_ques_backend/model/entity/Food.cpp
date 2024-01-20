@@ -101,6 +101,16 @@ void Food::setProperty(const std::string &propertyName, const std::string &value
 }
 
 Food::Food() {
+    Food::foodId = -1;
+    Food::foodEndu = 0;
+    Food::foodExp = 0;
+    Food::foodHealth = 0;
+    Food::foodHunger = 0;
+    Food::foodName = "";
+    Food::foodPrice = 0;
+    Food::foodThirsty = 0;
+    Food::foodPicPath = "";
+    Food::foodMood = 0;
     propertyIntegerSetters["foodId"] = &Food::setFoodId;
     propertyFloatSetters["foodPrice"] = &Food::setFoodPrice;
     propertyStringSetters["foodPicPath"] = &Food::setFoodPicPath;
@@ -111,5 +121,26 @@ Food::Food() {
     propertyFloatSetters["foodEndu"] = &Food::setFoodEndu;
     propertyFloatSetters["foodExp"] = &Food::setFoodExp;
     propertyFloatSetters["foodHealth"] = &Food::setFoodHealth;
+}
+
+Food &Food::operator=(const Food &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        foodId = other.foodId;
+        foodPrice = other.foodPrice;
+        foodPicPath = other.foodPicPath;
+        foodName = other.foodName;
+        foodHunger = other.foodHunger;
+        foodMood = other.foodMood;
+        foodThirsty = other.foodThirsty;
+        foodEndu = other.foodEndu;
+        foodExp = other.foodExp;
+        foodHealth = other.foodHealth;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }
 

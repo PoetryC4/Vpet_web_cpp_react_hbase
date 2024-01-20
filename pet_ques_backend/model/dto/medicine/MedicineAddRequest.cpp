@@ -76,6 +76,13 @@ void MedicineAddRequest::setProperty(const std::string &propertyName, const std:
 }
 
 MedicineAddRequest::MedicineAddRequest() {
+    MedicineAddRequest::medicineEndu = 0;
+    MedicineAddRequest::medicineExp = 0;
+    MedicineAddRequest::medicineHealth = 0;
+    MedicineAddRequest::medicineName = "";
+    MedicineAddRequest::medicinePrice = 0;
+    MedicineAddRequest::medicinePicPath = "";
+    MedicineAddRequest::medicineMood = 0;
     propertyFloatSetters["medicinePrice"] = &MedicineAddRequest::setMedicinePrice;
     propertyStringSetters["medicinePicPath"] = &MedicineAddRequest::setMedicinePicPath;
     propertyStringSetters["medicineName"] = &MedicineAddRequest::setMedicineName;
@@ -83,4 +90,35 @@ MedicineAddRequest::MedicineAddRequest() {
     propertyFloatSetters["medicineEndu"] = &MedicineAddRequest::setMedicineEndu;
     propertyFloatSetters["medicineExp"] = &MedicineAddRequest::setMedicineExp;
     propertyFloatSetters["medicineHealth"] = &MedicineAddRequest::setMedicineHealth;
+}
+
+std::ostream& operator<<(std::ostream& os, const MedicineAddRequest& medicine) {
+    os << "MedicineAddRequest{" <<
+       "medicinePrice=" << medicine.medicinePrice <<
+       ", medicinePicPath='" << medicine.medicinePicPath << '\'' <<
+       ", medicineName='" << medicine.medicineName << '\'' <<
+       ", medicineMood=" << medicine.medicineMood <<
+       ", medicineEndu=" << medicine.medicineEndu <<
+       ", medicineExp=" << medicine.medicineExp <<
+       ", medicineHealth=" << medicine.medicineHealth <<
+       '}';
+    return os;
+}
+
+MedicineAddRequest &MedicineAddRequest::operator=(const MedicineAddRequest &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        medicinePrice = other.medicinePrice;
+        medicinePicPath = other.medicinePicPath;
+        medicineName = other.medicineName;
+        medicineMood = other.medicineMood;
+        medicineEndu = other.medicineEndu;
+        medicineExp = other.medicineExp;
+        medicineHealth = other.medicineHealth;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }

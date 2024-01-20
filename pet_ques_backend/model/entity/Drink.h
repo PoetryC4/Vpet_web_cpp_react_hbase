@@ -45,6 +45,8 @@ public:
         };
     }
 
+    Drink& operator=(const Drink& other);
+
     const int &getDrinkId() const;
     void setDrinkId(const int &drinkId);
 

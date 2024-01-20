@@ -1,5 +1,13 @@
 const routesConfig = [
   {
+    path: '/pet',
+    layout: false,
+    name: 'vPet',
+    routes: [
+      { path: '/pet/display', name: 'vPetDisplay', component: './Pet/Display' },
+    ],
+  },
+  {
     path: '/add',
     layout: false,
     name: '添加',

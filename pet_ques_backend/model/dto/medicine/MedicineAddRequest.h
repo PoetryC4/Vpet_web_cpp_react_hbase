@@ -26,18 +26,8 @@ public:
 
     MedicineAddRequest();
 
-    friend std::ostream& operator<<(std::ostream& os, const MedicineAddRequest& medicine) {
-        os << "MedicineAddRequest{" <<
-           "medicinePrice=" << medicine.medicinePrice <<
-           ", medicinePicPath='" << medicine.medicinePicPath << '\'' <<
-           ", medicineName='" << medicine.medicineName << '\'' <<
-           ", medicineMood=" << medicine.medicineMood <<
-           ", medicineEndu=" << medicine.medicineEndu <<
-           ", medicineExp=" << medicine.medicineExp <<
-           ", medicineHealth=" << medicine.medicineHealth <<
-           '}';
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const MedicineAddRequest& medicine);
+    MedicineAddRequest& operator=(const MedicineAddRequest& other);
 
     float getMedicinePrice() const;
     void setMedicinePrice(float medicinePrice);

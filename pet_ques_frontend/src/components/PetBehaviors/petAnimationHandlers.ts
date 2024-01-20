@@ -1,51 +1,4 @@
-import {
-  boringAnimationFlag,
-  durDebug,
-  durSwitch,
-  enableRandMov,
-  hungryAnimationFlag,
-  illAnimationFlag,
-  imgSize,
-  isCopy,
-  isDance, isDragged,
-  isLaunched,
-  isLive,
-  isPlayOne,
-  isRemoveObject,
-  isResearch,
-  isSleep,
-  isStudy,
-  isWorkClean,
-  petBackLayStyle,
-  petLeftMargin,
-  petTopMargin,
-  preLaunched,
-  recoverAnimationFlag,
-  setBoringAnimationFlag,
-  setDurShutdown,
-  setDurSwitch,
-  setHungryAnimationFlag,
-  setIllAnimationFlag,
-  setIsCopy, setIsDance, setIsDragged,
-  setIsLaunched,
-  setIsLive, setIsPlayOne, setIsRemoveObject,
-  setIsResearch, setIsSleep, setIsStudy,
-  setIsWorkClean,
-  setPetBackLayStyle, setPetLeftMargin,
-  setPetMouseDownEvent, setPetMouseMoveEvent, setPetTopMargin,
-  setRecoverAnimationFlag,
-  setThirstyAnimationFlag,
-  thirstyAnimationFlag
-} from "@/components/Entity/petStateProperty";
 import {petAnimation, petAnimation3layers, petMovementAnimation_B} from "./petAnimationUtils";
-import {
-  curAnimation,
-  curState, petEndu, petExp, petHealth,
-  petHunger, petMoney, petMood, petThirsty, petWorkPerformance, setCurAnimation,
-  setCurState, setPetEndu, setPetExp, setPetHealth,
-  setPetHunger, setPetMoney, setPetMood,
-  setPetThirsty, setPetWorkPerformance
-} from "@/components/Entity/petProperty";
 import {sleep} from "@antfu/utils";
 import {
   animationGap,
@@ -57,20 +10,52 @@ import {
   trialGap
 } from "@/components/Entity/petConstants";
 import {getCurTime, randomInt} from "@/components/Utils/utils";
-
+import {
+  boringAnimationFlag,
+  durDebug,
+  durSwitch, enableRandMov,
+  hungryAnimationFlag, illAnimationFlag,
+  imgSize, isCopy, isDance,
+  isDragged,
+  isLaunched, isLive, isPlayOne, isRemoveObject, isResearch, isSleep, isStudy, isWorkClean,
+  petLeftMargin,
+  petTopMargin,
+  preLaunched,
+  recoverAnimationFlag,
+  setBoringAnimationFlag, setDurShutdown,
+  setDurSwitch,
+  setHungryAnimationFlag,
+  setIllAnimationFlag, setIsCopy, setIsDance,
+  setIsDragged,
+  setIsLaunched, setIsLive, setIsPlayOne, setIsRemoveObject, setIsResearch, setIsSleep, setIsStudy, setIsWorkClean,
+  setPetLeftMargin,
+  setPetTopMargin,
+  setRecoverAnimationFlag,
+  setThirstyAnimationFlag,
+  thirstyAnimationFlag
+} from "@/components/Entity/petStateProperty";
+import {
+  curAnimation,
+  curState,
+  petWorkPerformance,
+  setCurAnimation,
+  setCurState
+} from "@/components/Entity/petProperty";
+/*
 let time: any
 
 async function dragMove(event: { clientX: any; clientY: any; }) {
+
   const mouseX = event.clientX
   const mouseY = event.clientY
   if (mouseX === undefined || mouseY === undefined) return
   const scrollX = window.scrollX
   const scrollY = window.scrollY
 
-  let newPetLeftMargin = mouseX + scrollX - petLeftMargin
-  let newPetTopMargin = mouseY + scrollY - petTopMargin
+  let newPetLeftMargin = mouseX + scrollX - petLeftMargin.value
+  let newPetTopMargin = mouseY + scrollY - petTopMargin.value
 
-  setPetBackLayStyle({...petBackLayStyle, marginLeft: newPetLeftMargin + 'px', marginTop: newPetTopMargin + 'px'})
+  setPetBackLayStyle({...(getPetBackLayStyle()), marginLeft: newPetLeftMargin + 'px', marginTop: newPetTopMargin + 'px'})
 }
 
 async function petClickedUp(event: MouseEvent) {
@@ -85,27 +70,27 @@ async function petClickedUp(event: MouseEvent) {
     time = null
   }
 
-  if (!isDragged || curAnimation !== 'Raise') {
-    const mousePerX = (mouseX - petLeftMargin) / imgSize
-    const mousePerY = (mouseY - petTopMargin) / imgSize
+  if (!isDragged.value || curAnimation.value !== 'Raise') {
+    const mousePerX = (mouseX - petLeftMargin.value) / imgSize.value
+    const mousePerY = (mouseY - petTopMargin.value) / imgSize.value
 
     if (mousePerX >= 0.3 && mousePerX <= 0.7 && mousePerY <= 0.3 && mousePerY >= 0.1) {
       console.log('Head')
       setCurAnimation("Touch_Head")
       setPetMood(petMood + 2)
       setPetEndu(petEndu - 4)
-      switch (curState) {
+      switch (curState.value) {
         case 'Ill':
         case 'PoorCondition': {
-          await petAnimation('/vup/' + curAnimation + '/A_Ill', false)
-          await petAnimation('/vup/' + curAnimation + '/B_Ill', false)
-          await petAnimation('/vup/' + curAnimation + '/C_Ill', false)
+          await petAnimation('/vup/' + curAnimation.value + '/A_Ill', false)
+          await petAnimation('/vup/' + curAnimation.value + '/B_Ill', false)
+          await petAnimation('/vup/' + curAnimation.value + '/C_Ill', false)
           break
         }
         default: {
-          await petAnimation('/vup/' + curAnimation + '/A_' + curState, false)
-          await petAnimation('/vup/' + curAnimation + '/B_' + curState, false)
-          await petAnimation('/vup/' + curAnimation + '/C_' + curState, false)
+          await petAnimation('/vup/' + curAnimation.value + '/A_' + curState.value, false)
+          await petAnimation('/vup/' + curAnimation.value + '/B_' + curState.value, false)
+          await petAnimation('/vup/' + curAnimation.value + '/C_' + curState.value, false)
           break
         }
       }
@@ -115,28 +100,28 @@ async function petClickedUp(event: MouseEvent) {
       setCurAnimation("Touch_Body")
       setPetMood(petMood + 2)
       setPetEndu(petEndu - 4)
-      switch (curState) {
+      switch (curState.value) {
         case 'Ill':
         case 'PoorCondition': {
-          await petAnimation('/vup/' + curAnimation + '/A_Ill', false)
-          await petAnimation('/vup/' + curAnimation + '/B_Ill', false)
-          await petAnimation('/vup/' + curAnimation + '/C_Ill', false)
+          await petAnimation('/vup/' + curAnimation.value + '/A_Ill', false)
+          await petAnimation('/vup/' + curAnimation.value + '/B_Ill', false)
+          await petAnimation('/vup/' + curAnimation.value + '/C_Ill', false)
           break
         }
         default: {
           let rand = randomInt(1, 3)
-          await petAnimation('/vup/' + curAnimation + '/A_Happy/tb' + rand, false)
-          await petAnimation('/vup/' + curAnimation + '/B_Happy/tb' + rand, false)
-          await petAnimation('/vup/' + curAnimation + '/C_Happy/tb' + rand, false)
+          await petAnimation('/vup/' + curAnimation.value + '/A_Happy/tb' + rand, false)
+          await petAnimation('/vup/' + curAnimation.value + '/B_Happy/tb' + rand, false)
+          await petAnimation('/vup/' + curAnimation.value + '/C_Happy/tb' + rand, false)
           break
         }
       }
       setCurAnimation('Default')
     }
   }
-  if (curAnimation !== 'Raise') return
+  if (curAnimation.value !== 'Raise') return
   setCurAnimation("Falling")
-  await petAnimation('/vup/Raise/Raised_Static/C_' + curState, false)
+  await petAnimation('/vup/Raise/Raised_Static/C_' + curState.value, false)
   setIsDragged(false)
   setCurAnimation('Default')
 }
@@ -149,7 +134,7 @@ async function petClickedDown(event: { clientX: any; clientY: any; }) {
   let timeStart = getCurTime();
 
   //setInterval会每100毫秒执行一次，也就是每100毫秒获取一次时间
-  if (curAnimation !== 'Raise' && curAnimation !== 'Falling') {
+  if (curAnimation.value !== 'Raise' && curAnimation.value !== 'Falling') {
     time = setInterval(async function () {
       let timeEnd = getCurTime();
 
@@ -160,15 +145,15 @@ async function petClickedDown(event: { clientX: any; clientY: any; }) {
         clearInterval(time);
         time = null
         setCurAnimation('Raise')
-        setPetTopMargin(mouseY - petTopMargin)
-        setPetLeftMargin(mouseY - petLeftMargin)
+        setPetTopMargin(mouseY - petTopMargin.value)
+        setPetLeftMargin(mouseY - petLeftMargin.value)
         setPetMouseMoveEvent(dragMove)
-        await petAnimation('/vup/' + curAnimation + '/Raised_Static/A_' + curState, false)
-        while (curAnimation === 'Raise') {
-          if (curState !== 'Normal') {
-            await petAnimation('/vup/' + curAnimation + '/Raised_Dynamic/' + curState, false)
+        await petAnimation('/vup/' + curAnimation.value + '/Raised_Static/A_' + curState.value, false)
+        while (curAnimation.value === 'Raise') {
+          if (curState.value !== 'Normal') {
+            await petAnimation('/vup/' + curAnimation.value + '/Raised_Dynamic/' + curState.value, false)
           } else {
-            await petAnimation('/vup/' + curAnimation + '/Raised_Dynamic/Normal/' + randomInt(1, 3), false)
+            await petAnimation('/vup/' + curAnimation.value + '/Raised_Dynamic/Normal/' + randomInt(1, 3), false)
           }
         }
         return
@@ -176,23 +161,24 @@ async function petClickedDown(event: { clientX: any; clientY: any; }) {
     }, 100);
   }
 }
+*/
 
-async function illAnimation() {
-  if (curState === 'Ill') {
+export async function illAnimation() {
+  if (curState.value === 'Ill') {
     setDurSwitch(true)
     await petAnimation('/vup/Switch/Down/PoorCondition', false)
     setDurSwitch(false)
   } else {
     setDurSwitch(true)
-    await petAnimation('/vup/Switch/Down/' + curState, false)
+    await petAnimation('/vup/Switch/Down/' + curState.value, false)
     setDurSwitch(false)
   }
   setCurState('Ill')
 }
 
-async function tryIll(ext: number) {
+export async function tryIll(ext: number) {
   await sleep(trialGap)
-  if (curState === 'Ill' || durSwitch) return
+  if (curState.value === 'Ill' || durSwitch.value) return
   else if (Math.random() * Math.pow(2, ext) < 2) {
     setIllAnimationFlag(true)
   } else {
@@ -200,18 +186,18 @@ async function tryIll(ext: number) {
   }
 }
 
-async function recoverAnimation() {
-  if (curState === 'Happy') {
+export async function recoverAnimation() {
+  if (curState.value === 'Happy') {
     await petAnimation('/vup/Switch/Up/Normal', false)
   } else {
-    await petAnimation('/vup/Switch/Up/' + curState, false)
+    await petAnimation('/vup/Switch/Up/' + curState.value, false)
   }
   setCurState('Normal')
 }
 
-async function tryRecover(ext: number) {
+export async function tryRecover(ext: number) {
   await sleep(trialGap)
-  if (curState !== 'Ill' || durSwitch) return
+  if (curState.value !== 'Ill' || durSwitch.value) return
   else if (Math.random() * Math.pow(2, ext) < 2) {
     setRecoverAnimationFlag(true)
     setIllAnimationFlag(false)
@@ -220,21 +206,22 @@ async function tryRecover(ext: number) {
   }
 }
 
-async function hungryAnimation() {
-  if (curState === 'Ill') {
+export async function hungryAnimation() {
+  if (curState.value === 'Ill') {
     setDurSwitch(true)
     await petAnimation('/vup/Switch/Hunger/PoorCondition', false)
     setDurSwitch(false)
   } else {
     setDurSwitch(true)
-    await petAnimation('/vup/Switch/Hunger/' + curState, false)
+    await petAnimation('/vup/Switch/Hunger/' + curState.value, false)
     setDurSwitch(false)
   }
 }
 
-async function tryHungry(ext: number) {
+export async function tryHungry(ext: number) {
   await sleep(trialGap)
-  if (curState === 'Ill' || durSwitch || hungryAnimationFlag) return
+
+  if (curState.value === 'Ill' || durSwitch.value || hungryAnimationFlag.value) return
   else if (Math.random() * Math.pow(2, ext) < 2) {
     setHungryAnimationFlag(true)
   } else {
@@ -242,15 +229,15 @@ async function tryHungry(ext: number) {
   }
 }
 
-async function thirstyAnimation() {
+export async function thirstyAnimation() {
   setDurSwitch(true)
   await petAnimation('/vup/Switch/Thirsty', false)
   setDurSwitch(false)
 }
 
-async function tryThirsty(ext: number) {
+export async function tryThirsty(ext: number) {
   await sleep(trialGap)
-  if (curState === 'Ill' || durSwitch || thirstyAnimationFlag) return
+  if (curState.value === 'Ill' || durSwitch.value || thirstyAnimationFlag.value) return
   else if (Math.random() * Math.pow(2, ext) < 2) {
     setThirstyAnimationFlag(true)
   } else {
@@ -258,7 +245,7 @@ async function tryThirsty(ext: number) {
   }
 }
 
-async function boringAnimation() {
+export async function boringAnimation() {
   setDurSwitch(true)
   let rand = randomInt(0, 3)
   switch (rand) {
@@ -272,7 +259,7 @@ async function boringAnimation() {
       break
     }
     case 1: {
-      if (curState === 'Ill' || curState === 'PoorCondition') {
+      if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
         await petAnimation('/vup/IDEL/Squat/A_PoorCondition', false)
         let loop = randomInt(1, 3)
         for (let i = 0; i < loop; i++) {
@@ -292,7 +279,7 @@ async function boringAnimation() {
       break
     }
     case 2: {
-      if (curState === 'Ill' || curState === 'PoorCondition') {
+      if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
         await petAnimation('/vup/State/StateONE/A_PoorCondition', false)
         let loop = randomInt(1, 3)
         for (let i = 0; i < loop; i++) {
@@ -301,18 +288,18 @@ async function boringAnimation() {
         }
         await petAnimation('/vup/State/StateONE/C_PoorCondition', false)
       } else {
-        await petAnimation('/vup/State/StateONE/A_' + curState, false)
+        await petAnimation('/vup/State/StateONE/A_' + curState.value, false)
         let loop = randomInt(1, 3)
         for (let i = 0; i < loop; i++) {
-          await petAnimation('/vup/State/StateONE/B_' + curState + '/' + randomInt(1, 3), false)
+          await petAnimation('/vup/State/StateONE/B_' + curState.value + '/' + randomInt(1, 3), false)
           await sleep(boringMidGap)
         }
-        await petAnimation('/vup/State/StateONE/C_' + curState, false)
+        await petAnimation('/vup/State/StateONE/C_' + curState.value, false)
       }
       break
     }
     case 3: {
-      if (curState === 'Ill' || curState === 'PoorCondition') {
+      if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
         await petAnimation('/vup/State/StateTWO/A_PoorCondition', false)
         let loop = randomInt(1, 3)
         for (let i = 0; i < loop; i++) {
@@ -338,8 +325,8 @@ async function boringAnimation() {
   setDurSwitch(false)
 }
 
-async function tryBoring(ext: number) {
-  if (curState === 'Ill' || durSwitch || boringAnimationFlag) return
+export async function tryBoring(ext: number) {
+  if (curState.value === 'Ill' || durSwitch.value || boringAnimationFlag.value) return
   await sleep(trialGap)
   if (Math.random() * Math.pow(2, ext) < 2) {
     setBoringAnimationFlag(true)
@@ -347,26 +334,26 @@ async function tryBoring(ext: number) {
     await tryBoring(Math.max(1, ext - 1))
   }
 }
-
+/*
 async function petListener() {
-  if (curAnimation in interactionNames) {
-    setPetHunger(petHunger + (petValueChange[curAnimation].hungerChange || 0))
-    setPetThirsty(petThirsty + (petValueChange[curAnimation].thirstyChange || 0))
-    setPetExp(petExp + (petValueChange[curAnimation].expChange || 0))
-    setPetEndu(petEndu + (petValueChange[curAnimation].enduranceChange || 0))
-    setPetMood(petMood + (petValueChange[curAnimation].moodChange || 0))
-    setPetHealth(petHealth + (petValueChange[curAnimation].healthChange || 0))
-    setPetMoney(petMoney + ((petValueChange[curAnimation].moneyChange(petExp, petWorkPerformance)) || 0))
+  if (curAnimation.value in interactionNames) {
+    setPetHunger(petHunger + (petValueChange[curAnimation.value].hungerChange || 0))
+    setPetThirsty(petThirsty + (petValueChange[curAnimation.value].thirstyChange || 0))
+    setPetExp(petExp + (petValueChange[curAnimation.value].expChange || 0))
+    setPetEndu(petEndu + (petValueChange[curAnimation.value].enduranceChange || 0))
+    setPetMood(petMood + (petValueChange[curAnimation.value].moodChange || 0))
+    setPetHealth(petHealth + (petValueChange[curAnimation.value].healthChange || 0))
+    setPetMoney(petMoney + ((petValueChange[curAnimation.value].moneyChange(petExp, petWorkPerformance.value)) || 0))
     return
   }
   setPetHunger(petHunger + (petValueChange['Default'].hungerChange || 0))
   setPetThirsty(petThirsty + (petValueChange['Default'].thirstyChange || 0))
   setPetEndu(petEndu + (petValueChange['Default'].enduranceChange || 0))
   setPetMood(petMood + (petValueChange['Default'].moodChange || 0))
-  //console.log(curState)
-  if (durSwitch) return
+  //console.log(curState.value)
+  if (durSwitch.value) return
 
-  if (curState === 'Ill') {
+  if (curState.value === 'Ill') {
     if (petHealth >= 60) {
       tryRecover(10 - Math.floor(petHealth / 10))
     }
@@ -385,17 +372,17 @@ async function petListener() {
     tryHungry(5)
   } else if (petThirsty <= 30) {
     tryThirsty(6)
-  } else if (curState !== 'Ill') {
+  } else if (curState.value !== 'Ill') {
     tryBoring(8)
   }
 }
 
 async function defaultAnimation() {
-  while (isLaunched) {
-    for (; durSwitch || curAnimation in specialInteractionNames || curAnimation in interactionNames || durDebug;) {
+  while (isLaunched.value) {
+    for (; durSwitch.value || curAnimation.value in specialInteractionNames || curAnimation.value in interactionNames || durDebug.value;) {
       await sleep(animationGap)
     }
-    switch (curState) {
+    switch (curState.value) {
       case 'Normal': {
         await petAnimation('/vup/Default/Normal', false)
         break
@@ -417,7 +404,7 @@ async function defaultAnimation() {
 }
 
 export async function start() {
-  if (!preLaunched || isLaunched) return
+  if (!preLaunched.value || isLaunched.value) return
 
   setIsLaunched(true)
   setPetBackLayStyle({...petBackLayStyle, display: 'block'})
@@ -434,12 +421,12 @@ export async function start() {
   if (storage.vPetWorkPerformance) setPetWorkPerformance(Number.parseFloat(storage.vPetWorkPerformance))
   if (storage.vPetState) setCurState(storage.vPetState)
 
-  //curState = 'Ill'
+  //curState.value = 'Ill'
 
   setPetMouseDownEvent(petClickedDown)
   window.addEventListener("mouseup", petClickedUp);
 
-  switch (curState) {
+  switch (curState.value) {
     case 'Normal': {
       await petAnimation('/vup/StartUP/Normal', false)
       break
@@ -464,40 +451,40 @@ export async function start() {
 
   defaultAnimation()
 
-  while (isLaunched) {
-    for (; curAnimation in specialInteractionNames;) {
+  while (isLaunched.value) {
+    for (; curAnimation.value in specialInteractionNames;) {
       await sleep(animationGap)
     }
-    if (durDebug) {
+    if (durDebug.value) {
       await sleep(listenerGap)
       continue
     }
-    if (curAnimation in interactionNames) {
+    if (curAnimation.value in interactionNames) {
       petListener()
       await sleep(listenerGap)
       continue
     }
-    if (recoverAnimationFlag) {
+    if (recoverAnimationFlag.value) {
       await recoverAnimation()
       setRecoverAnimationFlag(false)
     }
-    if (illAnimationFlag) {
+    if (illAnimationFlag.value) {
       await illAnimation()
       setIllAnimationFlag(false)
     }
-    if (hungryAnimationFlag) {
+    if (hungryAnimationFlag.value) {
       await hungryAnimation()
       setHungryAnimationFlag(false)
     }
-    if (thirstyAnimationFlag) {
+    if (thirstyAnimationFlag.value) {
       await thirstyAnimation()
       setThirstyAnimationFlag(false)
     }
-    if (boringAnimationFlag) {
+    if (boringAnimationFlag.value) {
       await boringAnimation()
       setBoringAnimationFlag(false)
     }
-    if (enableRandMov && curState !== 'Ill' && !durSwitch) {
+    if (enableRandMov.value && curState.value !== 'Ill' && !durSwitch.value) {
       if (Math.random() * 100 < 2) {
         let targetX = window.innerHeight * (Math.random() * 0.8 + 0.1)
         let targetY = window.innerHeight * (Math.random() * 0.8 + 0.1)
@@ -511,7 +498,7 @@ export async function start() {
 }
 
 export async function shutdown() {
-  if (!isLaunched) {
+  if (!isLaunched.value) {
     return
   }
   setIsLaunched(false)
@@ -524,14 +511,14 @@ export async function shutdown() {
   storage.vPetHunger = petHunger
   storage.vPetThirsty = petThirsty
   storage.vPetHealth = petHealth
-  storage.vPetWorkPerformance = petWorkPerformance
-  storage.vPetState = curState
+  storage.vPetWorkPerformance = petWorkPerformance.value
+  storage.vPetState = curState.value
 
   setPetMouseDownEvent(undefined)
   window.removeEventListener("mouseup", petClickedUp);
 
   setDurShutdown(true)
-  switch (curState) {
+  switch (curState.value) {
     case 'Normal': {
       await petAnimation('/vup/Shutdown/Normal/' + randomInt(1, 3), false)
       break
@@ -555,19 +542,19 @@ export async function shutdown() {
   }
   setDurShutdown(false)
   setPetBackLayStyle({...petBackLayStyle, display: 'none'})
-}
+}*/
 
 export async function researchToggle() {
-  if (!isLaunched) return
-  if (isResearch && curAnimation === 'Research') {
+  if (!isLaunched.value) return
+  if (isResearch.value && curAnimation.value === 'Research') {
     setIsResearch(false)
     return
   }
   setCurAnimation('Research')
   setIsResearch(true)
-  await petAnimation('/vup/WORK/Research/' + curState + '/A', false)
-  while (isResearch) {
-    switch (curState) {
+  await petAnimation('/vup/WORK/Research/' + curState.value + '/A', false)
+  while (isResearch.value) {
+    switch (curState.value) {
       case 'Ill':
       case 'PoorCondition': {
         await petAnimation('/vup/WORK/Research/PoorCondition/B_' + randomInt(1, 3), false)
@@ -583,45 +570,45 @@ export async function researchToggle() {
       }
     }
   }
-  await petAnimation('/vup/WORK/Research/' + curState + '/C', false)
+  await petAnimation('/vup/WORK/Research/' + curState.value + '/C', false)
   setCurAnimation('Default')
 }
 
 export async function petMove(targetX: number, targetY: number) {
-  if (!isLaunched) return
+  if (!isLaunched.value) return
   setDurSwitch(true)
   if (Math.random() < 0.5) {
-    await goToX(targetX, petLeftMargin + imgSize / 2, petTopMargin + imgSize / 2)
-    await goToY(targetY, targetX, petLeftMargin + imgSize / 2, petTopMargin + imgSize / 2)
+    await goToX(targetX, petLeftMargin.value + imgSize.value / 2, petTopMargin.value + imgSize.value / 2)
+    await goToY(targetY, targetX, petLeftMargin.value + imgSize.value / 2, petTopMargin.value + imgSize.value / 2)
   } else {
-    await goToY(targetY, targetX, petLeftMargin + imgSize / 2, petTopMargin + imgSize / 2)
-    await goToX(targetX, petLeftMargin + imgSize / 2, petTopMargin + imgSize / 2)
+    await goToY(targetY, targetX, petLeftMargin.value + imgSize.value / 2, petTopMargin.value + imgSize.value / 2)
+    await goToX(targetX, petLeftMargin.value + imgSize.value / 2, petTopMargin.value + imgSize.value / 2)
   }
   setDurSwitch(false)
 }
 
 async function goToX(targetX: number | undefined, startX: number, startY: number) {
-  const windowHeight = window.innerHeight
   if (targetX === undefined) return
+  const windowHeight = window.innerHeight
   if (windowHeight) {
     setDurSwitch(true)
-    if ((petTopMargin + imgSize / 2) / windowHeight < 0.2) {
+    if ((petTopMargin.value + imgSize.value / 2) / windowHeight < 0.2) {
       if (targetX < startX) {
-        await petAnimation('/vup/MOVE/climb.top.left/A_' + curState, false)
-        await petMovementAnimation_B('/vup/MOVE/climb.top.left/B_' + curState, speedSlow, 'L', targetX, startX, startY, false)
-        await petAnimation('/vup/MOVE/climb.top.left/C_' + curState, false)
+        await petAnimation('/vup/MOVE/climb.top.left/A_' + curState.value, false)
+        await petMovementAnimation_B('/vup/MOVE/climb.top.left/B_' + curState.value, speedSlow, 'L', targetX, startX, startY, false)
+        await petAnimation('/vup/MOVE/climb.top.left/C_' + curState.value, false)
       } else {
-        await petAnimation('/vup/MOVE/climb.top.right/A_' + curState, false)
-        await petMovementAnimation_B('/vup/MOVE/climb.top.right/B_' + curState, speedSlow, 'R', targetX, startX, startY, false)
-        await petAnimation('/vup/MOVE/climb.top.right/C_' + curState, false)
+        await petAnimation('/vup/MOVE/climb.top.right/A_' + curState.value, false)
+        await petMovementAnimation_B('/vup/MOVE/climb.top.right/B_' + curState.value, speedSlow, 'R', targetX, startX, startY, false)
+        await petAnimation('/vup/MOVE/climb.top.right/C_' + curState.value, false)
       }
     } else {
       if (targetX < startX) {
         if (Math.random() < 1 / 3) {
-          await petAnimation('/vup/MOVE/crawl.left/A_' + curState, false)
-          await petMovementAnimation_B('/vup/MOVE/crawl.left/B_' + curState, speedSlow, 'L', targetX, startX, startY, false)
-          await petAnimation('/vup/MOVE/crawl.left/C_' + curState, false)
-        } else if (curState !== 'Happy') {
+          await petAnimation('/vup/MOVE/crawl.left/A_' + curState.value, false)
+          await petMovementAnimation_B('/vup/MOVE/crawl.left/B_' + curState.value, speedSlow, 'L', targetX, startX, startY, false)
+          await petAnimation('/vup/MOVE/crawl.left/C_' + curState.value, false)
+        } else if (curState.value !== 'Happy') {
           await petAnimation('/vup/MOVE/walk.left/A_Normal', false)
           await petMovementAnimation_B('/vup/MOVE/walk.left/B_Normal', speedNormal, 'L', targetX, startX, startY, false)
           await petAnimation('/vup/MOVE/walk.left/C_Normal', false)
@@ -632,14 +619,14 @@ async function goToX(targetX: number | undefined, startX: number, startY: number
         }
       } else {
         if (Math.random() < 1 / 4) {
-          await petAnimation('/vup/MOVE/crawl.right/A_' + curState, false)
-          await petMovementAnimation_B('/vup/MOVE/crawl.right/B_' + curState, speedSlow, 'R', targetX, startX, startY, false)
-          await petAnimation('/vup/MOVE/crawl.right/C_' + curState, false)
-        } else if (curState === 'Normal') {
+          await petAnimation('/vup/MOVE/crawl.right/A_' + curState.value, false)
+          await petMovementAnimation_B('/vup/MOVE/crawl.right/B_' + curState.value, speedSlow, 'R', targetX, startX, startY, false)
+          await petAnimation('/vup/MOVE/crawl.right/C_' + curState.value, false)
+        } else if (curState.value === 'Normal') {
           await petAnimation('/vup/MOVE/walk.right/A_Normal', false)
           await petMovementAnimation_B('/vup/MOVE/walk.right/B_Normal', speedNormal, 'R', targetX, startX, startY, false)
           await petAnimation('/vup/MOVE/walk.right/C_Normal', false)
-        } else if (curState === 'Happy') {
+        } else if (curState.value === 'Happy') {
           await petAnimation('/vup/MOVE/walk.right.faster/A_Happy', false)
           await petMovementAnimation_B('/vup/MOVE/walk.right.faster/B_Happy', speedFast, 'R', targetX, startX, startY, false)
           await petAnimation('/vup/MOVE/walk.right.faster/C_Happy', false)
@@ -660,10 +647,10 @@ async function goToY(targetY: number | undefined, targetX: number | undefined, s
   setDurSwitch(true)
   if (targetY < startY) {
     if (startX < targetX) {
-      if (curState !== 'PoorCondition') {
-        await petAnimation('/vup/MOVE/climb.left/A_' + curState, false)
-        await petMovementAnimation_B('/vup/MOVE/climb.left/B_' + curState, speedSlow, 'U', targetY, startX, startY, false)
-        //await petAnimation(baseLocalUrl.value+'/vup/MOVE/climb.left/C_'+curState, false)
+      if (curState.value !== 'PoorCondition') {
+        await petAnimation('/vup/MOVE/climb.left/A_' + curState.value, false)
+        await petMovementAnimation_B('/vup/MOVE/climb.left/B_' + curState.value, speedSlow, 'U', targetY, startX, startY, false)
+        //await petAnimation(baseLocalUrl.value+'/vup/MOVE/climb.left/C_'+curState.value, false)
       } else {
         if (Math.random() < 0.5) {
           await petAnimation('/vup/MOVE/climb.left/PoorCondition/A_1', false)
@@ -676,36 +663,36 @@ async function goToY(targetY: number | undefined, targetX: number | undefined, s
         }
       }
     } else {
-      await petAnimation('/vup/MOVE/climb.right/A_' + curState, false)
-      await petMovementAnimation_B('/vup/MOVE/climb.right/B_' + curState, speedSlow, 'U', targetY, startX, startY, false)
-      if (curState === 'PoorCondition')
-        await petAnimation('/vup/MOVE/climb.right/C_' + curState, false)
+      await petAnimation('/vup/MOVE/climb.right/A_' + curState.value, false)
+      await petMovementAnimation_B('/vup/MOVE/climb.right/B_' + curState.value, speedSlow, 'U', targetY, startX, startY, false)
+      if (curState.value === 'PoorCondition')
+        await petAnimation('/vup/MOVE/climb.right/C_' + curState.value, false)
     }
   } else {
     if (startX < targetX) {
-      await petAnimation('/vup/MOVE/fall.left/A_' + curState, false)
-      await petMovementAnimation_B('/vup/MOVE/fall.left/B_' + curState, speedFalling, 'D', targetY, startX, startY, false)
-      await petAnimation('/vup/MOVE/fall.left/C_' + curState, false)
+      await petAnimation('/vup/MOVE/fall.left/A_' + curState.value, false)
+      await petMovementAnimation_B('/vup/MOVE/fall.left/B_' + curState.value, speedFalling, 'D', targetY, startX, startY, false)
+      await petAnimation('/vup/MOVE/fall.left/C_' + curState.value, false)
     } else {
-      await petAnimation('/vup/MOVE/fall.right/A_' + curState, false)
-      await petMovementAnimation_B('/vup/MOVE/fall.right/B_' + curState, speedFalling, 'D', targetY, startX, startY, false)
-      await petAnimation('/vup/MOVE/fall.right/C_' + curState, false)
+      await petAnimation('/vup/MOVE/fall.right/A_' + curState.value, false)
+      await petMovementAnimation_B('/vup/MOVE/fall.right/B_' + curState.value, speedFalling, 'D', targetY, startX, startY, false)
+      await petAnimation('/vup/MOVE/fall.right/C_' + curState.value, false)
     }
   }
   setDurSwitch(false)
 }
 
 export async function studyToggle() {
-  if (!isLaunched) return
-  if (getFlagsAnd(isStudy)) return
-  if (isStudy && curAnimation === 'Study') {
+  if (!isLaunched.value) return
+  if (getFlagsAnd(isStudy.value)) return
+  if (isStudy.value && curAnimation.value === 'Study') {
     setIsStudy(false)
     return
   }
   setCurAnimation('Study')
   setIsStudy(true)
   await petAnimation('/vup/WORK/Study/A_Normal', false)
-  while (isStudy) {
+  while (isStudy.value) {
     await petAnimation('/vup/WORK/Study/B_' + randomInt(1, 4) + '_Normal', false)
   }
   await petAnimation('/vup/WORK/Study/C_Normal', false)
@@ -713,16 +700,16 @@ export async function studyToggle() {
 }
 
 export async function liveToggle() {
-  if (!isLaunched) return
-  if (getFlagsAnd(isLive)) return
-  if (isLive && curAnimation === 'Live') {
+  if (!isLaunched.value) return
+  if (getFlagsAnd(isLive.value)) return
+  if (isLive.value && curAnimation.value === 'Live') {
     setIsLive(false)
     return
   }
   setCurAnimation('Live')
   setIsLive(true)
   await petAnimation('/vup/WORK/Live/A_Normal', false)
-  while (isLive) {
+  while (isLive.value) {
     await petAnimation('/vup/WORK/Live/B_' + randomInt(1, 4) + '_Normal', false)
   }
   await petAnimation('/vup/WORK/Live/C_Normal', false)
@@ -730,16 +717,16 @@ export async function liveToggle() {
 }
 
 export async function copyToggle() {
-  if (!isLaunched) return
-  if (getFlagsAnd(isCopy)) return
-  if (isCopy && curAnimation === 'Copy') {
+  if (!isLaunched.value) return
+  if (getFlagsAnd(isCopy.value)) return
+  if (isCopy.value && curAnimation.value === 'Copy') {
     setIsCopy(false)
     return
   }
   setCurAnimation('Copy')
   setIsCopy(true)
   await petAnimation('/vup/WORK/Copy/A_Normal', false)
-  while (isCopy) {
+  while (isCopy.value) {
     await petAnimation('/vup/WORK/Copy/B_' + randomInt(1, 3) + '_Normal', false)
   }
   await petAnimation('/vup/WORK/Copy/C_Normal', false)
@@ -747,17 +734,17 @@ export async function copyToggle() {
 }
 
 export async function workCleanToggle() {
-  if (!isLaunched) return
-  if (getFlagsAnd(isWorkClean)) return
-  if (isWorkClean && curAnimation === 'WorkClean') {
+  if (!isLaunched.value) return
+  if (getFlagsAnd(isWorkClean.value)) return
+  if (isWorkClean.value && curAnimation.value === 'WorkClean') {
     setIsWorkClean(false)
     return
   }
   setCurAnimation('WorkClean')
   setIsWorkClean(true)
-  await petAnimation('/vup/WORK/WorkClean/' + curState + '/A', false)
-  while (isWorkClean) {
-    switch (curState) {
+  await petAnimation('/vup/WORK/WorkClean/' + curState.value + '/A', false)
+  while (isWorkClean.value) {
+    switch (curState.value) {
       case 'Ill':
       case 'PoorCondition': {
         await petAnimation('/vup/WORK/WorkClean/PoorCondition/B_' + randomInt(1, 6), false)
@@ -773,56 +760,56 @@ export async function workCleanToggle() {
       }
     }
   }
-  await petAnimation('/vup/WORK/WorkClean/' + curState + '/C', false)
+  await petAnimation('/vup/WORK/WorkClean/' + curState.value + '/C', false)
   setCurAnimation('Default')
 }
 
 export async function playOneToggle() {
-  if (!isLaunched) return
-  if (getFlagsAnd(isPlayOne)) return
-  if (isPlayOne && curAnimation === 'PlayONE') {
+  if (!isLaunched.value) return
+  if (getFlagsAnd(isPlayOne.value)) return
+  if (isPlayOne.value && curAnimation.value === 'PlayONE') {
     setIsPlayOne(false)
     return
   }
   setCurAnimation('PlayONE')
   setIsPlayOne(true)
-  await petAnimation('/vup/WORK/PlayONE/' + curState + '/A', false)
-  while (isPlayOne) {
-    await petAnimation('/vup/WORK/PlayONE/' + curState + '/B', false)
+  await petAnimation('/vup/WORK/PlayONE/' + curState.value + '/A', false)
+  while (isPlayOne.value) {
+    await petAnimation('/vup/WORK/PlayONE/' + curState.value + '/B', false)
   }
-  await petAnimation('/vup/WORK/PlayONE/' + curState + '/C', false)
+  await petAnimation('/vup/WORK/PlayONE/' + curState.value + '/C', false)
   setCurAnimation('Default')
 }
 
 export async function sleepToggle() {
-  if (!isLaunched) return
-  if (getFlagsAnd(isSleep)) return
-  if (isSleep && curAnimation === 'Sleep') {
+  if (!isLaunched.value) return
+  if (getFlagsAnd(isSleep.value)) return
+  if (isSleep.value && curAnimation.value === 'Sleep') {
     setIsSleep(false)
     return
   }
   setCurAnimation('Sleep')
   setIsSleep(true)
-  await petAnimation('/vup/Sleep/A_' + curState, false)
-  while (isSleep) {
-    await petAnimation('/vup/Sleep/B_' + curState, false)
+  await petAnimation('/vup/Sleep/A_' + curState.value, false)
+  while (isSleep.value) {
+    await petAnimation('/vup/Sleep/B_' + curState.value, false)
   }
-  await petAnimation('/vup/Sleep/C_' + curState, false)
+  await petAnimation('/vup/Sleep/C_' + curState.value, false)
   setCurAnimation('Default')
 }
 
 export async function removeObjectToggle() {
-  if (!isLaunched) return
-  if (getFlagsAnd(isRemoveObject)) return
-  if (isRemoveObject && curAnimation === 'RemoveObject') {
+  if (!isLaunched.value) return
+  if (getFlagsAnd(isRemoveObject.value)) return
+  if (isRemoveObject.value && curAnimation.value === 'RemoveObject') {
     setIsRemoveObject(false)
     return
   }
   setCurAnimation('RemoveObject')
   setIsRemoveObject(true)
-  await petAnimation('/vup/WORK/RemoveObject/' + curState + '/A', false)
-  while (isRemoveObject) {
-    switch (curState) {
+  await petAnimation('/vup/WORK/RemoveObject/' + curState.value + '/A', false)
+  while (isRemoveObject.value) {
+    switch (curState.value) {
       case 'Ill':
       case 'PoorCondition': {
         await petAnimation('/vup/WORK/RemoveObject/PoorCondition/B_' + randomInt(1, 3), false)
@@ -838,27 +825,27 @@ export async function removeObjectToggle() {
       }
     }
   }
-  await petAnimation('/vup/WORK/RemoveObject/' + curState + '/C', false)
+  await petAnimation('/vup/WORK/RemoveObject/' + curState.value + '/C', false)
   setCurAnimation('Default')
 }
 
 export async function danceToggle() {
-  if (!isLaunched) return
-  if (getFlagsAnd(isDance)) return
-  if (isDance && curAnimation === 'Dance') {
+  if (!isLaunched.value) return
+  if (getFlagsAnd(isDance.value)) return
+  if (isDance.value && curAnimation.value === 'Dance') {
     setIsDance(false)
     return
   }
   setCurAnimation('Dance')
   setIsDance(true)
-  if (curState === 'Ill') {
+  if (curState.value === 'Ill') {
     await petAnimation('/vup/Music/A/PoorCondition', false)
   } else {
-    await petAnimation('/vup/Music/A/' + curState, false)
+    await petAnimation('/vup/Music/A/' + curState.value, false)
   }
   let rand: number = randomInt(1, 3)
-  while (isDance) {
-    if (curState === 'Happy') {
+  while (isDance.value) {
+    if (curState.value === 'Happy') {
       rand = randomInt(1, 5)
       if (rand === 5) {
         await petAnimation('/vup/Music/Single/Happy', false)
@@ -875,7 +862,7 @@ export async function danceToggle() {
     }
   }
   if (rand === 2 || rand === 1) {
-    if (curState === 'Happy') {
+    if (curState.value === 'Happy') {
       await petAnimation('/vup/Music/C/Happy_' + rand, false)
     } else {
       await petAnimation('/vup/Music/C/Normal_' + rand, false)
@@ -889,5 +876,5 @@ export async function danceToggle() {
  * @curTry: 当前要执行的状态
  */
 export function getFlagsAnd(curTry: boolean) {
-  return !curTry && (isStudy || isCopy || isLive || isSleep || isDance || isResearch || isPlayOne || isWorkClean || isRemoveObject)
+  return !curTry && (isStudy.value || isCopy.value || isLive.value || isSleep.value || isDance.value || isResearch.value || isPlayOne.value || isWorkClean.value || isRemoveObject.value)
 }

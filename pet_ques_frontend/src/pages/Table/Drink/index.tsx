@@ -54,10 +54,6 @@ const getExpandInfo = (record: API.Drink) => {
   ]);
 }
 
-const handleBuyDrink = (drink: API.Drink) => {
-  console.log(drink);
-}
-
 const DrinkTable: React.FC = (props) => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
@@ -86,6 +82,10 @@ const DrinkTable: React.FC = (props) => {
   if (!initialState) {
     return (<div>加载错误</div>);
   }
+
+  const handleBuyDrink = (props?.handleBuyDrink || ((drink: API.Drink) => {
+    console.log(drink);
+  }))
 
   const tableWidth = props?.width || '60%'
 

@@ -115,7 +115,7 @@ export const speedNormal = 9
 export const speedSlow = 6
 export const speedFalling = 17
 
-export const imgUrlPrefix = "http://http://192.168.116.129:12432/static/"
+export const imgUrlPrefix = "http://192.168.116.129:12432/static"
 
 // 两帧图片之间的间隔
 export const animationGap = 110

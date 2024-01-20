@@ -25,6 +25,7 @@
 #include "controller/FoodController.h"
 #include "controller/MedicineController.h"
 #include "controller/PresentController.h"
+#include "OtherInteractionController.h"
 
 using namespace Pistache;
 
@@ -96,6 +97,7 @@ HTTP_PROTOTYPE(MyHandler)
         FoodController foodController;
         MedicineController medicineController;
         PresentController presentController;
+        OtherInteractionController otherInteractionController;
 
         std::cout << "拦截到请求:" << req.resource() << std::endl;
 
@@ -107,6 +109,8 @@ HTTP_PROTOTYPE(MyHandler)
             medicineController.medicineRequestHandlers[req.resource()](medicineController, req, response);
         } else if(presentController.presentRequestHandlers.find(req.resource())!=presentController.presentRequestHandlers.end()) {
             presentController.presentRequestHandlers[req.resource()](presentController, req, response);
+        } else if(otherInteractionController.otherInteractionRequestHandlers.find(req.resource())!=otherInteractionController.otherInteractionRequestHandlers.end()) {
+            otherInteractionController.otherInteractionRequestHandlers[req.resource()](otherInteractionController, req, response);
         } else if (req.resource() == "/exception") {
             throw std::runtime_error("Exception thrown in the handler");
         } else if (req.resource() == "/timeout") {

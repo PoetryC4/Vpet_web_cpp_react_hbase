@@ -101,6 +101,16 @@ void Drink::setProperty(const std::string &propertyName, const std::string &valu
 }
 
 Drink::Drink() {
+    Drink::drinkId = -1;
+    Drink::drinkEndu = 0;
+    Drink::drinkExp = 0;
+    Drink::drinkHealth = 0;
+    Drink::drinkHunger = 0;
+    Drink::drinkName = "";
+    Drink::drinkPrice = 0;
+    Drink::drinkThirsty = 0;
+    Drink::drinkPicPath = "";
+    Drink::drinkMood = 0;
     propertyIntegerSetters["drinkId"] = &Drink::setDrinkId;
     propertyFloatSetters["drinkPrice"] = &Drink::setDrinkPrice;
     propertyStringSetters["drinkPicPath"] = &Drink::setDrinkPicPath;
@@ -111,5 +121,26 @@ Drink::Drink() {
     propertyFloatSetters["drinkEndu"] = &Drink::setDrinkEndu;
     propertyFloatSetters["drinkExp"] = &Drink::setDrinkExp;
     propertyFloatSetters["drinkHealth"] = &Drink::setDrinkHealth;
+}
+
+Drink &Drink::operator=(const Drink &other) {
+    // 1. 处理自我赋值
+    if (this != &other) {
+        // 2. 释放当前对象的资源（如果有的话）
+
+        // 3. 复制参数对象的值
+        drinkId = other.drinkId;
+        drinkPrice = other.drinkPrice;
+        drinkPicPath = other.drinkPicPath;
+        drinkName = other.drinkName;
+        drinkHunger = other.drinkHunger;
+        drinkMood = other.drinkMood;
+        drinkThirsty = other.drinkThirsty;
+        drinkEndu = other.drinkEndu;
+        drinkExp = other.drinkExp;
+        drinkHealth = other.drinkHealth;
+    }
+    // 4. 返回一个对当前对象的引用，以支持连续赋值
+    return *this;
 }
 

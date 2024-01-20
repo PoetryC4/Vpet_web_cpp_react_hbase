@@ -43,6 +43,8 @@ public:
         };
     }
 
+    Food& operator=(const Food& other);
+
     const int &getFoodId() const;
     void setFoodId(const int &foodId);
 

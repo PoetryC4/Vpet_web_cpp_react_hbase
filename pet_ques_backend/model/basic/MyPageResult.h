@@ -17,13 +17,14 @@ private:
 public:
     MyPageResult() {
         count = -1;
+        records = {};
     };
     // 构造函数，用于初始化属性
     MyPageResult(int intValue, const std::vector<T>& vectorValue)
             : count(intValue), records(vectorValue) {
     }
     // Getter for count
-    [[nodiscard]] int getCount() const {
+    int getCount() const {
         return count;
     };
 
