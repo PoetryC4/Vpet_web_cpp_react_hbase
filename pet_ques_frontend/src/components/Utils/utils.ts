@@ -11,7 +11,8 @@ export async function getAllImgsNames(targetFolder: string) {
     let res = await getFileNamesUsingGet({
       targetFolder: targetFolder,
     })
-    console.log("获取到的图片" + res)
+    res.sort((a, b) => a.localeCompare(b));
+    // console.log("获取到的图片" + res)
     return res
   } catch (e) {
     message.error(`获取图片出错{e}`)

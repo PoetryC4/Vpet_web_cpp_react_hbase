@@ -1,159 +1,172 @@
-
 export const itemTransformScale = {
-  value: 0.005
+    value: 0.005
 }
 export const setItemTransformScale = (value: number) => {
-  itemTransformScale.value = value
+    itemTransformScale.value = value
 }
 export const petTopMargin = {
-  value: 0
+    value: 350
 }
 export const setPetTopMargin = (value: number) => {
-  petTopMargin.value = value
+    petTopMargin.value = value
 }
 export const petLeftMargin = {
-  value: 0
+    value: 0
 }
 export const setPetLeftMargin = (value: number) => {
-  petLeftMargin.value = value
+    petLeftMargin.value = value
 }
 export const isCopy = {
-  value: false
+    value: false
 }
 export const setIsCopy = (value: boolean) => {
-  isCopy.value = value
+    isCopy.value = value
 }
 export const isLive = {
-  value: false
+    value: false
 }
 export const setIsLive = (value: boolean) => {
-  isLive.value = value
+    isLive.value = value
 }
 export const isSleep = {
-  value: false
+    value: false
 }
 export const setIsSleep = (value: boolean) => {
-  isSleep.value = value
+    isSleep.value = value
 }
 export const isDance = {
-  value: false
+    value: false
 }
 export const setIsDance = (value: boolean) => {
-  isDance.value = value
+    isDance.value = value
 }
 export const isResearch = {
-  value: false
+    value: false
 }
 export const setIsResearch = (value: boolean) => {
-  isResearch.value = value
+    isResearch.value = value
 }
 export const isPlayOne = {
-  value: false
+    value: false
 }
 export const setIsPlayOne = (value: boolean) => {
-  isPlayOne.value = value
+    isPlayOne.value = value
 }
 export const isRemoveObject = {
-  value: false
+    value: false
 }
 export const setIsRemoveObject = (value: boolean) => {
-  isRemoveObject.value = value
+    isRemoveObject.value = value
 }
 export const isWorkClean = {
-  value: false
+    value: false
 }
 export const setIsWorkClean = (value: boolean) => {
-  isWorkClean.value = value
+    isWorkClean.value = value
 }
 export const isStudy = {
-  value: false
+    value: false
 }
 export const setIsStudy = (value: boolean) => {
-  isStudy.value = value
+    isStudy.value = value
 }
 export const durShutdown = {
-  value: false
+    value: false
 }
 export const setDurShutdown = (value: boolean) => {
-  durShutdown.value = value
+    durShutdown.value = value
 }
 export const isLaunched = {
-  value: false
+    value: false
 }
 export const setIsLaunched = (value: boolean) => {
-  isLaunched.value = value
+    isLaunched.value = value
 }
 export const recoverAnimationFlag = {
-  value: false
+    value: false
 }
 export const setRecoverAnimationFlag = (value: boolean) => {
-  recoverAnimationFlag.value = value
+    recoverAnimationFlag.value = value
 }
 export const illAnimationFlag = {
-  value: false
+    value: false
 }
 export const setIllAnimationFlag = (value: boolean) => {
-  illAnimationFlag.value = value
+    illAnimationFlag.value = value
 }
 export const hungryAnimationFlag = {
-  value: false
+    value: false
 }
 export const setHungryAnimationFlag = (value: boolean) => {
-  hungryAnimationFlag.value = value
+    hungryAnimationFlag.value = value
 }
 export const thirstyAnimationFlag = {
-  value: false
+    value: false
 }
 export const setThirstyAnimationFlag = (value: boolean) => {
-  thirstyAnimationFlag.value = value
+    thirstyAnimationFlag.value = value
 }
 export const boringAnimationFlag = {
-  value: false
+    value: false
 }
 export const setBoringAnimationFlag = (value: boolean) => {
-  boringAnimationFlag.value = value
+    boringAnimationFlag.value = value
 }
 export const preLaunched = {
-  value: false
+    value: false
 }
 export const setPreLaunched = (value: boolean) => {
-  preLaunched.value = value
+    preLaunched.value = value
 }
 export const durDebug = {
-  value: false
+    value: false
 }
 export const setDurDebug = (value: boolean) => {
-  durDebug.value = value
+    durDebug.value = value
 }
 export const isDragged = {
-  value: false
+    value: false
 }
 export const setIsDragged = (value: boolean) => {
-  isDragged.value = value
+    isDragged.value = value
 }
 
 export const durSwitch = {
-  value: false
+    value: false
 }
 export const setDurSwitch = (value: boolean) => {
-  durSwitch.value = value
+    durSwitch.value = value
 }
 
 export const enableRandMov = {
-  value: true
+    value: true
 }
 export const setEnableRandMov = (value: boolean) => {
-  enableRandMov.value = value
+    enableRandMov.value = value
 }
 export const imgSize = {
-  value: 200
+    value: 400
 }
 export const setImgSize = (value: number) => {
-  imgSize.value = value
+    imgSize.value = value
 }
 export const animationTimestamp = {
-  value: 200
+    value: 200
 }
 export const setAnimationTimestamp = (value: number) => {
-  animationTimestamp.value = value
+    animationTimestamp.value = value
 }
+
+export const petTopGap = {
+    value: 0
+}
+export const setPetTopGap = (value: number) => {
+    petTopGap.value = value
+}
+export const petLeftGap = {
+    value: 0
+}
+export const setPetLeftGap = (value: number) => {
+    petLeftGap.value = value
+}
+
