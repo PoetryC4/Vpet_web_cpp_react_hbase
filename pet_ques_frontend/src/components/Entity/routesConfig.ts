@@ -1,5 +1,9 @@
 const routesConfig = [
   {
+    path: '/',
+    redirect: '/pet/display',
+  },
+  {
     path: '/pet',
     layout: false,
     name: 'vPet',

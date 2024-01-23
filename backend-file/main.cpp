@@ -11,7 +11,7 @@ namespace fs = std::filesystem;
 
 const std::string absolutePathPrefix = "/home/clpo/Documents/pet_ques_new/static_file";
 
-std::string getFileExtension(const std::string& file_path) {
+std::string getFileExtension(const std::string &file_path) {
     size_t last_dot_pos = file_path.find_last_of('.');
     if (last_dot_pos != std::string::npos) {
         return file_path.substr(last_dot_pos + 1);
@@ -22,9 +22,21 @@ std::string getFileExtension(const std::string& file_path) {
 int main() {
     httplib::Server svr;
 
+    // 处理跨域请求
+    svr.Options("/static/(.*)", [&](const httplib::Request &req, httplib::Response &res) {
+        std::cout << req.path << std::endl;
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+    });
+
+
     // 处理GET请求，将静态文件映射到相应的路径
     svr.Get("/static/drink/(.*)", [&](const httplib::Request &req, httplib::Response &res) {
         std::string file_path = absolutePathPrefix + "/drink/" + req.matches[1].str();
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
         std::cout << file_path << std::endl;
 
         // 读取文件内容
@@ -43,6 +55,9 @@ int main() {
 
     svr.Get("/static/medicine/(.*)", [&](const httplib::Request &req, httplib::Response &res) {
         std::string file_path = absolutePathPrefix + "/medicine/" + req.matches[1].str();
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
         std::cout << file_path << std::endl;
 
         // 读取文件内容
@@ -52,7 +67,6 @@ int main() {
             return;
         }
 
-        // 设置响应头
         res.set_header("Content-Type", "image/" + getFileExtension(req.path));
 
         // 将文件内容作为响应主体
@@ -61,6 +75,9 @@ int main() {
 
     svr.Get("/static/food/(.*)", [&](const httplib::Request &req, httplib::Response &res) {
         std::string file_path = absolutePathPrefix + "/food/" + req.matches[1].str();
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
         std::cout << file_path << std::endl;
 
         // 读取文件内容
@@ -69,8 +86,6 @@ int main() {
             res.status = 404;
             return;
         }
-
-        // 设置响应头
         res.set_header("Content-Type", "image/" + getFileExtension(req.path));
 
         // 将文件内容作为响应主体
@@ -79,6 +94,9 @@ int main() {
 
     svr.Get("/static/present/(.*)", [&](const httplib::Request &req, httplib::Response &res) {
         std::string file_path = absolutePathPrefix + "/present/" + req.matches[1].str();
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
         std::cout << file_path << std::endl;
 
         // 读取文件内容
@@ -87,8 +105,6 @@ int main() {
             res.status = 404;
             return;
         }
-
-        // 设置响应头
         res.set_header("Content-Type", "image/" + getFileExtension(req.path));
 
         // 将文件内容作为响应主体
@@ -97,6 +113,9 @@ int main() {
 
     svr.Get("/static/vup/(.*)", [&](const httplib::Request &req, httplib::Response &res) {
         std::string file_path = absolutePathPrefix + "/vup/" + req.matches[1].str();
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
         std::cout << file_path << std::endl;
 
         // 读取文件内容
@@ -106,7 +125,6 @@ int main() {
             return;
         }
 
-        // 设置响应头
         res.set_header("Content-Type", "image/" + getFileExtension(req.path));
 
         // 将文件内容作为响应主体

@@ -58,8 +58,8 @@ import {
     setPreLaunched
 } from "@/components/Entity/petStateProperty";
 import * as animationFunctions from "@/components/PetBehaviors/petAnimationDebugs";
-import {chatWithLlmUsingPost} from "@/services/pet_ques/InteractionController";
-import {getCurTime, getQuadrantOfEight, randomInt} from "@/components/Utils/utils";
+import {chatWithLlmUsingPost, getFileNamesUsingGet} from "@/services/pet_ques/InteractionController";
+import {getBlob, getCurTime, getQuadrantOfEight, randomInt} from "@/components/Utils/utils";
 import {sleep} from "@antfu/utils";
 import {SendOutline} from "antd-mobile-icons";
 import {
@@ -96,7 +96,7 @@ import {
 } from "@/components/Entity/petProperty";
 import {petAnimation, petAnimation3layers} from "@/components/PetBehaviors/petAnimationUtils";
 import {
-    animationGap,
+    animationGap, imgUrlPrefix,
     interactionNames, listenerGap,
     petValueChange,
     specialInteractionNames
@@ -249,7 +249,10 @@ const PetDisplay: React.FC = () => {
 
     const [popoverPlacement, setPopoverPlacement, refPopoverPlacement] = useState<TooltipPlacement>('topLeft');
 
-    const [chatResponseDisplay, setChatResponseDisplay, refChatResponseDisplay] = useState<{ title: any, content: any }>({
+    const [chatResponseDisplay, setChatResponseDisplay, refChatResponseDisplay] = useState<{
+        title: any,
+        content: any
+    }>({
         title: 'title',
         content: 'content'
     })
@@ -283,7 +286,13 @@ const PetDisplay: React.FC = () => {
 
     const [stateSelected, setStateSelected] = useState(0);
     const [functionSelected, setFunctionSelected] = useState(0);
-    const [functionOptions, setFunctionOptions] = useState<{ label: string; value: any; }[]>([]);
+    const [functionOptions, setFunctionOptions] = useState<{
+        label: string;
+        value: any;
+    }[]>([]);
+    const [loadPerc, setLoadPerc] = useState("0%");
+    const [preLaunchViewStyle, setPreLaunchViewStyle] = useState<React.CSSProperties>({display: "block", height: '100%', width: '100%'});
+    const [petMainViewStyle, setPetMainViewStyle] = useState<React.CSSProperties>({display: "none"});
 
     if (!initialState) {
         return (<div>加载错误</div>);
@@ -871,7 +880,10 @@ const PetDisplay: React.FC = () => {
         }
     }
 
-    const debugFuncFilterOption = (input: string, option?: { label: string; value: string }) =>
+    const debugFuncFilterOption = (input: string, option?: {
+        label: string;
+        value: string
+    }) =>
         (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
 
@@ -1017,21 +1029,46 @@ const PetDisplay: React.FC = () => {
         }
     };
     useEffect(() => {
-
-        // TODO 预加载
-        setPreLaunched(true)
-
-
-        let animationOptionsTmp = []
-        let idx = 0
-        for (const functionName in animationFunctions) {
-            animationOptionsTmp.push({
-                label: functionName,
-                value: idx
+        try {
+            getFileNamesUsingGet({
+                targetFolder: "ATslash;vup"
+            }).then(async (res) => {
+                let preFiles = res
+                let countFiles = preFiles.length
+                let countCur = 0
+                for (let i = 0; i < countFiles; i++) {
+                    if (i - countCur >= 150) {
+                        await sleep(100)
+                        continue
+                    }
+                    if (i - countCur >= 50) {
+                        await sleep(100)
+                    }
+                    getBlob(imgUrlPrefix + preFiles[i]).then((value) => {
+                        countCur++
+                        //console.log(countCur)
+                        setLoadPerc(Math.ceil(countCur / countFiles * 100) + '%')
+                        if (countCur === countFiles) {
+                            setPreLaunched(true)
+                            let animationOptionsTmp = []
+                            let idx = 0
+                            for (const functionName in animationFunctions) {
+                                animationOptionsTmp.push({
+                                    label: functionName,
+                                    value: idx
+                                })
+                                idx++
+                            }
+                            setFunctionOptions(animationOptionsTmp)
+                            setPreLaunchViewStyle({...preLaunchViewStyle, display: "none"})
+                            setPetMainViewStyle({display: "block"})
+                        }
+                    })
+                }
             })
-            idx++
+        } catch (e) {
+            message.error(e)
         }
-        setFunctionOptions(animationOptionsTmp)
         // 如果有清理逻辑，可以在返回的函数中处理
         return () => {
             // 清理逻辑
@@ -1040,231 +1077,237 @@ const PetDisplay: React.FC = () => {
     }, []);
     return (
         <div id={'petDisplayView'}>
-            <Menu
-                onClick={onMenuClick}
-                style={{
-                    position: 'absolute', width: 256, inset: 0, margin: '6% auto auto 2%'
-                }}
-                defaultSelectedKeys={['1']}
-                mode="inline"
-                items={menuItems}
-            />
-            <Popover placement={popoverPlacement} title={chatResponseDisplay.title}
-                     content={chatResponseDisplay.content}
-                     open={popoverSwitch}
-                     onOpenChange={(newOpen: boolean) => {
-                         setPopoverSwitch(newOpen);
-                     }}>
-                <div style={chatPopoverStyle}>
-                </div>
-            </Popover>
-            <div id={'petMainPart'}>
-                <Image
-                    id={'petBackLay'}
-                    preview={false}
-                    width={400}
-                    src={petBackLayImgUrl}
-                    style={petBackLayStyle}
-                    onMouseDown={petClickedDown}
-                    onMouseMove={petDragMove}
-                />
-                <Image
-                    id={'petItemLay'}
-                    preview={false}
-                    width={400}
-                    src={petItemLayImgUrl}
-                    style={petItemLayStyle}
-                />
-                <Image
-                    id={'petFrontLay'}
-                    preview={false}
-                    width={400}
-                    src={petFrontLayImgUrl}
-                    style={petFrontLayStyle}
-                />
+            <div style={preLaunchViewStyle}>
+                <div
+                    style={{height: '100%', width: '100%', inset: 0, margin: "auto auto auto auto", position: "absolute"}}>{loadPerc}</div>
             </div>
-            <List
-                bordered
-                itemLayout="horizontal"
-                dataSource={petValueDisplayData}
-                style={{
-                    position: 'absolute', width: 200, inset: 0, margin: '2% 2% auto auto'
-                }}
-                renderItem={(item, index) => (
-                    <List.Item>
-                        <Statistic title={item.title} value={item.value}/>
-                    </List.Item>
-                )}
-            />
-            <div id={'drawers'} style={{position: 'absolute'}}>
-                <Drawer
-                    width={drawerWidth}
-                    title="动画调试"
-                    placement={'right'}
-                    closable={false}
-                    onClose={() => {
-                        setDebugDrawerSwitch(false)
+            <div style={petMainViewStyle}>
+                <Menu
+                    onClick={onMenuClick}
+                    style={{
+                        position: 'absolute', width: 256, inset: 0, margin: '6% auto auto 2%'
                     }}
-                    open={debugDrawerSwitch}
-                    key={'animeDebug'}
-                >
-
-                    <div>
-                        <Row>
-                            <Col span={24}>
-                                <Radio.Group onChange={onDebugStateChange} value={stateSelected}>
-                                    <Radio value={0}>Happy</Radio>
-                                    <Radio value={1}>Normal</Radio>
-                                    <Radio value={2}>Ill</Radio>
-                                    <Radio value={3}>PoorCondition</Radio>
-                                </Radio.Group></Col>
-                        </Row>
-                        <Row style={{marginTop: 20, marginBottom: 20}}>
-                            <Col span={24}>
-                                <Select
-                                    showSearch
-                                    placeholder="选择要调试的动画"
-                                    optionFilterProp="children"
-                                    onChange={onDebugFunctionChange}
-                                    filterOption={debugFuncFilterOption}
-                                    options={functionOptions}
-                                />
-                            </Col>
-                        </Row>
-                        <Row style={{marginTop: 20, marginBottom: 20}}>
-                            <Col span={24}>
-                                <Button
-                                    type="primary"
-                                    icon={<BugOutlined/>}
-                                    onClick={beginAnimationDebug}
-                                >
-                                    开始调试
-                                </Button>
-                            </Col>
-                        </Row>
+                    defaultSelectedKeys={['1']}
+                    mode="inline"
+                    items={menuItems}
+                />
+                <Popover placement={popoverPlacement} title={chatResponseDisplay.title}
+                         content={chatResponseDisplay.content}
+                         open={popoverSwitch}
+                         onOpenChange={(newOpen: boolean) => {
+                             setPopoverSwitch(newOpen);
+                         }}>
+                    <div style={chatPopoverStyle}>
                     </div>
-                </Drawer>
-                <Drawer
-                    width={drawerWidth}
-                    title="特殊互动"
-                    placement={'right'}
-                    closable={false}
-                    onClose={() => {
-                        setSpecialInterDrawerSwitch(false)
+                </Popover>
+                <div id={'petMainPart'}>
+                    <Image
+                        id={'petBackLay'}
+                        preview={false}
+                        width={400}
+                        src={petBackLayImgUrl}
+                        style={petBackLayStyle}
+                        onMouseDown={petClickedDown}
+                        onMouseMove={petDragMove}
+                    />
+                    <Image
+                        id={'petItemLay'}
+                        preview={false}
+                        width={400}
+                        src={petItemLayImgUrl}
+                        style={petItemLayStyle}
+                    />
+                    <Image
+                        id={'petFrontLay'}
+                        preview={false}
+                        width={400}
+                        src={petFrontLayImgUrl}
+                        style={petFrontLayStyle}
+                    />
+                </div>
+                <List
+                    bordered
+                    itemLayout="horizontal"
+                    dataSource={petValueDisplayData}
+                    style={{
+                        position: 'absolute', width: 200, inset: 0, margin: '2% 2% auto auto'
                     }}
-                    open={specialInterDrawerSwitch}
-                    key={'specialInter'}
-                >
+                    renderItem={(item, index) => (
+                        <List.Item>
+                            <Statistic title={item.title} value={item.value}/>
+                        </List.Item>
+                    )}
+                />
+                <div id={'drawers'} style={{position: 'absolute'}}>
+                    <Drawer
+                        width={drawerWidth}
+                        title="动画调试"
+                        placement={'right'}
+                        closable={false}
+                        onClose={() => {
+                            setDebugDrawerSwitch(false)
+                        }}
+                        open={debugDrawerSwitch}
+                        key={'animeDebug'}
+                    >
 
-                    <div>
-                        <Row>
-                            <Col span={12}>
-                                <InputNumber value={customTargetX} placeholder={'请填入目标X值'}
-                                             onChange={(value: number | null) => {
-                                                 setCustomTargetX(value || 0)
-                                             }}/>
-                            </Col>
-                            <Col span={12}>
-                                <InputNumber value={customTargetY} placeholder={'请填入目标Y值'}
-                                             onChange={(value: number | null) => {
-                                                 setCustomTargetY(value || 0)
-                                             }}/></Col>
-                        </Row>
-                        <Row style={{marginTop: 20, marginBottom: 20}}>
-                            <Col span={24}>
-                                <Button
-                                    type="primary"
-                                    icon={<SendOutline/>}
-                                    onClick={beginManualMove}
-                                >
-                                    移动
-                                </Button>
-                            </Col>
-                        </Row>
-                        <Divider/>
-                        <Row>
-                            <Col span={24}>
-                                <Search
-                                    placeholder="输入你想说的话"
-                                    onSearch={beginChat}
-                                    enterButton={<SendOutline/>}
-                                    loading={isChatLoading}
-                                    value={chatPrompt}
-                                    onChange={(e) => {
-                                        setChatPrompt(e.target.value)
-                                    }}/>
-                            </Col>
-                        </Row>
-                    </div>
-                </Drawer>
-                <Drawer
-                    width={drawerWidth}
-                    title="美食商店"
-                    placement={'left'}
-                    closable={false}
-                    onClose={() => {
-                        setFoodDrawerSwitch(false)
-                    }}
-                    open={foodDrawerSwitch}
-                    key={'food'}
-                >
-                    <FoodTable width={'95%'} handleBuyFood={(food: API.Food) => {
-                        console.log(food);
-                        setFoodDrawerSwitch(false)
-                        buyFood(food)
-                    }}/>
-                </Drawer>
-                <Drawer
-                    width={drawerWidth}
-                    title="饮品商店"
-                    placement={'left'}
-                    closable={false}
-                    onClose={() => {
-                        setDrinkDrawerSwitch(false)
-                    }}
-                    open={drinkDrawerSwitch}
-                    key={'drink'}
-                >
-                    <DrinkTable width={'95%'} handleBuyDrink={(drink: API.Drink) => {
-                        console.log(drink);
-                        setDrinkDrawerSwitch(false)
-                        buyDrink(drink);
-                    }}/>
-                </Drawer>
-                <Drawer
-                    width={drawerWidth}
-                    title="大药房"
-                    placement={'left'}
-                    closable={false}
-                    onClose={() => {
-                        setMedicineDrawerSwitch(false)
-                    }}
-                    open={medicineDrawerSwitch}
-                    key={'medicine'}
-                >
-                    <MedicineTable width={'95%'} handleBuyMedicine={(medicine: API.Medicine) => {
-                        console.log(medicine);
-                        setMedicineDrawerSwitch(false)
-                        buyMedicine(medicine)
-                    }}/>
-                </Drawer>
-                <Drawer
-                    width={drawerWidth}
-                    title="礼物商店"
-                    placement={'left'}
-                    closable={false}
-                    onClose={() => {
-                        setPresentDrawerSwitch(false)
-                    }}
-                    open={presentDrawerSwitch}
-                    key={'present'}
-                >
-                    <PresentTable width={'95%'} handleBuyPresent={(present: API.Present) => {
-                        console.log(present);
-                        setPresentDrawerSwitch(false)
-                        buyPresent(present)
-                    }}/>
-                </Drawer>
+                        <div>
+                            <Row>
+                                <Col span={24}>
+                                    <Radio.Group onChange={onDebugStateChange} value={stateSelected}>
+                                        <Radio value={0}>Happy</Radio>
+                                        <Radio value={1}>Normal</Radio>
+                                        <Radio value={2}>Ill</Radio>
+                                        <Radio value={3}>PoorCondition</Radio>
+                                    </Radio.Group></Col>
+                            </Row>
+                            <Row style={{marginTop: 20, marginBottom: 20}}>
+                                <Col span={24}>
+                                    <Select
+                                        showSearch
+                                        placeholder="选择要调试的动画"
+                                        optionFilterProp="children"
+                                        onChange={onDebugFunctionChange}
+                                        filterOption={debugFuncFilterOption}
+                                        options={functionOptions}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row style={{marginTop: 20, marginBottom: 20}}>
+                                <Col span={24}>
+                                    <Button
+                                        type="primary"
+                                        icon={<BugOutlined/>}
+                                        onClick={beginAnimationDebug}
+                                    >
+                                        开始调试
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Drawer>
+                    <Drawer
+                        width={drawerWidth}
+                        title="特殊互动"
+                        placement={'right'}
+                        closable={false}
+                        onClose={() => {
+                            setSpecialInterDrawerSwitch(false)
+                        }}
+                        open={specialInterDrawerSwitch}
+                        key={'specialInter'}
+                    >
+
+                        <div>
+                            <Row>
+                                <Col span={12}>
+                                    <InputNumber value={customTargetX} placeholder={'请填入目标X值'}
+                                                 onChange={(value: number | null) => {
+                                                     setCustomTargetX(value || 0)
+                                                 }}/>
+                                </Col>
+                                <Col span={12}>
+                                    <InputNumber value={customTargetY} placeholder={'请填入目标Y值'}
+                                                 onChange={(value: number | null) => {
+                                                     setCustomTargetY(value || 0)
+                                                 }}/></Col>
+                            </Row>
+                            <Row style={{marginTop: 20, marginBottom: 20}}>
+                                <Col span={24}>
+                                    <Button
+                                        type="primary"
+                                        icon={<SendOutline/>}
+                                        onClick={beginManualMove}
+                                    >
+                                        移动
+                                    </Button>
+                                </Col>
+                            </Row>
+                            <Divider/>
+                            <Row>
+                                <Col span={24}>
+                                    <Search
+                                        placeholder="输入你想说的话"
+                                        onSearch={beginChat}
+                                        enterButton={<SendOutline/>}
+                                        loading={isChatLoading}
+                                        value={chatPrompt}
+                                        onChange={(e) => {
+                                            setChatPrompt(e.target.value)
+                                        }}/>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Drawer>
+                    <Drawer
+                        width={drawerWidth}
+                        title="美食商店"
+                        placement={'left'}
+                        closable={false}
+                        onClose={() => {
+                            setFoodDrawerSwitch(false)
+                        }}
+                        open={foodDrawerSwitch}
+                        key={'food'}
+                    >
+                        <FoodTable width={'95%'} handleBuyFood={(food: API.Food) => {
+                            console.log(food);
+                            setFoodDrawerSwitch(false)
+                            buyFood(food)
+                        }}/>
+                    </Drawer>
+                    <Drawer
+                        width={drawerWidth}
+                        title="饮品商店"
+                        placement={'left'}
+                        closable={false}
+                        onClose={() => {
+                            setDrinkDrawerSwitch(false)
+                        }}
+                        open={drinkDrawerSwitch}
+                        key={'drink'}
+                    >
+                        <DrinkTable width={'95%'} handleBuyDrink={(drink: API.Drink) => {
+                            console.log(drink);
+                            setDrinkDrawerSwitch(false)
+                            buyDrink(drink);
+                        }}/>
+                    </Drawer>
+                    <Drawer
+                        width={drawerWidth}
+                        title="大药房"
+                        placement={'left'}
+                        closable={false}
+                        onClose={() => {
+                            setMedicineDrawerSwitch(false)
+                        }}
+                        open={medicineDrawerSwitch}
+                        key={'medicine'}
+                    >
+                        <MedicineTable width={'95%'} handleBuyMedicine={(medicine: API.Medicine) => {
+                            console.log(medicine);
+                            setMedicineDrawerSwitch(false)
+                            buyMedicine(medicine)
+                        }}/>
+                    </Drawer>
+                    <Drawer
+                        width={drawerWidth}
+                        title="礼物商店"
+                        placement={'left'}
+                        closable={false}
+                        onClose={() => {
+                            setPresentDrawerSwitch(false)
+                        }}
+                        open={presentDrawerSwitch}
+                        key={'present'}
+                    >
+                        <PresentTable width={'95%'} handleBuyPresent={(present: API.Present) => {
+                            console.log(present);
+                            setPresentDrawerSwitch(false)
+                            buyPresent(present)
+                        }}/>
+                    </Drawer>
+                </div>
             </div>
         </div>
     );
