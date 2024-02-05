@@ -1,10 +1,6 @@
 import {useModel} from '@umijs/max';
 import {Button, theme, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
-import {getAllDrinkUsingGet} from "@/services/pet_ques/drinkController";
-import Title from "antd/es/typography/Title";
-import Paragraph from "antd/es/skeleton/Paragraph";
-import {tryGetNum, trySetNum} from "@/components/test";
 
 /**
  * 每个单独的卡片，为了复用样式抽成了组件
@@ -38,8 +34,8 @@ const Test: React.FC = () => {
 
   return (
     <div>
-      <Button onClick={tryGetNum}>获取</Button>
-      <Button onClick={trySetNum}>设置随机值</Button>
+      <Button onClick={()=>{console.log("测试1")}}>获取</Button>
+      <Button onClick={()=>{console.log("测试2")}}>设置随机值</Button>
     </div>
   );
 };

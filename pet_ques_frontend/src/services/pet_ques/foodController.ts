@@ -5,7 +5,7 @@ import {request} from '@umijs/max';
 const API_PREFIX = "/api"
 
 export async function addFoodUsingPost(body: API.FoodAddRequest, options?: { [key: string]: any }) {
-  return request<string>(API_PREFIX + '/food/add', {
+  return request<API.BaseResponseString_>(API_PREFIX + '/food/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export async function addFoodUsingPost(body: API.FoodAddRequest, options?: { [ke
 }
 
 export async function updateFoodUsingPost(body: API.FoodUpdateRequest, options?: { [key: string]: any }) {
-  return request<string>(API_PREFIX + '/food/updateById', {
+  return request<API.BaseResponseString_>(API_PREFIX + '/food/updateById', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export async function updateFoodUsingPost(body: API.FoodUpdateRequest, options?:
 }
 
 export async function getFoodByPageUsingPost(body: API.MyPageRequest, options?: { [key: string]: any }) {
-  return request<API.FoodPage>(API_PREFIX + '/food/page', {
+  return request<API.BaseResponseFoodPage_>(API_PREFIX + '/food/page', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export async function getFoodByIdUsingGet(
   params: API.GetFoodByIdUsingGetParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.Food>(API_PREFIX + '/food/getById', {
+  return request<API.BaseResponseFood_>(API_PREFIX + '/food/getById', {
     method: 'GET',
     params: {
       ...params,
@@ -52,7 +52,7 @@ export async function getFoodByIdUsingGet(
 }
 
 export async function getAllFoodUsingGet(options?: { [key: string]: any }) {
-  return request<API.Food[]>(API_PREFIX + '/food/getAll', {
+  return request<API.BaseResponseFoodArray_>(API_PREFIX + '/food/getAll', {
     method: 'GET',
     ...(options || {}),
   });

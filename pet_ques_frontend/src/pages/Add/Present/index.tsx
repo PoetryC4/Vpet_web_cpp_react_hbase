@@ -49,19 +49,19 @@ const PresentAdd: React.FC = () => {
 
   useEffect(() => {
     const urlParams = new URL(window.location.href).searchParams;
-    let presentId = urlParams.get('presentId');
-    if (presentId !== null) {
-      getPresentByIdUsingGet({presentId: presentId}).then((res) => {
-        if (res != null) {
+    let present_id = urlParams.get('present_id');
+    if (present_id !== null) {
+      getPresentByIdUsingGet({present_id: present_id}).then((res) => {
+        if (res.code === 0) {
           message.success("获取成功");
-          form.setFieldValue('presentName', res.presentName);
-          form.setFieldValue('presentPicPath', res.presentPicPath);
-          form.setFieldValue('presentPrice', res.presentPrice);
-          form.setFieldValue('presentMood', res.presentMood);
-          form.setFieldValue('presentExp', res.presentExp);
-          form.setFieldValue('presentPerformance', res.presentPerformance);
+          form.setFieldValue('present_name', res.data.present_name);
+          form.setFieldValue('present_pic_path', res.data.present_pic_path);
+          form.setFieldValue('present_price', res.data.present_price);
+          form.setFieldValue('present_mood', res.data.present_mood);
+          form.setFieldValue('present_exp', res.data.present_exp);
+          form.setFieldValue('present_performance', res.data.present_performance);
         } else {
-          message.error("获取失败");
+          message.error("获取失败", res.msg);
         }
       });
     }
@@ -74,7 +74,11 @@ const PresentAdd: React.FC = () => {
   const onFinish = async (values: any) => {
     try {
       const res = await addPresentUsingPost(values);
-      message.success("添加成功" + res);
+      if (res.code === 0) {
+        message.success("添加成功" + res);
+      } else {
+        message.error("添加失败:", res.msg)
+      }
     } catch (error) {
       message.error("添加失败" + error);
     }
@@ -117,7 +121,7 @@ const PresentAdd: React.FC = () => {
         validateMessages={validateMessages}
       >
         <Form.Item
-          name="presentName"
+          name="present_name"
           label="礼物名称"
           rules={[{required: true, message: '请输入礼物名称'}]}
         >
@@ -126,7 +130,7 @@ const PresentAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="presentPicPath"
+          name="present_pic_path"
           label="图片名称"
           rules={[{required: true, message: '请输入图片名称'}]}
         >
@@ -135,7 +139,7 @@ const PresentAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="presentPrice"
+          name="present_price"
           label="礼物价格"
           rules={[{required: true, message: '请输入礼物价格'}]}
         >
@@ -146,7 +150,7 @@ const PresentAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="presentMood"
+          name="present_mood"
           label="礼物补充心情值"
           rules={[{required: true, message: '请输入礼物补充心情值'}]}
         >
@@ -157,7 +161,7 @@ const PresentAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="presentExp"
+          name="present_exp"
           label="礼物提供经验值"
           rules={[{required: true, message: '请输入礼物提供经验值'}]}
         >
@@ -168,7 +172,7 @@ const PresentAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="presentPerformance"
+          name="present_performance"
           label="礼物性能"
           rules={[{required: true, message: '请输入礼物性能'}]}
         >

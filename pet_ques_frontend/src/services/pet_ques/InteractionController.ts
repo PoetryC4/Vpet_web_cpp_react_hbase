@@ -9,7 +9,7 @@ export async function getFileNamesUsingGet(
   params: API.getFileNamesUsingGetParams,
   options?: { [key: string]: any },
 ) {
-  return request<string[]>(API_PREFIX + '/files/getAll', {
+  return request<API.BaseResponseStringArray_>(API_PREFIX + '/files/getAll', {
     method: 'GET',
     params: {
       ...params,
@@ -18,8 +18,9 @@ export async function getFileNamesUsingGet(
   });
 }
 
+// 暂时用不着
 export async function chatWithLlmUsingPost(body: API.llmChatRequest, options?: { [key: string]: any }) {
-  return request<string>(API_PREFIX + '/chat/chat', {
+  return request<any>(API_PREFIX + '/chat/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

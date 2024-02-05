@@ -49,26 +49,27 @@ const DrinkUpdate: React.FC = () => {
 
   useEffect(() => {
     const urlParams = new URL(window.location.href).searchParams;
-    let drinkId = urlParams.get('drinkId');
-    if (drinkId !== null) {
-      getDrinkByIdUsingGet({drinkId: drinkId}).then((res) => {
-        if (res != null) {
-          setCurDrinkId(res.drinkId || -1)
-          form.setFieldValue('drinkName', res.drinkName);
-          form.setFieldValue('drinkPicPath', res.drinkPicPath);
-          form.setFieldValue('drinkPrice', res.drinkPrice);
-          form.setFieldValue('drinkHunger', res.drinkHunger);
-          form.setFieldValue('drinkMood', res.drinkMood);
-          form.setFieldValue('drinkThirsty', res.drinkThirsty);
-          form.setFieldValue('drinkEndu', res.drinkEndu);
-          form.setFieldValue('drinkExp', res.drinkExp);
-          form.setFieldValue('drinkHealth', res.drinkHealth);
+    let drink_id = urlParams.get('drink_id');
+    if (drink_id !== null) {
+      setCurDrinkId(parseInt(drink_id))
+      getDrinkByIdUsingGet({drink_id: drink_id}).then((res) => {
+        if (res.code === 0) {
+          message.success("获取成功");
+          form.setFieldValue('drink_name', res.data.drink_name);
+          form.setFieldValue('drink_pic_path', res.data.drink_pic_path);
+          form.setFieldValue('drink_price', res.data.drink_price);
+          form.setFieldValue('drink_hunger', res.data.drink_hunger);
+          form.setFieldValue('drink_mood', res.data.drink_mood);
+          form.setFieldValue('drink_thirsty', res.data.drink_thirsty);
+          form.setFieldValue('drink_endu', res.data.drink_endu);
+          form.setFieldValue('drink_exp', res.data.drink_exp);
+          form.setFieldValue('drink_health', res.data.drink_health);
         } else {
-          message.error("获取失败");
+          message.error("获取失败:", res.msg)
         }
       });
     } else {
-      message.error("缺少drinkId")
+      message.error("缺少drink_id")
     }
     // 如果有清理逻辑，可以在返回的函数中处理
     return () => {
@@ -78,12 +79,16 @@ const DrinkUpdate: React.FC = () => {
 
   const onFinish = async (values: any) => {
     if (curDrinkId == null || curDrinkId < 0) {
-      message.error("无法修改，缺少drinkId");
+      message.error("无法修改，缺少drink_id");
       return;
     }
     try {
-      const res = await updateDrinkUsingPost({...values, drinkId: curDrinkId});
-      message.success("修改成功");
+      const res = await updateDrinkUsingPost({...values, drink_id: curDrinkId});
+      if (res.code === 0) {
+        message.success("修改成功" + res);
+      } else {
+        message.error("修改失败:", res.msg)
+      }
     } catch (error) {
       message.error("修改失败" + error);
     }
@@ -126,7 +131,7 @@ const DrinkUpdate: React.FC = () => {
         validateMessages={validateMessages}
       >
         <Form.Item
-          name="drinkName"
+          name="drink_name"
           label="饮料名称"
           rules={[{required: true, message: '请输入饮料名称'}]}
         >
@@ -135,7 +140,7 @@ const DrinkUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="drinkPicPath"
+          name="drink_pic_path"
           label="图片名称"
           rules={[{required: true, message: '请输入图片名称'}]}
         >
@@ -144,7 +149,7 @@ const DrinkUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="drinkPrice"
+          name="drink_price"
           label="饮料价格"
           rules={[{required: true, message: '请输入饮料价格'}]}
         >
@@ -155,7 +160,7 @@ const DrinkUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="drinkHunger"
+          name="drink_hunger"
           label="饮料补充饥饿值"
           rules={[{required: true, message: '请输入饮料补充饥饿值'}]}
         >
@@ -166,7 +171,7 @@ const DrinkUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="drinkMood"
+          name="drink_mood"
           label="饮料补充心情值"
           rules={[{required: true, message: '请输入饮料补充心情值'}]}
         >
@@ -177,7 +182,7 @@ const DrinkUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="drinkThirsty"
+          name="drink_thirsty"
           label="饮料补充口渴值"
           rules={[{required: true, message: '请输入饮料补充口渴值'}]}
         >
@@ -188,7 +193,7 @@ const DrinkUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="drinkEndu"
+          name="drink_endu"
           label="饮料补充耐力值"
           rules={[{required: true, message: '请输入饮料补充耐力值'}]}
         >
@@ -199,7 +204,7 @@ const DrinkUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="drinkExp"
+          name="drink_exp"
           label="饮料提供经验值"
           rules={[{required: true, message: '请输入饮料提供经验值'}]}
         >
@@ -210,7 +215,7 @@ const DrinkUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="drinkHealth"
+          name="drink_health"
           label="饮料补充健康值"
           rules={[{required: true, message: '请输入饮料补充健康值'}]}
         >

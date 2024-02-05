@@ -1,32 +1,25 @@
 import useState from 'react-usestateref'
-import {useEmotionCss} from '@ant-design/use-emotion-css';
+import type {MenuProps} from 'antd';
 import {
     Button,
-    Col, Divider,
+    Col,
+    Divider,
     Drawer,
-    Image, Input, InputNumber,
+    Image,
+    Input,
+    InputNumber,
     List,
+    Menu,
     message,
     Popover,
     Radio,
     RadioChangeEvent,
     Row,
     Select,
-    Statistic,
-    Typography
+    Statistic
 } from 'antd';
-import Title from 'antd/es/typography/Title';
-import React, {MouseEventHandler, useEffect} from 'react';
-import {
-    AppstoreOutlined, BugOutlined,
-    ClusterOutlined,
-    MailOutlined,
-    SettingOutlined,
-    ShoppingOutlined,
-    SwapOutlined
-} from '@ant-design/icons';
-import type {MenuProps} from 'antd';
-import {Menu} from 'antd';
+import React, {useEffect} from 'react';
+import {BugOutlined, ClusterOutlined, ShoppingOutlined, SwapOutlined} from '@ant-design/icons';
 import {
     boringAnimation,
     copyToggle,
@@ -40,7 +33,13 @@ import {
     removeObjectToggle,
     researchToggle,
     sleepToggle,
-    studyToggle, thirstyAnimation, tryBoring, tryHungry, tryIll, tryRecover, tryThirsty,
+    studyToggle,
+    thirstyAnimation,
+    tryBoring,
+    tryHungry,
+    tryIll,
+    tryRecover,
+    tryThirsty,
     workCleanToggle
 } from "@/components/PetBehaviors/petAnimationHandlers";
 import FoodTable from "@/pages/Table/Food";
@@ -48,60 +47,65 @@ import DrinkTable from "@/pages/Table/Drink";
 import MedicineTable from "@/pages/Table/Medicine";
 import PresentTable from "@/pages/Table/Present";
 import {TooltipPlacement} from "antd/es/tooltip";
-import {getPresentByIdUsingGet} from "@/services/pet_ques/presentController";
-import {
-    imgSize, petLeftGap, petTopGap,
-    setDurDebug,
-    setDurSwitch,
-    setPetLeftGap,
-    setPetTopGap,
-    setPreLaunched
-} from "@/components/Entity/petStateProperty";
-import * as animationFunctions from "@/components/PetBehaviors/petAnimationDebugs";
-import {chatWithLlmUsingPost, getFileNamesUsingGet} from "@/services/pet_ques/InteractionController";
-import {getBlob, getCurTime, getQuadrantOfEight, randomInt} from "@/components/Utils/utils";
-import {sleep} from "@antfu/utils";
-import {SendOutline} from "antd-mobile-icons";
 import {
     boringAnimationFlag,
     durDebug,
+    durSpeak,
     durSwitch,
     enableRandMov,
     hungryAnimationFlag,
     illAnimationFlag,
+    imgSize,
     isDragged,
     isLaunched,
+    petLeftGap,
     petLeftMargin,
+    petTopGap,
     petTopMargin,
     preLaunched,
     recoverAnimationFlag,
     setBoringAnimationFlag,
+    setDurDebug,
     setDurShutdown,
+    setDurSpeak,
+    setDurSwitch,
     setHungryAnimationFlag,
     setIllAnimationFlag,
     setIsDragged,
     setIsLaunched,
+    setPetLeftGap,
     setPetLeftMargin,
+    setPetTopGap,
     setPetTopMargin,
+    setPreLaunched,
     setRecoverAnimationFlag,
     setThirstyAnimationFlag,
     thirstyAnimationFlag
 } from "@/components/Entity/petStateProperty";
+import * as animationFunctions from "@/components/PetBehaviors/petAnimationDebugs";
+import {getFileNamesUsingGet} from "@/services/pet_ques/InteractionController";
+import {getBlob, getCurTime, getQuadrantOfEight, randomInt} from "@/components/Utils/utils";
+import {sleep} from "@antfu/utils";
+import {SendOutline} from "antd-mobile-icons";
 import {
     curAnimation,
     curState,
     petWorkPerformance,
     setCurAnimation,
-    setCurState, setPetWorkPerformance
+    setCurState,
+    setPetWorkPerformance
 } from "@/components/Entity/petProperty";
 import {petAnimation, petAnimation3layers} from "@/components/PetBehaviors/petAnimationUtils";
 import {
-    animationGap, imgUrlPrefix,
-    interactionNames, listenerGap,
+    animationGap,
+    imgUrlPrefix,
+    interactionNames,
+    listenerGap,
     petValueChange,
     specialInteractionNames
 } from "@/components/Entity/petConstants";
 import {useModel} from "@umijs/max";
+import {EventStreamContentType, fetchEventSource} from "@microsoft/fetch-event-source";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -291,7 +295,11 @@ const PetDisplay: React.FC = () => {
         value: any;
     }[]>([]);
     const [loadPerc, setLoadPerc] = useState("0%");
-    const [preLaunchViewStyle, setPreLaunchViewStyle] = useState<React.CSSProperties>({display: "block", height: '100%', width: '100%'});
+    const [preLaunchViewStyle, setPreLaunchViewStyle] = useState<React.CSSProperties>({
+        display: "block",
+        height: '100%',
+        width: '100%'
+    });
     const [petMainViewStyle, setPetMainViewStyle] = useState<React.CSSProperties>({display: "none"});
 
     if (!initialState) {
@@ -466,77 +474,77 @@ const PetDisplay: React.FC = () => {
     }
 
     async function buyDrink(drinkInfo: API.Drink) {
-        if (!isLaunched.value || !drinkInfo.drinkPrice || petMoney < drinkInfo.drinkPrice || durSwitch.value) return
+        if (!isLaunched.value || !drinkInfo.drink_price || petMoney < drinkInfo.drink_price || durSwitch.value) return
         setDurSwitch(true)
-        await petAnimation3layers('/vup/Drink/' + curState.value, '/drink/' + drinkInfo.drinkPicPath, curState.value === 'Ill' ? 4 : 9, curState.value === 'Ill' ? 1 : 0, false)
-        setPetMoney(refPetMoney.current - drinkInfo.drinkPrice)
-        setPetEndu(refPetEndu.current + (drinkInfo.drinkEndu || 0))
-        setPetExp(refPetExp.current + (drinkInfo.drinkExp || 0))
-        setPetHunger(refPetHunger.current + (drinkInfo.drinkHunger || 0))
-        setPetThirsty(refPetThirsty.current + (drinkInfo.drinkThirsty || 0))
-        setPetMood(refPetMood.current + (drinkInfo.drinkMood || 0))
-        setPetHealth(refPetHealth.current + (drinkInfo.drinkHealth || 0))
+        await petAnimation3layers('/vup/Drink/' + curState.value, '/drink/' + drinkInfo.drink_pic_path, curState.value === 'Ill' ? 4 : 9, curState.value === 'Ill' ? 1 : 0, false)
+        setPetMoney(refPetMoney.current - drinkInfo.drink_price)
+        setPetEndu(refPetEndu.current + (drinkInfo.drink_endu || 0))
+        setPetExp(refPetExp.current + (drinkInfo.drink_exp || 0))
+        setPetHunger(refPetHunger.current + (drinkInfo.drink_hunger || 0))
+        setPetThirsty(refPetThirsty.current + (drinkInfo.drink_thirsty || 0))
+        setPetMood(refPetMood.current + (drinkInfo.drink_mood || 0))
+        setPetHealth(refPetHealth.current + (drinkInfo.drink_health || 0))
 
         setDurSwitch(false)
     }
 
     async function buyFood(foodInfo: API.Food) {
-        if (!isLaunched.value || !foodInfo.foodPrice || petMoney < foodInfo.foodPrice || durSwitch.value) return
+        if (!isLaunched.value || !foodInfo.food_price || petMoney < foodInfo.food_price || durSwitch.value) return
         setDurSwitch(true)
         switch (curState.value) {
             case 'Ill' : {
-                await petAnimation3layers('/vup/Eat/Ill', '/food/' + foodInfo.foodPicPath, 5, 2, false)
+                await petAnimation3layers('/vup/Eat/Ill', '/food/' + foodInfo.food_pic_path, 5, 2, false)
                 break
             }
             default: {
                 if (Math.random() < 1 / 2) {
-                    await petAnimation3layers('/vup/Eat/Normal_1', '/food/' + foodInfo.foodPicPath, 4, 3, false)
+                    await petAnimation3layers('/vup/Eat/Normal_1', '/food/' + foodInfo.food_pic_path, 4, 3, false)
                 } else {
-                    await petAnimation3layers('/vup/Eat/Normal_2', '/food/' + foodInfo.foodPicPath, 4, 4, false)
+                    await petAnimation3layers('/vup/Eat/Normal_2', '/food/' + foodInfo.food_pic_path, 4, 4, false)
                 }
                 break
             }
         }
-        setPetMoney(refPetMoney.current - foodInfo.foodPrice)
-        setPetEndu(refPetEndu.current + (foodInfo.foodEndu || 0))
-        setPetExp(refPetExp.current + (foodInfo.foodExp || 0))
-        setPetHunger(refPetHunger.current + (foodInfo.foodHunger || 0))
-        setPetThirsty(refPetThirsty.current + (foodInfo.foodThirsty || 0))
-        setPetMood(refPetMood.current + (foodInfo.foodMood || 0))
-        setPetHealth(refPetHealth.current + (foodInfo.foodHealth || 0))
+        setPetMoney(refPetMoney.current - foodInfo.food_price)
+        setPetEndu(refPetEndu.current + (foodInfo.food_endu || 0))
+        setPetExp(refPetExp.current + (foodInfo.food_exp || 0))
+        setPetHunger(refPetHunger.current + (foodInfo.food_hunger || 0))
+        setPetThirsty(refPetThirsty.current + (foodInfo.food_thirsty || 0))
+        setPetMood(refPetMood.current + (foodInfo.food_mood || 0))
+        setPetHealth(refPetHealth.current + (foodInfo.food_health || 0))
 
         setDurSwitch(false)
     }
 
     async function buyMedicine(medicineInfo: API.Medicine) {
-        if (!isLaunched.value || curState.value !== 'Ill' || !medicineInfo.medicinePrice || petMoney < medicineInfo.medicinePrice || durSwitch.value) return
+        if (!isLaunched.value || curState.value !== 'Ill' || !medicineInfo.medicine_price || petMoney < medicineInfo.medicine_price || durSwitch.value) return
         setDurSwitch(true)
         switch (curState.value) {
             case 'Ill' : {
-                await petAnimation3layers('/vup/Eat/Ill', '/medicine/' + medicineInfo.medicinePicPath, 5, 2, false)
+                await petAnimation3layers('/vup/Eat/Ill', '/medicine/' + medicineInfo.medicine_pic_path, 5, 2, false)
                 break
             }
             default: {
                 if (Math.random() < 1 / 2) {
-                    await petAnimation3layers('/vup/Eat/Normal_1', '/medicine/' + medicineInfo.medicinePicPath, 4, 3, false)
+                    await petAnimation3layers('/vup/Eat/Normal_1', '/medicine/' + medicineInfo.medicine_pic_path, 4, 3, false)
                 } else {
-                    await petAnimation3layers('/vup/Eat/Normal_2', '/medicine/' + medicineInfo.medicinePicPath, 4, 4, false)
+                    await petAnimation3layers('/vup/Eat/Normal_2', '/medicine/' + medicineInfo.medicine_pic_path, 4, 4, false)
                 }
                 break
             }
         }
 
-        setPetMoney(refPetMoney.current - medicineInfo.medicinePrice)
-        setPetEndu(refPetEndu.current + (medicineInfo.medicineEndu || 0))
-        setPetExp(refPetExp.current + (medicineInfo.medicineExp || 0))
-        setPetMood(refPetMood.current + (medicineInfo.medicineMood || 0))
-        setPetHealth(refPetHealth.current + (medicineInfo.medicineHealth || 0))
+        setPetMoney(refPetMoney.current - medicineInfo.medicine_price)
+        setPetEndu(refPetEndu.current + (medicineInfo.medicine_endu || 0))
+        setPetExp(refPetExp.current + (medicineInfo.medicine_exp || 0))
+        setPetMood(refPetMood.current + (medicineInfo.medicine_mood || 0))
+        setPetHealth(refPetHealth.current + (medicineInfo.medicine_health || 0))
 
         setDurSwitch(false)
     }
 
     async function buyPresent(presentInfo: API.Present) {
-        if (!isLaunched.value || !presentInfo.presentPrice || petMoney < presentInfo.presentPrice || durSwitch.value) return
+        if (!isLaunched.value || !presentInfo.present_price || petMoney < presentInfo.present_price || durSwitch.value) return
         setDurSwitch(true)
         let startIndex = -1
         let transformIndex = -1
@@ -565,26 +573,25 @@ const PetDisplay: React.FC = () => {
                 break
             }
         }
-        await petAnimation3layers('/vup/Gift/' + curState.value, '/present/' + presentInfo.presentPicPath, startIndex, transformIndex, false)
+        await petAnimation3layers('/vup/Gift/' + curState.value, '/present/' + presentInfo.present_pic_path, startIndex, transformIndex, false)
 
-        setPetMoney(refPetMoney.current - presentInfo.presentPrice)
-        setPetExp(refPetExp.current + (presentInfo.presentExp || 0))
-        setPetMood(refPetMood.current + (presentInfo.presentMood || 0))
-        setPetWorkPerformance(petWorkPerformance.value + (presentInfo.presentPerformance || 0))
+        setPetMoney(refPetMoney.current - presentInfo.present_price)
+        setPetExp(refPetExp.current + (presentInfo.present_exp || 0))
+        setPetMood(refPetMood.current + (presentInfo.present_mood || 0))
+        setPetWorkPerformance(petWorkPerformance.value + (presentInfo.present_performance || 0))
 
         setDurSwitch(false)
     }
 
-    async function chatSpeak(duration: number) {
+    async function chatSpeak() {
         setDurSwitch(true)
         let curTimeLine = 0
         switch (curState.value) {
             case 'Ill':
             case 'PoorCondition': {
                 await petAnimation('/vup/Say/Serious/A', false)
-                while (curTimeLine < duration) {
+                while (durSpeak.value) {
                     await petAnimation('/vup/Say/Serious/B', false)
-                    curTimeLine += 4 * animationGap
                 }
                 await petAnimation('/vup/Say/Serious/C', false)
                 break
@@ -592,10 +599,9 @@ const PetDisplay: React.FC = () => {
             case 'Happy': {
                 await petAnimation('/vup/Say/Shining/A', false)
                 let rand = 1
-                while (curTimeLine < duration) {
+                while (durSpeak.value) {
                     rand = randomInt(1, 3)
                     await petAnimation('/vup/Say/Shining/B_' + rand, false)
-                    curTimeLine += (rand === 1 ? 6 : 7) * animationGap
                 }
                 await petAnimation('/vup/Say/Shining/C', false)
                 break
@@ -603,10 +609,9 @@ const PetDisplay: React.FC = () => {
             default: {
                 await petAnimation('/vup/Say/Self/A', false)
                 let rand = 1
-                while (curTimeLine < duration) {
+                while (durSpeak.value) {
                     rand = randomInt(1, 3)
                     await petAnimation('/vup/Say/Self/B_' + rand, false)
-                    curTimeLine += (rand === 3 ? 14 : 15) * animationGap
                 }
                 await petAnimation('/vup/Say/Self/C', false)
                 break
@@ -892,59 +897,93 @@ const PetDisplay: React.FC = () => {
         petMove(customTargetX, customTargetY)
     }
 
-    let chatHistory: API.ChatHistory[] = []
-
     const beginChat = async () => {
         if (isChatLoading) {
             return
         }
         setIsChatLoading(true)
-        // TODO 流式应答
+
+        let llm_answer = ""
         try {
             setSpecialInterDrawerSwitch(false)
-            const curQuery = chatPrompt
-            const res = await chatWithLlmUsingPost({
-                query: curQuery,
-                history: chatHistory
-            })
+            fetchEventSource('http://127.0.0.1:8878/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    llm_model_name: 'chatgpt',
+                    query: chatPrompt,
+                    user_id: 1,
+                    conversation_id: 1,
+                    temperature: 0.7,
+                    skip_history: true,
+                    access_key: "3s0PbL10LFd9tzeiZNXKmCd9yuQjdcGIALrjne8IDYi0uDn8",
+                    secret_key: "8bZYZb2EsEp2B/Yk8nkoZ3Df56j+W/yBqXG3Z3DyOjClZo1VqQC8s6+tZixzUCD+8Vjn7SF="
+                }),
+                async onopen(response) {
+                    if (response.ok && response.headers.get('content-type') === EventStreamContentType) {
 
-            chatSpeak(res.length * chatResultDetainUnit)
-            // 根据当前坐标设置气泡卡片出现方向
-            setPopoverSwitch(true)
+                        setDurSpeak(true)
 
-            setPopoverPlacement(quadrantNamesReverse[getQuadrantOfEight(petLeftMargin.value + imgSize.value / 2, petTopMargin.value + imgSize.value / 2) - 1])
+                        chatSpeak()
+                        // 根据当前坐标设置气泡卡片出现方向
+                        setPopoverSwitch(true)
 
-            setChatPopoverStyle({
-                ...chatPopoverStyle,
-                marginLeft: petLeftMargin.value + chatPopoverShift[0] + 'px',
-                marginTop: petTopMargin.value + chatPopoverShift[1] + 'px',
-                display: 'block',
-                position: 'absolute'
-            })
+                        setPopoverPlacement(quadrantNamesReverse[getQuadrantOfEight(petLeftMargin.value + imgSize.value / 2, petTopMargin.value + imgSize.value / 2) - 1])
 
-            setChatResponseDisplay({
-                title: curQuery,
-                content: res
-            })
+                        setChatPopoverStyle({
+                            ...chatPopoverStyle,
+                            marginLeft: petLeftMargin.value + chatPopoverShift[0] + 'px',
+                            marginTop: petTopMargin.value + chatPopoverShift[1] + 'px',
+                            display: 'block',
+                            position: 'absolute'
+                        })
+                        return; // everything's good
+                    } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+                        console.log("错误，但未知", response.status)
+                        // client-side errors are usually non-retriable:
+                    } else {
+                        console.log("错误，但依旧未知", response.status)
+                    }
+                },
+                onmessage(msg) {
+                    if (msg.data.startsWith("[LLM_DONE]")) {
+                        setDurSpeak(false)
+                        setTimeout(() => {
+                            setPopoverSwitch(false)
+                            setChatPopoverStyle({
+                                ...chatPopoverStyle,
+                                marginLeft: petLeftMargin.value + chatPopoverShift[0] + 'px',
+                                marginTop: petTopMargin.value + chatPopoverShift[1] + 'px',
+                                display: 'none'
+                            })
+                        }, chatResultDetainBase)
 
-            chatHistory.push({
-                role: 'user',
-                content: curQuery
-            })
-            chatHistory.push({
-                role: 'assistant',
-                content: res
-            })
-
-            await sleep(res.length * chatResultDetainUnit + chatResultDetainBase)
-
-            setPopoverSwitch(false)
-            setChatPopoverStyle({
-                ...chatPopoverStyle,
-                marginLeft: petLeftMargin.value + chatPopoverShift[0] + 'px',
-                marginTop: petTopMargin.value + chatPopoverShift[1] + 'px',
-                display: 'none'
-            })
+                        // TODO 更新消息
+                        return
+                    }
+                    const msgJson = JSON.parse(msg.data)
+                    console.log(msgJson)
+                    llm_answer = msgJson.content
+                    setChatResponseDisplay({
+                        title: chatPrompt,
+                        content: llm_answer
+                    })
+                    // if the server emits an error message, throw an exception
+                    // so it gets handled by the onerror callback below:
+                    if (msg.event === 'FatalError') {
+                        throw new Error(msg.data);
+                    }
+                },
+                onclose() {
+                    setDurSpeak(false)
+                    // if the server closes the connection unexpectedly, retry:
+                },
+                onerror(err) {
+                    console.error("FetchEventSource:", err)
+                }
+            });
 
         } catch (e) {
             message.error("错误" + e)
@@ -1031,39 +1070,44 @@ const PetDisplay: React.FC = () => {
     useEffect(() => {
         try {
             getFileNamesUsingGet({
-                targetFolder: "ATslash;vup"
+                target_folder: "ATslash;vupATslash;"
             }).then(async (res) => {
-                let preFiles = res
-                let countFiles = preFiles.length
-                let countCur = 0
-                for (let i = 0; i < countFiles; i++) {
-                    if (i - countCur >= 150) {
-                        await sleep(100)
-                        continue
-                    }
-                    if (i - countCur >= 50) {
-                        await sleep(100)
-                    }
-                    getBlob(imgUrlPrefix + preFiles[i]).then((value) => {
-                        countCur++
-                        //console.log(countCur)
-                        setLoadPerc(Math.ceil(countCur / countFiles * 100) + '%')
-                        if (countCur === countFiles) {
-                            setPreLaunched(true)
-                            let animationOptionsTmp = []
-                            let idx = 0
-                            for (const functionName in animationFunctions) {
-                                animationOptionsTmp.push({
-                                    label: functionName,
-                                    value: idx
-                                })
-                                idx++
-                            }
-                            setFunctionOptions(animationOptionsTmp)
-                            setPreLaunchViewStyle({...preLaunchViewStyle, display: "none"})
-                            setPetMainViewStyle({display: "block"})
+                console.log(res)
+                if (res.code === 0) {
+                    let preFiles = res.data
+                    let countFiles = preFiles.length
+                    let countCur = 0
+                    for (let i = 0; i < countFiles; i++) {
+                        if (i - countCur >= 150) {
+                            await sleep(100)
+                            continue
                         }
-                    })
+                        if (i - countCur >= 50) {
+                            await sleep(100)
+                        }
+                        getBlob(imgUrlPrefix + "/vup/" + preFiles[i]).then((value) => {
+                            countCur++
+                            //console.log(countCur)
+                            setLoadPerc(Math.ceil(countCur / countFiles * 100) + '%')
+                            if (countCur === countFiles) {
+                                setPreLaunched(true)
+                                let animationOptionsTmp = []
+                                let idx = 0
+                                for (const functionName in animationFunctions) {
+                                    animationOptionsTmp.push({
+                                        label: functionName,
+                                        value: idx
+                                    })
+                                    idx++
+                                }
+                                setFunctionOptions(animationOptionsTmp)
+                                setPreLaunchViewStyle({...preLaunchViewStyle, display: "none"})
+                                setPetMainViewStyle({display: "block"})
+                            }
+                        })
+                    }
+                } else {
+                    message.error("初始化失败:", res.msg)
                 }
             })
         } catch (e) {
@@ -1079,7 +1123,13 @@ const PetDisplay: React.FC = () => {
         <div id={'petDisplayView'}>
             <div style={preLaunchViewStyle}>
                 <div
-                    style={{height: '100%', width: '100%', inset: 0, margin: "auto auto auto auto", position: "absolute"}}>{loadPerc}</div>
+                    style={{
+                        height: '100%',
+                        width: '100%',
+                        inset: 0,
+                        margin: "auto auto auto auto",
+                        position: "absolute"
+                    }}>{loadPerc}</div>
             </div>
             <div style={petMainViewStyle}>
                 <Menu

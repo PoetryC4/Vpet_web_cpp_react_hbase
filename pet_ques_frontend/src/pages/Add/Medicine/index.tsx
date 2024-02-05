@@ -49,20 +49,20 @@ const MedicineAdd: React.FC = () => {
 
   useEffect(() => {
     const urlParams = new URL(window.location.href).searchParams;
-    let medicineId = urlParams.get('medicineId');
-    if (medicineId !== null) {
-      getMedicineByIdUsingGet({medicineId: medicineId}).then((res) => {
-        if (res != null) {
+    let medicine_id = urlParams.get('medicine_id');
+    if (medicine_id !== null) {
+      getMedicineByIdUsingGet({medicine_id: medicine_id}).then((res) => {
+        if (res.code === 0) {
           message.success("获取成功");
-          form.setFieldValue('medicineName', res.medicineName);
-          form.setFieldValue('medicinePicPath', res.medicinePicPath);
-          form.setFieldValue('medicinePrice', res.medicinePrice);
-          form.setFieldValue('medicineMood', res.medicineMood);
-          form.setFieldValue('medicineEndu', res.medicineEndu);
-          form.setFieldValue('medicineExp', res.medicineExp);
-          form.setFieldValue('medicineHealth', res.medicineHealth);
+          form.setFieldValue('medicine_name', res.data.medicine_name);
+          form.setFieldValue('medicine_pic_path', res.data.medicine_pic_path);
+          form.setFieldValue('medicine_price', res.data.medicine_price);
+          form.setFieldValue('medicine_mood', res.data.medicine_mood);
+          form.setFieldValue('medicine_endu', res.data.medicine_endu);
+          form.setFieldValue('medicine_exp', res.data.medicine_exp);
+          form.setFieldValue('medicine_health', res.data.medicine_health);
         } else {
-          message.error("获取失败");
+          message.error("获取失败:", res.msg)
         }
       });
     }
@@ -75,7 +75,11 @@ const MedicineAdd: React.FC = () => {
   const onFinish = async (values: any) => {
     try {
       const res = await addMedicineUsingPost(values);
-      message.success("添加成功" + res);
+      if (res.code === 0) {
+        message.success("添加成功" + res);
+      } else {
+        message.error("添加失败:", res.msg)
+      }
     } catch (error) {
       message.error("添加失败" + error);
     }
@@ -118,7 +122,7 @@ const MedicineAdd: React.FC = () => {
         validateMessages={validateMessages}
       >
         <Form.Item
-          name="medicineName"
+          name="medicine_name"
           label="药物名称"
           rules={[{required: true, message: '请输入药物名称'}]}
         >
@@ -127,7 +131,7 @@ const MedicineAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="medicinePicPath"
+          name="medicine_pic_path"
           label="图片名称"
           rules={[{required: true, message: '请输入图片名称'}]}
         >
@@ -136,7 +140,7 @@ const MedicineAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="medicinePrice"
+          name="medicine_price"
           label="药物价格"
           rules={[{required: true, message: '请输入药物价格'}]}
         >
@@ -147,7 +151,7 @@ const MedicineAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="medicineMood"
+          name="medicine_mood"
           label="药物补充心情值"
           rules={[{required: true, message: '请输入药物补充心情值'}]}
         >
@@ -158,7 +162,7 @@ const MedicineAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="medicineEndu"
+          name="medicine_endu"
           label="药物补充耐力值"
           rules={[{required: true, message: '请输入药物补充耐力值'}]}
         >
@@ -169,7 +173,7 @@ const MedicineAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="medicineExp"
+          name="medicine_exp"
           label="药物提供经验值"
           rules={[{required: true, message: '请输入药物提供经验值'}]}
         >
@@ -180,7 +184,7 @@ const MedicineAdd: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="medicineHealth"
+          name="medicine_health"
           label="药物补充健康值"
           rules={[{required: true, message: '请输入药物补充健康值'}]}
         >

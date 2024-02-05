@@ -8,20 +8,21 @@ import {Table} from 'antd/lib';
 import {ColumnsType} from 'antd/lib/table';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {addDrinkUsingPost, getDrinkByPageUsingPost} from "@/services/pet_ques/drinkController";
+import { getDrinkByPageUsingPost} from "@/services/pet_ques/drinkController";
 import {Image} from 'antd';
 
-const handleCopyCase = (drinkId: number) => {
-  history.push(`/add/drink?drinkId=${drinkId}`);
+const handleCopyCase = (drink_id: number) => {
+  history.push(`/add/drink?drink_id=${drink_id}`);
 };
 const handleAddCase = () => {
   history.push(`/add/drink`);
 };
-const handleUpdateCase = (drinkId: number) => {
-  history.push(`/update/drink?drinkId=${drinkId}`);
+const handleUpdateCase = (drink_id: number) => {
+  history.push(`/update/drink?drink_id=${drink_id}`);
 };
 
-const imageUrlPrefix = "http://192.168.116.129:12432/static/drink/"
+// const imageUrlPrefix = "http://192.168.116.129:12432/static/drink/"
+const imageUrlPrefix = "http://127.0.0.1:12432/static/drink/"
 
 const getExpandInfo = (record: API.Drink) => {
   //const items: DescriptionsProps['items'] = ;
@@ -29,27 +30,27 @@ const getExpandInfo = (record: API.Drink) => {
   return ([
     {
       label: '饮料补充饥饿值',
-      children: record.drinkHunger?.toFixed(2),
+      children: record.drink_hunger?.toFixed(2),
     },
     {
       label: '饮料补充心情值',
-      children: record.drinkMood?.toFixed(2),
+      children: record.drink_mood?.toFixed(2),
     },
     {
       label: '饮料补充口渴值',
-      children: record.drinkThirsty?.toFixed(2),
+      children: record.drink_thirsty?.toFixed(2),
     },
     {
       label: '饮料补充耐力值',
-      children: record.drinkEndu?.toFixed(2),
+      children: record.drink_endu?.toFixed(2),
     },
     {
       label: '饮料提供经验值',
-      children: record.drinkExp?.toFixed(2),
+      children: record.drink_exp?.toFixed(2),
     },
     {
       label: '饮料补充健康值',
-      children: record.drinkHealth?.toFixed(2),
+      children: record.drink_health?.toFixed(2),
     },
   ]);
 }
@@ -76,8 +77,8 @@ const DrinkTable: React.FC = (props) => {
   const [drinkCount, setDrinkCount] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const [curPage, setCurPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
-  const pageSizes = [8, 16, 24];
+  const [page_size, setPageSize] = useState(8);
+  const page_sizes = [8, 16, 24];
 
   if (!initialState) {
     return (<div>加载错误</div>);
@@ -92,12 +93,19 @@ const DrinkTable: React.FC = (props) => {
   const getDrinks = async () => {
     try {
       const res = await getDrinkByPageUsingPost({
-        pageSize: pageSize,
+        page_size: page_size,
         page: curPage,
       });
-      setDrinkTable(res.records || []);
-      setDrinkCount(res.count || 0);
-      message.success("获取成功");
+      if (res.code === 0) {
+        console.log(res)
+        setDrinkTable(res.data.records || []);
+        setDrinkCount(res.data.count || 0);
+        console.log(drinkTable)
+        console.log(typeof drinkTable[0])
+        message.success("获取成功");
+      } else {
+        message.error("获取失败:", res.msg)
+      }
     } catch (error) {
       message.error("获取失败" + error);
     }
@@ -108,15 +116,15 @@ const DrinkTable: React.FC = (props) => {
     setSearchInput(e.target.value);
   };
 
-  const handlePaginationChange = async (page: number, pageSize: number) => {
+  const handlePaginationChange = async (page: number, page_size: number) => {
     setCurPage(page);
-    setPageSize(pageSize);
+    setPageSize(page_size);
   };
 
   useEffect(() => {
     handlePaginationChange(1, 8);
     getDrinks();
-  }, [pageSize, curPage, searchInput]);
+  }, [page_size, curPage, searchInput]);
 
   const columns: ColumnsType<API.Drink> = [
     {
@@ -126,25 +134,25 @@ const DrinkTable: React.FC = (props) => {
         <div>
           <Image
             width={100}
-            src={imageUrlPrefix + record.drinkPicPath}
+            src={imageUrlPrefix + record.drink_pic_path}
           />
         </div>
       ),
     },
     {
-      title: '饮料名称', dataIndex: '', key: 'drinkName',
+      title: '饮料名称', dataIndex: '', key: 'drink_name',
       width: 100,
       render: (text, record) => (
         <div>
-          {record.drinkName}
+          {record.drink_name}
         </div>
       ),
     },
     {
-      title: '饮料价格', dataIndex: '', key: 'drinkPrice',
+      title: '饮料价格', dataIndex: '', key: 'drink_price',
       render: (text, record) => (
         <div>
-          {record.drinkPrice?.toFixed(2)}￥
+          {record.drink_price?.toFixed(2)}￥
         </div>
       ),
     },
@@ -174,14 +182,14 @@ const DrinkTable: React.FC = (props) => {
         <div>
           <Button
             type="primary"
-            onClick={() => handleCopyCase(record.drinkId || 0)}
+            onClick={() => handleCopyCase(record.drink_id || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             复制
           </Button>
           <Button
             type="primary"
-            onClick={() => handleUpdateCase(record.drinkId || 0)}
+            onClick={() => handleUpdateCase(record.drink_id || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             修改
@@ -219,7 +227,7 @@ const DrinkTable: React.FC = (props) => {
             </Button></Col>
         </Row>
         <Table
-          rowKey={(record) => (record.drinkId || -1).toString()}
+          rowKey={(record) => (record.drink_id || -1).toString()}
           pagination={false}
           columns={columns}
           expandable={{
@@ -233,7 +241,7 @@ const DrinkTable: React.FC = (props) => {
                 />
               </div>
             ),
-            rowExpandable: (record) => record.drinkName !== null,
+            rowExpandable: (record) => record.drink_name !== null,
           }}
           dataSource={drinkTable}
         />
@@ -242,14 +250,14 @@ const DrinkTable: React.FC = (props) => {
           showSizeChanger
           total={drinkCount}
           showTotal={(total, range) =>
-            `${total} 个结果中的 ${(curPage - 1) * pageSize + 1}-${Math.min(
-              curPage * pageSize,
+            `${total} 个结果中的 ${(curPage - 1) * page_size + 1}-${Math.min(
+              curPage * page_size,
               total,
             )} `
           }
-          defaultPageSize={pageSize}
+          defaultPageSize={page_size}
           defaultCurrent={curPage}
-          pageSizeOptions={pageSizes}
+          page_sizeOptions={page_sizes}
           onChange={handlePaginationChange}
         />
       </div>

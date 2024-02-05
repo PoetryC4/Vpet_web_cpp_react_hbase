@@ -5,7 +5,7 @@ import {request} from '@umijs/max';
 const API_PREFIX = "/api"
 
 export async function addDrinkUsingPost(body: API.DrinkAddRequest, options?: { [key: string]: any }) {
-  return request<string>(API_PREFIX + '/drink/add', {
+  return request<API.BaseResponseString_>(API_PREFIX + '/drink/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export async function addDrinkUsingPost(body: API.DrinkAddRequest, options?: { [
 }
 
 export async function updateDrinkUsingPost(body: API.DrinkUpdateRequest, options?: { [key: string]: any }) {
-  return request<string>(API_PREFIX + '/drink/updateById', {
+  return request<API.BaseResponseString_>(API_PREFIX + '/drink/updateById', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export async function updateDrinkUsingPost(body: API.DrinkUpdateRequest, options
 }
 
 export async function getDrinkByPageUsingPost(body: API.MyPageRequest, options?: { [key: string]: any }) {
-  return request<API.DrinkPage>(API_PREFIX + '/drink/page', {
+  return request<API.BaseResponseDrinkPage_>(API_PREFIX + '/drink/page', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export async function getDrinkByIdUsingGet(
   params: API.GetDrinkByIdUsingGetParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.Drink>(API_PREFIX + '/drink/getById', {
+  return request<API.BaseResponseDrink_>(API_PREFIX + '/drink/getById', {
     method: 'GET',
     params: {
       ...params,
@@ -52,7 +52,7 @@ export async function getDrinkByIdUsingGet(
 }
 
 export async function getAllDrinkUsingGet(options?: { [key: string]: any }) {
-  return request<API.Drink[]>(API_PREFIX + '/drink/getAll', {
+  return request<API.BaseResponseDrinkArray_>(API_PREFIX + '/drink/getAll', {
     method: 'GET',
     ...(options || {}),
   });

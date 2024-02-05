@@ -5,7 +5,7 @@ import {request} from '@umijs/max';
 const API_PREFIX = "/api"
 
 export async function addPresentUsingPost(body: API.PresentAddRequest, options?: { [key: string]: any }) {
-  return request<string>(API_PREFIX + '/present/add', {
+  return request<API.BaseResponseString_>(API_PREFIX + '/present/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export async function addPresentUsingPost(body: API.PresentAddRequest, options?:
 }
 
 export async function updatePresentUsingPost(body: API.PresentUpdateRequest, options?: { [key: string]: any }) {
-  return request<string>(API_PREFIX + '/present/updateById', {
+  return request<API.BaseResponseString_>(API_PREFIX + '/present/updateById', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export async function updatePresentUsingPost(body: API.PresentUpdateRequest, opt
 }
 
 export async function getPresentByPageUsingPost(body: API.MyPageRequest, options?: { [key: string]: any }) {
-  return request<API.PresentPage>(API_PREFIX + '/present/page', {
+  return request<API.BaseResponsePresentPage_>(API_PREFIX + '/present/page', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export async function getPresentByIdUsingGet(
   params: API.GetPresentByIdUsingGetParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.Present>(API_PREFIX + '/present/getById', {
+  return request<API.BaseResponsePresent_>(API_PREFIX + '/present/getById', {
     method: 'GET',
     params: {
       ...params,
@@ -52,7 +52,7 @@ export async function getPresentByIdUsingGet(
 }
 
 export async function getAllPresentUsingGet(options?: { [key: string]: any }) {
-  return request<API.Present[]>(API_PREFIX + '/present/getAll', {
+  return request<API.BaseResponsePresentArray_>(API_PREFIX + '/present/getAll', {
     method: 'GET',
     ...(options || {}),
   });

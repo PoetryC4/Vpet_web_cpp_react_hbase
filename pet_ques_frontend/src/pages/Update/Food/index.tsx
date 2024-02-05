@@ -49,26 +49,25 @@ const FoodUpdate: React.FC = () => {
 
   useEffect(() => {
     const urlParams = new URL(window.location.href).searchParams;
-    let foodId = urlParams.get('foodId');
-    if (foodId !== null) {
-      getFoodByIdUsingGet({foodId: foodId}).then((res) => {
-        if (res != null) {
-          setCurFoodId(res.foodId || -1)
-          form.setFieldValue('foodName', res.foodName);
-          form.setFieldValue('foodPicPath', res.foodPicPath);
-          form.setFieldValue('foodPrice', res.foodPrice);
-          form.setFieldValue('foodHunger', res.foodHunger);
-          form.setFieldValue('foodMood', res.foodMood);
-          form.setFieldValue('foodThirsty', res.foodThirsty);
-          form.setFieldValue('foodEndu', res.foodEndu);
-          form.setFieldValue('foodExp', res.foodExp);
-          form.setFieldValue('foodHealth', res.foodHealth);
+    let food_id = urlParams.get('food_id');
+    if (food_id !== null) {
+      setCurFoodId(parseInt(food_id))
+      getFoodByIdUsingGet({food_id: food_id}).then((res) => {
+        if (res.code === 0) {
+          message.success("获取成功");
+          form.setFieldValue('medicine_name', res.data.medicine_name);
+          form.setFieldValue('medicine_pic_path', res.data.medicine_pic_path);
+          form.setFieldValue('medicine_price', res.data.medicine_price);
+          form.setFieldValue('medicine_mood', res.data.medicine_mood);
+          form.setFieldValue('medicine_endu', res.data.medicine_endu);
+          form.setFieldValue('medicine_exp', res.data.medicine_exp);
+          form.setFieldValue('medicine_health', res.data.medicine_health);
         } else {
-          message.error("获取失败");
+          message.error("获取失败:", res.msg)
         }
       });
     } else {
-      message.error("缺少foodId")
+      message.error("缺少food_id")
     }
     // 如果有清理逻辑，可以在返回的函数中处理
     return () => {
@@ -78,12 +77,16 @@ const FoodUpdate: React.FC = () => {
 
   const onFinish = async (values: any) => {
     if (curFoodId == null || curFoodId < 0) {
-      message.error("无法修改，缺少foodId");
+      message.error("无法修改，缺少food_id");
       return;
     }
     try {
-      const res = await updateFoodUsingPost({...values, foodId: curFoodId});
-      message.success("修改成功");
+      const res = await updateFoodUsingPost({...values, food_id: curFoodId});
+      if (res.code === 0) {
+        message.success("修改成功" + res);
+      } else {
+        message.error("修改失败:", res.msg)
+      }
     } catch (error) {
       message.error("修改失败" + error);
     }
@@ -126,7 +129,7 @@ const FoodUpdate: React.FC = () => {
         validateMessages={validateMessages}
       >
         <Form.Item
-          name="foodName"
+          name="food_name"
           label="食物名称"
           rules={[{required: true, message: '请输入食物名称'}]}
         >
@@ -135,7 +138,7 @@ const FoodUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="foodPicPath"
+          name="food_pic_path"
           label="图片名称"
           rules={[{required: true, message: '请输入图片名称'}]}
         >
@@ -144,7 +147,7 @@ const FoodUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="foodPrice"
+          name="food_price"
           label="食物价格"
           rules={[{required: true, message: '请输入食物价格'}]}
         >
@@ -155,7 +158,7 @@ const FoodUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="foodHunger"
+          name="food_hunger"
           label="食物补充饥饿值"
           rules={[{required: true, message: '请输入食物补充饥饿值'}]}
         >
@@ -166,7 +169,7 @@ const FoodUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="foodMood"
+          name="food_mood"
           label="食物补充心情值"
           rules={[{required: true, message: '请输入食物补充心情值'}]}
         >
@@ -177,7 +180,7 @@ const FoodUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="foodThirsty"
+          name="food_thirsty"
           label="食物补充口渴值"
           rules={[{required: true, message: '请输入食物补充口渴值'}]}
         >
@@ -188,7 +191,7 @@ const FoodUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="foodEndu"
+          name="food_endu"
           label="食物补充耐力值"
           rules={[{required: true, message: '请输入食物补充耐力值'}]}
         >
@@ -199,7 +202,7 @@ const FoodUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="foodExp"
+          name="food_exp"
           label="食物提供经验值"
           rules={[{required: true, message: '请输入食物提供经验值'}]}
         >
@@ -210,7 +213,7 @@ const FoodUpdate: React.FC = () => {
           />
         </Form.Item>
         <Form.Item
-          name="foodHealth"
+          name="food_health"
           label="食物补充健康值"
           rules={[{required: true, message: '请输入食物补充健康值'}]}
         >

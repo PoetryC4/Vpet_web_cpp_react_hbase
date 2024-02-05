@@ -144,6 +144,13 @@ export const enableRandMov = {
 export const setEnableRandMov = (value: boolean) => {
     enableRandMov.value = value
 }
+
+export const durSpeak = {
+  value: true
+}
+export const setDurSpeak = (value: boolean) => {
+  durSpeak.value = value
+}
 export const imgSize = {
     value: 400
 }

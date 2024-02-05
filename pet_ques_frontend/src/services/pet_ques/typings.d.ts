@@ -2,20 +2,20 @@ declare namespace API {
 
   type MyPageRequest = {
     page?: number;
-    pageSize?: number;
+    page_size?: number;
   };
 
   type Drink = {
-    drinkId?: number;
-    drinkPicPath?: string;
-    drinkName?: string;
-    drinkPrice?: number;
-    drinkHunger?: number;
-    drinkMood?: number;
-    drinkThirsty?: number;
-    drinkEndu?: number;
-    drinkExp?: number;
-    drinkHealth?: number;
+    drink_id?: number;
+    drink_pic_path?: string;
+    drink_name?: string;
+    drink_price?: number;
+    drink_hunger?: number;
+    drink_mood?: number;
+    drink_thirsty?: number;
+    drink_endu?: number;
+    drink_exp?: number;
+    drink_health?: number;
   }
 
   type DrinkPage = {
@@ -42,40 +42,40 @@ declare namespace API {
   };
 
   type DrinkAddRequest = {
-    drinkName?: string;
-    drinkPicPath?: string;
-    drinkPrice?: number;
-    drinkHunger?: number;
-    drinkMood?: number;
-    drinkThirsty?: number;
-    drinkEndu?: number;
-    drinkExp?: number;
-    drinkHealth?: number;
+    drink_name?: string;
+    drink_pic_path?: string;
+    drink_price?: number;
+    drink_hunger?: number;
+    drink_mood?: number;
+    drink_thirsty?: number;
+    drink_endu?: number;
+    drink_exp?: number;
+    drink_health?: number;
   };
   type DrinkUpdateRequest = {
-    drinkId?: number;
-    drinkName?: string;
-    drinkPicPath?: string;
-    drinkPrice?: number;
-    drinkHunger?: number;
-    drinkMood?: number;
-    drinkThirsty?: number;
-    drinkEndu?: number;
-    drinkExp?: number;
-    drinkHealth?: number;
+    drink_id?: number;
+    drink_name?: string;
+    drink_pic_path?: string;
+    drink_price?: number;
+    drink_hunger?: number;
+    drink_mood?: number;
+    drink_thirsty?: number;
+    drink_endu?: number;
+    drink_exp?: number;
+    drink_health?: number;
   };
   type GetDrinkByIdUsingGetParams = {
-    drinkId?: string;
+    drink_id?: string;
   };
 
   type Present = {
-    presentId?: number;
-    presentPicPath?: string;
-    presentName?: string;
-    presentPrice?: number;
-    presentMood?: number;
-    presentExp?: number;
-    presentPerformance?: number;
+    present_id?: number;
+    present_pic_path?: string;
+    present_name?: string;
+    present_price?: number;
+    present_mood?: number;
+    present_exp?: number;
+    present_performance?: number;
   }
 
   type PresentPage = {
@@ -102,37 +102,37 @@ declare namespace API {
   };
 
   type PresentAddRequest = {
-    presentName?: string;
-    presentPicPath?: string;
-    presentPrice?: number;
-    presentMood?: number;
-    presentExp?: number;
-    presentPerformance?: number;
+    present_name?: string;
+    present_pic_path?: string;
+    present_price?: number;
+    present_mood?: number;
+    present_exp?: number;
+    present_performance?: number;
   };
   type PresentUpdateRequest = {
-    presentId?: number;
-    presentName?: string;
-    presentPicPath?: string;
-    presentPrice?: number;
-    presentMood?: number;
-    presentExp?: number;
-    presentPerformance?: number;
+    present_id?: number;
+    present_name?: string;
+    present_pic_path?: string;
+    present_price?: number;
+    present_mood?: number;
+    present_exp?: number;
+    present_performance?: number;
   };
   type GetPresentByIdUsingGetParams = {
-    presentId?: string;
+    present_id?: string;
   };
 
   type Food = {
-    foodId?: number;
-    foodPicPath?: string;
-    foodName?: string;
-    foodPrice?: number;
-    foodHunger?: number;
-    foodMood?: number;
-    foodThirsty?: number;
-    foodEndu?: number;
-    foodExp?: number;
-    foodHealth?: number;
+    food_id?: number;
+    food_pic_path?: string;
+    food_name?: string;
+    food_price?: number;
+    food_hunger?: number;
+    food_mood?: number;
+    food_thirsty?: number;
+    food_endu?: number;
+    food_exp?: number;
+    food_health?: number;
   }
 
   type FoodPage = {
@@ -159,41 +159,41 @@ declare namespace API {
   };
 
   type FoodAddRequest = {
-    foodName?: string;
-    foodPicPath?: string;
-    foodPrice?: number;
-    foodHunger?: number;R
-    foodMood?: number;
-    foodThirsty?: number;
-    foodEndu?: number;
-    foodExp?: number;
-    foodHealth?: number;
+    food_name?: string;
+    food_pic_path?: string;
+    food_price?: number;
+    food_hunger?: number; R
+    food_mood?: number;
+    food_thirsty?: number;
+    food_endu?: number;
+    food_exp?: number;
+    food_health?: number;
   };
   type FoodUpdateRequest = {
-    foodId?: number;
-    foodName?: string;
-    foodPicPath?: string;
-    foodPrice?: number;
-    foodHunger?: number;
-    foodMood?: number;
-    foodThirsty?: number;
-    foodEndu?: number;
-    foodExp?: number;
-    foodHealth?: number;
+    food_id?: number;
+    food_name?: string;
+    food_pic_path?: string;
+    food_price?: number;
+    food_hunger?: number;
+    food_mood?: number;
+    food_thirsty?: number;
+    food_endu?: number;
+    food_exp?: number;
+    food_health?: number;
   };
   type GetFoodByIdUsingGetParams = {
-    foodId?: string;
+    food_id?: string;
   };
 
   type Medicine = {
-    medicineId?: number;
-    medicinePicPath?: string;
-    medicineName?: string;
-    medicinePrice?: number;
-    medicineMood?: number;
-    medicineEndu?: number;
-    medicineExp?: number;
-    medicineHealth?: number;
+    medicine_id?: number;
+    medicine_pic_path?: string;
+    medicine_name?: string;
+    medicine_price?: number;
+    medicine_mood?: number;
+    medicine_endu?: number;
+    medicine_exp?: number;
+    medicine_health?: number;
   }
 
   type MedicinePage = {
@@ -220,26 +220,26 @@ declare namespace API {
   };
 
   type MedicineAddRequest = {
-    medicineName?: string;
-    medicinePicPath?: string;
-    medicinePrice?: number;
-    medicineMood?: number;
-    medicineEndu?: number;
-    medicineExp?: number;
-    medicineHealth?: number;
+    medicine_name?: string;
+    medicine_pic_path?: string;
+    medicine_price?: number;
+    medicine_mood?: number;
+    medicine_endu?: number;
+    medicine_exp?: number;
+    medicine_health?: number;
   };
   type MedicineUpdateRequest = {
-    medicineId?: number;
-    medicineName?: string;
-    medicinePicPath?: string;
-    medicinePrice?: number;
-    medicineMood?: number;
-    medicineEndu?: number;
-    medicineExp?: number;
-    medicineHealth?: number;
+    medicine_id?: number;
+    medicine_name?: string;
+    medicine_pic_path?: string;
+    medicine_price?: number;
+    medicine_mood?: number;
+    medicine_endu?: number;
+    medicine_exp?: number;
+    medicine_health?: number;
   };
   type GetMedicineByIdUsingGetParams = {
-    medicineId?: string;
+    medicine_id?: string;
   };
 
   type ChatHistory = {
@@ -248,11 +248,96 @@ declare namespace API {
   }
 
   type getFileNamesUsingGetParams = {
-    targetFolder?: string
+    target_folder?: string
   }
 
   type llmChatRequest = {
     query: string;
-    history: ChatHistory[]
+    user_id: number;
+    conversation_id: number;
   };
+
+  type BaseResponseString_ = {
+    code: number;
+    msg: string;
+    data: string;
+  }
+
+  type BaseResponseStringArray_ = {
+    code: number;
+    msg: string;
+    data: string[];
+  }
+
+  type BaseResponseDrinkPage_ = {
+    code: number;
+    msg: string;
+    data: DrinkPage;
+  }
+
+  type BaseResponseDrink_ = {
+    code: number;
+    msg: string;
+    data: Drink;
+  }
+
+  type BaseResponseDrinkArray_ = {
+    code: number;
+    msg: string;
+    data: Drink[];
+  }
+
+  type BaseResponseFoodPage_ = {
+    code: number;
+    msg: string;
+    data: FoodPage;
+  }
+
+  type BaseResponseFood_ = {
+    code: number;
+    msg: string;
+    data: Food;
+  }
+
+  type BaseResponseFoodArray_ = {
+    code: number;
+    msg: string;
+    data: Food[];
+  }
+
+  type BaseResponseMedicinePage_ = {
+    code: number;
+    msg: string;
+    data: MedicinePage;
+  }
+
+  type BaseResponseMedicine_ = {
+    code: number;
+    msg: string;
+    data: Medicine;
+  }
+
+  type BaseResponseMedicineArray_ = {
+    code: number;
+    msg: string;
+    data: Medicine[];
+  }
+
+  type BaseResponsePresentPage_ = {
+    code: number;
+    msg: string;
+    data: PresentPage;
+  }
+
+  type BaseResponsePresent_ = {
+    code: number;
+    msg: string;
+    data: Present;
+  }
+
+  type BaseResponsePresentArray_ = {
+    code: number;
+    msg: string;
+    data: Present[];
+  }
 }

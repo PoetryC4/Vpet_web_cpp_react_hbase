@@ -11,14 +11,14 @@ import React, {useEffect, useState} from 'react';
 import {addPresentUsingPost, getPresentByPageUsingPost} from "@/services/pet_ques/presentController";
 import {Image} from 'antd';
 
-const handleCopyCase = (presentId: number) => {
-  history.push(`/add/present?presentId=${presentId}`);
+const handleCopyCase = (present_id: number) => {
+  history.push(`/add/present?present_id=${present_id}`);
 };
 const handleAddCase = () => {
   history.push(`/add/present`);
 };
-const handleUpdateCase = (presentId: number) => {
-  history.push(`/update/present?presentId=${presentId}`);
+const handleUpdateCase = (present_id: number) => {
+  history.push(`/update/present?present_id=${present_id}`);
 };
 
 const imageUrlPrefix = "http://192.168.116.129:12432/static/present/"
@@ -29,15 +29,15 @@ const getExpandInfo = (record: API.Present) => {
   return ([
     {
       label: '礼物补充心情值',
-      children: record.presentMood?.toFixed(2),
+      children: record.present_mood?.toFixed(2),
     },
     {
       label: '礼物提供经验值',
-      children: record.presentExp?.toFixed(2),
+      children: record.present_exp?.toFixed(2),
     },
     {
       label: '礼物性能',
-      children: record.presentPerformance?.toFixed(2),
+      children: record.present_performance?.toFixed(2),
     },
   ]);
 }
@@ -64,8 +64,8 @@ const PresentTable: React.FC = (props) => {
   const [presentCount, setPresentCount] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const [curPage, setCurPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
-  const pageSizes = [8, 16, 24];
+  const [page_size, setPageSize] = useState(8);
+  const page_sizes = [8, 16, 24];
 
   if (!initialState) {
     return (<div>加载错误</div>);
@@ -80,12 +80,16 @@ const PresentTable: React.FC = (props) => {
   const getPresents = async () => {
     try {
       const res = await getPresentByPageUsingPost({
-        pageSize: pageSize,
+        page_size: page_size,
         page: curPage,
       });
-      setPresentTable(res.records || []);
-      setPresentCount(res.count || 0);
-      message.success("获取成功");
+      if (res.code === 0) {
+        setPresentTable(res.data.records || []);
+        setPresentCount(res.data.count || 0);
+        message.success("获取成功");
+      } else {
+        message.error("获取失败:", res.msg)
+      }
     } catch (error) {
       message.error("获取失败" + error);
     }
@@ -96,15 +100,15 @@ const PresentTable: React.FC = (props) => {
     setSearchInput(e.target.value);
   };
 
-  const handlePaginationChange = async (page: number, pageSize: number) => {
+  const handlePaginationChange = async (page: number, page_size: number) => {
     setCurPage(page);
-    setPageSize(pageSize);
+    setPageSize(page_size);
   };
 
   useEffect(() => {
     handlePaginationChange(1, 8);
     getPresents();
-  }, [pageSize, curPage, searchInput]);
+  }, [page_size, curPage, searchInput]);
 
   const columns: ColumnsType<API.Present> = [
     {
@@ -114,25 +118,25 @@ const PresentTable: React.FC = (props) => {
         <div>
           <Image
             width={100}
-            src={imageUrlPrefix + record.presentPicPath}
+            src={imageUrlPrefix + record.present_pic_path}
           />
         </div>
       ),
     },
     {
-      title: '礼物名称', dataIndex: '', key: 'presentName',
+      title: '礼物名称', dataIndex: '', key: 'present_name',
       width: 100,
       render: (text, record) => (
         <div>
-          {record.presentName}
+          {record.present_name}
         </div>
       ),
     },
     {
-      title: '礼物价格', dataIndex: '', key: 'presentPrice',
+      title: '礼物价格', dataIndex: '', key: 'present_price',
       render: (text, record) => (
         <div>
-          {record.presentPrice?.toFixed(2)}￥
+          {record.present_price?.toFixed(2)}￥
         </div>
       ),
     },
@@ -162,14 +166,14 @@ const PresentTable: React.FC = (props) => {
         <div>
           <Button
             type="primary"
-            onClick={() => handleCopyCase(record.presentId || 0)}
+            onClick={() => handleCopyCase(record.present_id || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             复制
           </Button>
           <Button
             type="primary"
-            onClick={() => handleUpdateCase(record.presentId || 0)}
+            onClick={() => handleUpdateCase(record.present_id || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             修改
@@ -207,7 +211,7 @@ const PresentTable: React.FC = (props) => {
             </Button></Col>
         </Row>
         <Table
-          rowKey={(record) => (record.presentId || -1).toString()}
+          rowKey={(record) => (record.present_id || -1).toString()}
           pagination={false}
           columns={columns}
           expandable={{
@@ -221,7 +225,7 @@ const PresentTable: React.FC = (props) => {
                 />
               </div>
             ),
-            rowExpandable: (record) => record.presentName !== null,
+            rowExpandable: (record) => record.present_name !== null,
           }}
           dataSource={presentTable}
         />
@@ -230,14 +234,14 @@ const PresentTable: React.FC = (props) => {
           showSizeChanger
           total={presentCount}
           showTotal={(total, range) =>
-            `${total} 个结果中的 ${(curPage - 1) * pageSize + 1}-${Math.min(
-              curPage * pageSize,
+            `${total} 个结果中的 ${(curPage - 1) * page_size + 1}-${Math.min(
+              curPage * page_size,
               total,
             )} `
           }
-          defaultPageSize={pageSize}
+          defaultPageSize={page_size}
           defaultCurrent={curPage}
-          pageSizeOptions={pageSizes}
+          page_sizeOptions={page_sizes}
           onChange={handlePaginationChange}
         />
       </div>

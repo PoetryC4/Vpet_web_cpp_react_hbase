@@ -11,14 +11,14 @@ import React, {useEffect, useState} from 'react';
 import {addFoodUsingPost, getFoodByPageUsingPost} from "@/services/pet_ques/foodController";
 import {Image} from 'antd';
 
-const handleCopyCase = (foodId: number) => {
-  history.push(`/add/food?foodId=${foodId}`);
+const handleCopyCase = (food_id: number) => {
+  history.push(`/add/food?food_id=${food_id}`);
 };
 const handleAddCase = () => {
   history.push(`/add/food`);
 };
-const handleUpdateCase = (foodId: number) => {
-  history.push(`/update/food?foodId=${foodId}`);
+const handleUpdateCase = (food_id: number) => {
+  history.push(`/update/food?food_id=${food_id}`);
 };
 
 const imageUrlPrefix = "http://192.168.116.129:12432/static/food/"
@@ -29,27 +29,27 @@ const getExpandInfo = (record: API.Food) => {
   return ([
     {
       label: '食物补充饥饿值',
-      children: record.foodHunger?.toFixed(2),
+      children: record.food_hunger?.toFixed(2),
     },
     {
       label: '食物补充心情值',
-      children: record.foodMood?.toFixed(2),
+      children: record.food_mood?.toFixed(2),
     },
     {
       label: '食物补充口渴值',
-      children: record.foodThirsty?.toFixed(2),
+      children: record.food_thirsty?.toFixed(2),
     },
     {
       label: '食物补充耐力值',
-      children: record.foodEndu?.toFixed(2),
+      children: record.food_endu?.toFixed(2),
     },
     {
       label: '食物提供经验值',
-      children: record.foodExp?.toFixed(2),
+      children: record.food_exp?.toFixed(2),
     },
     {
       label: '食物补充健康值',
-      children: record.foodHealth?.toFixed(2),
+      children: record.food_health?.toFixed(2),
     },
   ]);
 }
@@ -76,8 +76,8 @@ const FoodTable: React.FC = (props) => {
   const [foodCount, setFoodCount] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const [curPage, setCurPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
-  const pageSizes = [8, 16, 24];
+  const [page_size, setPageSize] = useState(8);
+  const page_sizes = [8, 16, 24];
 
   if (!initialState) {
     return (<div>加载错误</div>);
@@ -93,12 +93,16 @@ const FoodTable: React.FC = (props) => {
   const getFoods = async () => {
     try {
       const res = await getFoodByPageUsingPost({
-        pageSize: pageSize,
+        page_size: page_size,
         page: curPage,
       });
-      setFoodTable(res.records || []);
-      setFoodCount(res.count || 0);
-      message.success("获取成功");
+      if (res.code === 0) {
+        setFoodTable(res.data.records || []);
+        setFoodCount(res.data.count || 0);
+        message.success("获取成功");
+      } else {
+        message.error("获取失败:", res.msg)
+      }
     } catch (error) {
       message.error("获取失败" + error);
     }
@@ -109,15 +113,15 @@ const FoodTable: React.FC = (props) => {
     setSearchInput(e.target.value);
   };
 
-  const handlePaginationChange = async (page: number, pageSize: number) => {
+  const handlePaginationChange = async (page: number, page_size: number) => {
     setCurPage(page);
-    setPageSize(pageSize);
+    setPageSize(page_size);
   };
 
   useEffect(() => {
     handlePaginationChange(1, 8);
     getFoods();
-  }, [pageSize, curPage, searchInput]);
+  }, [page_size, curPage, searchInput]);
 
   const columns: ColumnsType<API.Food> = [
     {
@@ -127,25 +131,25 @@ const FoodTable: React.FC = (props) => {
         <div>
           <Image
             width={100}
-            src={imageUrlPrefix + record.foodPicPath}
+            src={imageUrlPrefix + record.food_pic_path}
           />
         </div>
       ),
     },
     {
-      title: '食物名称', dataIndex: '', key: 'foodName',
+      title: '食物名称', dataIndex: '', key: 'food_name',
       width: 100,
       render: (text, record) => (
         <div>
-          {record.foodName}
+          {record.food_name}
         </div>
       ),
     },
     {
-      title: '食物价格', dataIndex: '', key: 'foodPrice',
+      title: '食物价格', dataIndex: '', key: 'food_price',
       render: (text, record) => (
         <div>
-          {record.foodPrice?.toFixed(2)}￥
+          {record.food_price?.toFixed(2)}￥
         </div>
       ),
     },
@@ -175,14 +179,14 @@ const FoodTable: React.FC = (props) => {
         <div>
           <Button
             type="primary"
-            onClick={() => handleCopyCase(record.foodId || 0)}
+            onClick={() => handleCopyCase(record.food_id || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             复制
           </Button>
           <Button
             type="primary"
-            onClick={() => handleUpdateCase(record.foodId || 0)}
+            onClick={() => handleUpdateCase(record.food_id || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             修改
@@ -220,7 +224,7 @@ const FoodTable: React.FC = (props) => {
             </Button></Col>
         </Row>
         <Table
-          rowKey={(record) => (record.foodId || -1).toString()}
+          rowKey={(record) => (record.food_id || -1).toString()}
           pagination={false}
           columns={columns}
           expandable={{
@@ -234,7 +238,7 @@ const FoodTable: React.FC = (props) => {
                 />
               </div>
             ),
-            rowExpandable: (record) => record.foodName !== null,
+            rowExpandable: (record) => record.food_name !== null,
           }}
           dataSource={foodTable}
         />
@@ -243,14 +247,14 @@ const FoodTable: React.FC = (props) => {
           showSizeChanger
           total={foodCount}
           showTotal={(total, range) =>
-            `${total} 个结果中的 ${(curPage - 1) * pageSize + 1}-${Math.min(
-              curPage * pageSize,
+            `${total} 个结果中的 ${(curPage - 1) * page_size + 1}-${Math.min(
+              curPage * page_size,
               total,
             )} `
           }
-          defaultPageSize={pageSize}
+          defaultPageSize={page_size}
           defaultCurrent={curPage}
-          pageSizeOptions={pageSizes}
+          page_sizeOptions={page_sizes}
           onChange={handlePaginationChange}
         />
       </div>

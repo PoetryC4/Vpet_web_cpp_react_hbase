@@ -11,14 +11,14 @@ import React, {useEffect, useState} from 'react';
 import {addMedicineUsingPost, getMedicineByPageUsingPost} from "@/services/pet_ques/medicineController";
 import {Image} from 'antd';
 
-const handleCopyCase = (medicineId: number) => {
-  history.push(`/add/medicine?medicineId=${medicineId}`);
+const handleCopyCase = (medicine_id: number) => {
+  history.push(`/add/medicine?medicine_id=${medicine_id}`);
 };
 const handleAddCase = () => {
   history.push(`/add/medicine`);
 };
-const handleUpdateCase = (medicineId: number) => {
-  history.push(`/update/medicine?medicineId=${medicineId}`);
+const handleUpdateCase = (medicine_id: number) => {
+  history.push(`/update/medicine?medicine_id=${medicine_id}`);
 };
 
 const imageUrlPrefix = "http://192.168.116.129:12432/static/medicine/"
@@ -29,19 +29,19 @@ const getExpandInfo = (record: API.Medicine) => {
   return ([
     {
       label: '药物补充心情值',
-      children: record.medicineMood?.toFixed(2),
+      children: record.medicine_mood?.toFixed(2),
     },
     {
       label: '药物补充耐力值',
-      children: record.medicineEndu?.toFixed(2),
+      children: record.medicine_endu?.toFixed(2),
     },
     {
       label: '药物提供经验值',
-      children: record.medicineExp?.toFixed(2),
+      children: record.medicine_exp?.toFixed(2),
     },
     {
       label: '药物补充健康值',
-      children: record.medicineHealth?.toFixed(2),
+      children: record.medicine_health?.toFixed(2),
     },
   ]);
 }
@@ -68,8 +68,8 @@ const MedicineTable: React.FC = (props) => {
   const [medicineCount, setMedicineCount] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const [curPage, setCurPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
-  const pageSizes = [8, 16, 24];
+  const [page_size, setPageSize] = useState(8);
+  const page_sizes = [8, 16, 24];
 
   if (!initialState) {
     return (<div>加载错误</div>);
@@ -84,11 +84,16 @@ const MedicineTable: React.FC = (props) => {
   const getMedicines = async () => {
     try {
       const res = await getMedicineByPageUsingPost({
-        pageSize: pageSize,
+        page_size: page_size,
         page: curPage,
       });
-      setMedicineTable(res.records || []);
-      setMedicineCount(res.count || 0);
+      if (res.code === 0) {
+        setMedicineTable(res.data.records || []);
+        setMedicineCount(res.data.count || 0);
+        message.success("获取成功");
+      } else {
+        message.error("获取失败:", res.msg)
+      }
       message.success("获取成功");
     } catch (error) {
       message.error("获取失败" + error);
@@ -100,15 +105,15 @@ const MedicineTable: React.FC = (props) => {
     setSearchInput(e.target.value);
   };
 
-  const handlePaginationChange = async (page: number, pageSize: number) => {
+  const handlePaginationChange = async (page: number, page_size: number) => {
     setCurPage(page);
-    setPageSize(pageSize);
+    setPageSize(page_size);
   };
 
   useEffect(() => {
     handlePaginationChange(1, 8);
     getMedicines();
-  }, [pageSize, curPage, searchInput]);
+  }, [page_size, curPage, searchInput]);
 
   const columns: ColumnsType<API.Medicine> = [
     {
@@ -118,25 +123,25 @@ const MedicineTable: React.FC = (props) => {
         <div>
           <Image
             width={100}
-            src={imageUrlPrefix + record.medicinePicPath}
+            src={imageUrlPrefix + record.medicine_pic_path}
           />
         </div>
       ),
     },
     {
-      title: '药物名称', dataIndex: '', key: 'medicineName',
+      title: '药物名称', dataIndex: '', key: 'medicine_name',
       width: 100,
       render: (text, record) => (
         <div>
-          {record.medicineName}
+          {record.medicine_name}
         </div>
       ),
     },
     {
-      title: '药物价格', dataIndex: '', key: 'medicinePrice',
+      title: '药物价格', dataIndex: '', key: 'medicine_price',
       render: (text, record) => (
         <div>
-          {record.medicinePrice?.toFixed(2)}￥
+          {record.medicine_price?.toFixed(2)}￥
         </div>
       ),
     },
@@ -166,14 +171,14 @@ const MedicineTable: React.FC = (props) => {
         <div>
           <Button
             type="primary"
-            onClick={() => handleCopyCase(record.medicineId || 0)}
+            onClick={() => handleCopyCase(record.medicine_id || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             复制
           </Button>
           <Button
             type="primary"
-            onClick={() => handleUpdateCase(record.medicineId || 0)}
+            onClick={() => handleUpdateCase(record.medicine_id || 0)}
             style={{marginLeft: 20, marginRight: 20}}
           >
             修改
@@ -211,7 +216,7 @@ const MedicineTable: React.FC = (props) => {
             </Button></Col>
         </Row>
         <Table
-          rowKey={(record) => (record.medicineId || -1).toString()}
+          rowKey={(record) => (record.medicine_id || -1).toString()}
           pagination={false}
           columns={columns}
           expandable={{
@@ -225,7 +230,7 @@ const MedicineTable: React.FC = (props) => {
                 />
               </div>
             ),
-            rowExpandable: (record) => record.medicineName !== null,
+            rowExpandable: (record) => record.medicine_name !== null,
           }}
           dataSource={medicineTable}
         />
@@ -234,14 +239,14 @@ const MedicineTable: React.FC = (props) => {
           showSizeChanger
           total={medicineCount}
           showTotal={(total, range) =>
-            `${total} 个结果中的 ${(curPage - 1) * pageSize + 1}-${Math.min(
-              curPage * pageSize,
+            `${total} 个结果中的 ${(curPage - 1) * page_size + 1}-${Math.min(
+              curPage * page_size,
               total,
             )} `
           }
-          defaultPageSize={pageSize}
+          defaultPageSize={page_size}
           defaultCurrent={curPage}
-          pageSizeOptions={pageSizes}
+          page_sizeOptions={page_sizes}
           onChange={handlePaginationChange}
         />
       </div>
