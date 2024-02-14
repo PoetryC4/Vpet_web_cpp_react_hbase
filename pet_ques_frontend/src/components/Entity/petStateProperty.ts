@@ -146,7 +146,7 @@ export const setEnableRandMov = (value: boolean) => {
 }
 
 export const durSpeak = {
-  value: true
+  value: false
 }
 export const setDurSpeak = (value: boolean) => {
   durSpeak.value = value

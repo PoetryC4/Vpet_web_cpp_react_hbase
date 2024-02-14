@@ -1,6 +1,4 @@
 from fastapi import FastAPI
-from pymongo import MongoClient
-import yaml
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
@@ -19,8 +17,6 @@ def document():
 
 
 def api_start(host, port, **kwargs):
-    global app
-
     app = FastAPI()
 
     app.add_middleware(

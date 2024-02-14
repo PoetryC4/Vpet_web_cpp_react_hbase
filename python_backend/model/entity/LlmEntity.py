@@ -3,18 +3,18 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class Message:
+class Message(BaseModel):
     role: str
     content: str
     create_time: datetime
 
 
-class Conversion:
+class Conversion(BaseModel):
     user_id: int
     messages: list[Message]
     title: str
     conversation_id: int
-    model_name: str
+    llm_model_name: str
     temperature: float
     max_tokens: int
 

@@ -1,6 +1,6 @@
 from dataclasses import asdict
 
-import yaml
+
 from pymongo import MongoClient
 
 from common.Constants import mongodb

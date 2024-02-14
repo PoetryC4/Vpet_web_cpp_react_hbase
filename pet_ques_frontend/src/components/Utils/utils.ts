@@ -15,7 +15,7 @@ export async function getAllImgsNames(target_folder: string) {
     if (res.code === 0) {
       let sortedFileNames = res.data
       sortedFileNames.sort((a, b) => a.localeCompare(b));
-      console.log("获取到的图片" + res.data)
+      // console.log("获取到的图片" + res.data)
       return sortedFileNames
     } else {
       message.error("获取失败:", res.msg)
@@ -42,7 +42,7 @@ export function getBaseLog(x: number, y: number) {
 }
 
 export function getBlob(fileUrl: string) {
-  console.log(fileUrl)
+  // console.log(fileUrl)
   return new Promise(resolve => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', fileUrl, true);

@@ -1,55 +1,64 @@
-import {petAnimation, petAnimation3layers, petMovementAnimation_B} from "./petAnimationUtils";
+import {petAnimation, petMovementAnimation_B} from "./petAnimationUtils";
 import {sleep} from "@antfu/utils";
 import {
-  animationGap,
   boringMidGap,
-  interactionNames, listenerGap,
-  petValueChange,
-  specialInteractionNames, speedFalling, speedFast, speedNormal,
+  interactionNames,
+  specialInteractionNames,
+  speedFalling,
+  speedFast,
+  speedNormal,
   speedSlow,
   trialGap
 } from "@/components/Entity/petConstants";
-import {getCurTime, randomInt} from "@/components/Utils/utils";
+import {randomInt} from "@/components/Utils/utils";
 import {
   boringAnimationFlag,
   durDebug,
-  durSwitch, enableRandMov,
-  hungryAnimationFlag, illAnimationFlag,
-  imgSize, isCopy, isDance,
-  isDragged,
-  isLaunched, isLive, isPlayOne, isRemoveObject, isResearch, isSleep, isStudy, isWorkClean,
+  durSpeak,
+  durSwitch,
+  hungryAnimationFlag,
+  imgSize,
+  isCopy,
+  isDance,
+  isLaunched,
+  isLive,
+  isPlayOne,
+  isRemoveObject,
+  isResearch,
+  isSleep,
+  isStudy,
+  isWorkClean,
   petLeftMargin,
   petTopMargin,
-  preLaunched,
-  recoverAnimationFlag,
-  setBoringAnimationFlag, setDurShutdown,
+  setBoringAnimationFlag,
   setDurSwitch,
   setHungryAnimationFlag,
-  setIllAnimationFlag, setIsCopy, setIsDance,
-  setIsDragged,
-  setIsLaunched, setIsLive, setIsPlayOne, setIsRemoveObject, setIsResearch, setIsSleep, setIsStudy, setIsWorkClean,
-  setPetLeftMargin,
-  setPetTopMargin,
+  setIllAnimationFlag,
+  setIsCopy,
+  setIsDance,
+  setIsLive,
+  setIsPlayOne,
+  setIsRemoveObject,
+  setIsResearch,
+  setIsSleep,
+  setIsStudy,
+  setIsWorkClean,
   setRecoverAnimationFlag,
   setThirstyAnimationFlag,
   thirstyAnimationFlag
 } from "@/components/Entity/petStateProperty";
-import {
-  curAnimation,
-  curState,
-  petWorkPerformance,
-  setCurAnimation,
-  setCurState
-} from "@/components/Entity/petProperty";
+import {curAnimation, curState, setCurAnimation, setCurState} from "@/components/Entity/petProperty";
 
 export async function illAnimation() {
   if (curState.value === 'Ill') {
     setDurSwitch(true)
-    await petAnimation('/vup/Switch/Down/PoorCondition', false)
+    if (!(durSpeak.value || durSwitch.value || specialInteractionNames.includes(curAnimation.value) || interactionNames.includes(curAnimation.value) || durDebug.value))
+      await petAnimation('/vup/Switch/Down/PoorCondition', false)
     setDurSwitch(false)
   } else {
     setDurSwitch(true)
-    await petAnimation('/vup/Switch/Down/' + curState.value, false)
+    if (!(durSpeak.value || durSwitch.value || specialInteractionNames.includes(curAnimation.value) || interactionNames.includes(curAnimation.value) || durDebug.value))
+      await petAnimation('/vup/Switch/Down/' + curState.value, false)
     setDurSwitch(false)
   }
   setCurState('Ill')
@@ -66,10 +75,12 @@ export async function tryIll(ext: number) {
 }
 
 export async function recoverAnimation() {
-  if (curState.value === 'Happy') {
-    await petAnimation('/vup/Switch/Up/Normal', false)
-  } else {
-    await petAnimation('/vup/Switch/Up/' + curState.value, false)
+  if (!(durSpeak.value || durSwitch.value || specialInteractionNames.includes(curAnimation.value) || interactionNames.includes(curAnimation.value) || durDebug.value)) {
+    if (curState.value === 'Happy') {
+      await petAnimation('/vup/Switch/Up/Normal', false)
+    } else {
+      await petAnimation('/vup/Switch/Up/' + curState.value, false)
+    }
   }
   setCurState('Normal')
 }
@@ -88,11 +99,13 @@ export async function tryRecover(ext: number) {
 export async function hungryAnimation() {
   if (curState.value === 'Ill') {
     setDurSwitch(true)
-    await petAnimation('/vup/Switch/Hunger/PoorCondition', false)
+    if (!(durSpeak.value || durSwitch.value || specialInteractionNames.includes(curAnimation.value) || interactionNames.includes(curAnimation.value) || durDebug.value))
+      await petAnimation('/vup/Switch/Hunger/PoorCondition', false)
     setDurSwitch(false)
   } else {
     setDurSwitch(true)
-    await petAnimation('/vup/Switch/Hunger/' + curState.value, false)
+    if (!(durSpeak.value || durSwitch.value || specialInteractionNames.includes(curAnimation.value) || interactionNames.includes(curAnimation.value) || durDebug.value))
+      await petAnimation('/vup/Switch/Hunger/' + curState.value, false)
     setDurSwitch(false)
   }
 }
@@ -110,7 +123,8 @@ export async function tryHungry(ext: number) {
 
 export async function thirstyAnimation() {
   setDurSwitch(true)
-  await petAnimation('/vup/Switch/Thirsty', false)
+  if (!(durSpeak.value || durSwitch.value || specialInteractionNames.includes(curAnimation.value) || interactionNames.includes(curAnimation.value) || durDebug.value))
+    await petAnimation('/vup/Switch/Thirsty', false)
   setDurSwitch(false)
 }
 
@@ -126,79 +140,81 @@ export async function tryThirsty(ext: number) {
 
 export async function boringAnimation() {
   setDurSwitch(true)
-  let rand = randomInt(0, 3)
-  switch (rand) {
-    case 0: {
-      await petAnimation('/vup/IDEL/Boring/A_Normal', false)
-      let loop = randomInt(1, 3)
-      for (let i = 0; i < loop; i++) {
-        await petAnimation('/vup/IDEL/Boring/B_Normal', false)
+  if (!(durSpeak.value || durSwitch.value || specialInteractionNames.includes(curAnimation.value) || interactionNames.includes(curAnimation.value) || durDebug.value)) {
+    let rand = randomInt(0, 3)
+    switch (rand) {
+      case 0: {
+        await petAnimation('/vup/IDEL/Boring/A_Normal', false)
+        let loop = randomInt(1, 3)
+        for (let i = 0; i < loop; i++) {
+          await petAnimation('/vup/IDEL/Boring/B_Normal', false)
+        }
+        await petAnimation('/vup/IDEL/Boring/C_Normal', false)
+        break
       }
-      await petAnimation('/vup/IDEL/Boring/C_Normal', false)
-      break
-    }
-    case 1: {
-      if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
-        await petAnimation('/vup/IDEL/Squat/A_PoorCondition', false)
-        let loop = randomInt(1, 3)
-        for (let i = 0; i < loop; i++) {
-          await petAnimation('/vup/IDEL/Squat/B_PoorCondition/' + randomInt(1, 3), false)
-          await sleep(boringMidGap / 2)
+      case 1: {
+        if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
+          await petAnimation('/vup/IDEL/Squat/A_PoorCondition', false)
+          let loop = randomInt(1, 3)
+          for (let i = 0; i < loop; i++) {
+            await petAnimation('/vup/IDEL/Squat/B_PoorCondition/' + randomInt(1, 3), false)
+            await sleep(boringMidGap / 2)
+          }
+          await petAnimation('/vup/IDEL/Squat/C_PoorCondition', false)
+        } else {
+          await petAnimation('/vup/IDEL/Squat/A_Normal', false)
+          let loop = randomInt(1, 3)
+          for (let i = 0; i < loop; i++) {
+            await petAnimation('/vup/IDEL/Squat/B_Normal/' + randomInt(1, 3), false)
+            await sleep(boringMidGap / 2)
+          }
+          await petAnimation('/vup/IDEL/Squat/C_Normal', false)
         }
-        await petAnimation('/vup/IDEL/Squat/C_PoorCondition', false)
-      } else {
-        await petAnimation('/vup/IDEL/Squat/A_Normal', false)
-        let loop = randomInt(1, 3)
-        for (let i = 0; i < loop; i++) {
-          await petAnimation('/vup/IDEL/Squat/B_Normal/' + randomInt(1, 3), false)
-          await sleep(boringMidGap / 2)
-        }
-        await petAnimation('/vup/IDEL/Squat/C_Normal', false)
+        break
       }
-      break
-    }
-    case 2: {
-      if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
-        await petAnimation('/vup/State/StateONE/A_PoorCondition', false)
-        let loop = randomInt(1, 3)
-        for (let i = 0; i < loop; i++) {
-          await petAnimation('/vup/State/StateONE/B_PoorCondition', false)
-          await sleep(boringMidGap)
+      case 2: {
+        if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
+          await petAnimation('/vup/State/StateONE/A_PoorCondition', false)
+          let loop = randomInt(1, 3)
+          for (let i = 0; i < loop; i++) {
+            await petAnimation('/vup/State/StateONE/B_PoorCondition', false)
+            await sleep(boringMidGap)
+          }
+          await petAnimation('/vup/State/StateONE/C_PoorCondition', false)
+        } else {
+          await petAnimation('/vup/State/StateONE/A_' + curState.value, false)
+          let loop = randomInt(1, 3)
+          for (let i = 0; i < loop; i++) {
+            await petAnimation('/vup/State/StateONE/B_' + curState.value + '/' + randomInt(1, 3), false)
+            await sleep(boringMidGap)
+          }
+          await petAnimation('/vup/State/StateONE/C_' + curState.value, false)
         }
-        await petAnimation('/vup/State/StateONE/C_PoorCondition', false)
-      } else {
-        await petAnimation('/vup/State/StateONE/A_' + curState.value, false)
-        let loop = randomInt(1, 3)
-        for (let i = 0; i < loop; i++) {
-          await petAnimation('/vup/State/StateONE/B_' + curState.value + '/' + randomInt(1, 3), false)
-          await sleep(boringMidGap)
-        }
-        await petAnimation('/vup/State/StateONE/C_' + curState.value, false)
+        break
       }
-      break
-    }
-    case 3: {
-      if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
-        await petAnimation('/vup/State/StateTWO/A_PoorCondition', false)
-        let loop = randomInt(1, 3)
-        for (let i = 0; i < loop; i++) {
-          await petAnimation('/vup/State/StateTWO/B_PoorCondition', false)
-          await sleep(boringMidGap)
+      case 3: {
+        if (curState.value === 'Ill' || curState.value === 'PoorCondition') {
+          await petAnimation('/vup/State/StateTWO/A_PoorCondition', false)
+          let loop = randomInt(1, 3)
+          for (let i = 0; i < loop; i++) {
+            await petAnimation('/vup/State/StateTWO/B_PoorCondition', false)
+            await sleep(boringMidGap)
+          }
+          await petAnimation('/vup/State/StateTWO/C_PoorCondition', false)
+        } else {
+          await petAnimation('/vup/State/StateTWO/A_Normal', false)
+          let loop = randomInt(1, 3)
+          for (let i = 0; i < loop; i++) {
+            await petAnimation('/vup/State/StateTWO/B_Normal', false)
+            await sleep(boringMidGap)
+          }
+          await petAnimation('/vup/State/StateTWO/C_Normal', false)
         }
-        await petAnimation('/vup/State/StateTWO/C_PoorCondition', false)
-      } else {
-        await petAnimation('/vup/State/StateTWO/A_Normal', false)
-        let loop = randomInt(1, 3)
-        for (let i = 0; i < loop; i++) {
-          await petAnimation('/vup/State/StateTWO/B_Normal', false)
-          await sleep(boringMidGap)
-        }
-        await petAnimation('/vup/State/StateTWO/C_Normal', false)
+        break
       }
-      break
-    }
-    default: {
-      break
+      default: {
+        break
+      }
     }
   }
   setDurSwitch(false)
