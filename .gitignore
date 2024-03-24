@@ -1,3 +1,8 @@
 ./python_backend/venv
 ./python_backend/.idea
 ./python_backend/__pycache__
+
+backend-file/
+python_backend
+pet_ques_backend
+static_file
