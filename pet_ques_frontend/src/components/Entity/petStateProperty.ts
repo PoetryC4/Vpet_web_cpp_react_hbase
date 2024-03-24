@@ -146,10 +146,10 @@ export const setEnableRandMov = (value: boolean) => {
 }
 
 export const durSpeak = {
-  value: true
+    value: true
 }
 export const setDurSpeak = (value: boolean) => {
-  durSpeak.value = value
+    durSpeak.value = value
 }
 export const imgSize = {
     value: 400
