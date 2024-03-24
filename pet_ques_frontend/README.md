@@ -57,3 +57,16 @@ npm test
 
 You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in
 our [github](https://github.com/ant-design/ant-design-pro).
+
+
+### 纯前端注意
+
+获取图片分布
+```shell
+node imageNames.ts
+```
+
+将构建好的文件的静态资源进行替换(构建后运行)
+```shell
+node node copyAssets.ts
+```
