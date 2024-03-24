@@ -1,8 +1,72 @@
-## vPet网页版(2)
+# Ant Design Pro
 
-该项目使用 C++ [Pistache](https://github.com/pistacheio/pistache), [httplib](https://github.com/yhirose/cpp-httplib), hbase, thrift2 构建后端, 使用 Ant Design 构建前端。
+This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
 
-### 参考:
-1. https://blog.csdn.net/weixin_44177980/article/details/130662138
-2. https://blog.csdn.net/CREATE_17/article/details/90347586
-3. https://blog.csdn.net/qq_44732013/article/details/115209489
+## Environment Prepare
+
+Install `node_modules`:
+
+```bash
+npm install
+```
+
+or
+
+```bash
+yarn
+```
+
+## Provided Scripts
+
+Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and
+test.
+
+Scripts provided in `package.json`. It's safe to modify or add additional script:
+
+### Start project
+
+```bash
+npm start
+```
+
+### Build project
+
+```bash
+npm run build
+```
+
+### Check code style
+
+```bash
+npm run lint
+```
+
+You can also use script to auto fix some lint error:
+
+```bash
+npm run lint:fix
+```
+
+### Test code
+
+```bash
+npm test
+```
+
+## More
+
+You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in
+our [github](https://github.com/ant-design/ant-design-pro).
+
+
+### 纯前端注意
+
+获取图片分布
+```shell
+node imageNames.ts
+```
+
+将构建好的文件的静态资源进行替换(构建后运行)
+```shell
+node node copyAssets.ts
+```
